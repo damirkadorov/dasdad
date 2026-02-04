@@ -1,6 +1,6 @@
 // MongoDB database operations (replacing JSON file storage)
-import { User, Card, Transaction } from './types';
-import { getUsersCollection, getCardsCollection, getTransactionsCollection } from './mongodb';
+import { User, Card, Transaction, BankAccount, Trade } from './types';
+import { getUsersCollection, getCardsCollection, getTransactionsCollection, getBankAccountsCollection, getTradesCollection } from './mongodb';
 
 // User operations - now using MongoDB
 export async function getAllUsers(): Promise<User[]> {
@@ -93,4 +93,48 @@ export async function createTransaction(transaction: Transaction): Promise<Trans
   const transactions = await getTransactionsCollection();
   await transactions.insertOne(transaction);
   return transaction;
+}
+
+// Bank account operations
+export async function getBankAccountsByUserId(userId: string): Promise<BankAccount[]> {
+  const bankAccounts = await getBankAccountsCollection();
+  return await bankAccounts.find({ userId }).toArray();
+}
+
+export async function getBankAccountById(id: string): Promise<BankAccount | null> {
+  const bankAccounts = await getBankAccountsCollection();
+  return await bankAccounts.findOne({ id });
+}
+
+export async function getBankAccountByIban(iban: string): Promise<BankAccount | null> {
+  const bankAccounts = await getBankAccountsCollection();
+  return await bankAccounts.findOne({ iban });
+}
+
+export async function createBankAccount(bankAccount: BankAccount): Promise<BankAccount> {
+  const bankAccounts = await getBankAccountsCollection();
+  await bankAccounts.insertOne(bankAccount);
+  return bankAccount;
+}
+
+export async function updateBankAccount(id: string, updates: Partial<BankAccount>): Promise<BankAccount | null> {
+  const bankAccounts = await getBankAccountsCollection();
+  const result = await bankAccounts.findOneAndUpdate(
+    { id },
+    { $set: updates },
+    { returnDocument: 'after' }
+  );
+  return result ?? null;
+}
+
+// Trade operations
+export async function getTradesByUserId(userId: string): Promise<Trade[]> {
+  const trades = await getTradesCollection();
+  return await trades.find({ userId }).sort({ createdAt: -1 }).toArray();
+}
+
+export async function createTrade(trade: Trade): Promise<Trade> {
+  const trades = await getTradesCollection();
+  await trades.insertOne(trade);
+  return trade;
 }
