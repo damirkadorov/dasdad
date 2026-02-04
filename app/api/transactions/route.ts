@@ -7,7 +7,8 @@ export async function GET() {
     const { error, user } = await requireAuth();
     if (error) return error;
 
-    const transactions = getTransactionsByUserId(user!.userId);
+    // Get transactions from MongoDB
+    const transactions = await getTransactionsByUserId(user!.userId);
 
     return NextResponse.json(
       { transactions },

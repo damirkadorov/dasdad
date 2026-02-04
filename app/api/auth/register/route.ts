@@ -35,8 +35,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if user already exists
-    const existingUserByEmail = getUserByEmail(email);
+    // Check if user already exists (using MongoDB now)
+    const existingUserByEmail = await getUserByEmail(email);
     if (existingUserByEmail) {
       return NextResponse.json(
         { error: 'User with this email already exists' },
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const existingUserByUsername = getUserByUsername(username);
+    const existingUserByUsername = await getUserByUsername(username);
     if (existingUserByUsername) {
       return NextResponse.json(
         { error: 'Username already taken' },
@@ -52,11 +52,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Hash password
+    // Hash password using bcrypt
     const passwordHash = await hashPassword(password);
 
-    // Create user
-    const newUser = createUser({
+    // Create user in MongoDB
+    const newUser = await createUser({
       id: uuidv4(),
       email,
       username,
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
       createdAt: new Date().toISOString()
     });
 
-    // Generate JWT token
+    // Generate JWT token signed with JWT_SECRET
     const token = generateToken({
       userId: newUser.id,
       email: newUser.email,

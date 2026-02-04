@@ -14,7 +14,8 @@ export async function GET(request: NextRequest, { params }: Params) {
     if (error) return error;
 
     const { id } = await params;
-    const card = getCardById(id);
+    // Get card from MongoDB
+    const card = await getCardById(id);
 
     if (!card) {
       return NextResponse.json(
@@ -50,7 +51,8 @@ export async function PATCH(request: NextRequest, { params }: Params) {
     if (error) return error;
 
     const { id } = await params;
-    const card = getCardById(id);
+    // Get card from MongoDB
+    const card = await getCardById(id);
 
     if (!card) {
       return NextResponse.json(
@@ -77,7 +79,8 @@ export async function PATCH(request: NextRequest, { params }: Params) {
       );
     }
 
-    const updatedCard = updateCard(id, { status });
+    // Update card in MongoDB
+    const updatedCard = await updateCard(id, { status });
 
     return NextResponse.json(
       {
@@ -101,7 +104,8 @@ export async function DELETE(request: NextRequest, { params }: Params) {
     if (error) return error;
 
     const { id } = await params;
-    const card = getCardById(id);
+    // Get card from MongoDB
+    const card = await getCardById(id);
 
     if (!card) {
       return NextResponse.json(
@@ -118,7 +122,8 @@ export async function DELETE(request: NextRequest, { params }: Params) {
       );
     }
 
-    deleteCard(id);
+    // Delete card from MongoDB
+    await deleteCard(id);
 
     return NextResponse.json(
       { message: 'Card deleted successfully' },

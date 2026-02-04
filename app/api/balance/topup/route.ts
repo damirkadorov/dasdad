@@ -19,8 +19,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get user
-    const user = getUserById(authUser!.userId);
+    // Get user from MongoDB
+    const user = await getUserById(authUser!.userId);
     if (!user) {
       return NextResponse.json(
         { error: 'User not found' },
@@ -31,8 +31,8 @@ export async function POST(request: NextRequest) {
     const balanceBefore = user.balance;
     const balanceAfter = balanceBefore + amount;
 
-    // Update user balance
-    const updatedUser = updateUser(user.id, { balance: balanceAfter });
+    // Update user balance in MongoDB
+    const updatedUser = await updateUser(user.id, { balance: balanceAfter });
     if (!updatedUser) {
       return NextResponse.json(
         { error: 'Failed to update balance' },
@@ -40,8 +40,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create transaction record
-    createTransaction({
+    // Create transaction record in MongoDB
+    await createTransaction({
       id: uuidv4(),
       userId: user.id,
       type: 'top_up',
