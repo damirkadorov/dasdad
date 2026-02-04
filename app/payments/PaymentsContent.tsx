@@ -5,15 +5,18 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Navigation from '@/components/layout/Navigation';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import { Currency } from '@/lib/db/types';
+import { getSupportedCurrencies, formatCurrencyAmount } from '@/lib/utils/currency';
 
 export default function PaymentsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<'send' | 'nfc'>('send');
+  const [activeTab, setActiveTab] = useState<'send' | 'nfc' | 'topup'>('send');
   
   // Send Money State
   const [recipient, setRecipient] = useState('');
   const [sendAmount, setSendAmount] = useState('');
+  const [sendCurrency, setSendCurrency] = useState<Currency>('USD');
   const [sendLoading, setSendLoading] = useState(false);
   const [sendSuccess, setSendSuccess] = useState('');
   const [sendError, setSendError] = useState('');
@@ -25,10 +28,20 @@ export default function PaymentsContent() {
   const [nfcError, setNfcError] = useState('');
   const [nfcAnimating, setNfcAnimating] = useState(false);
 
+  // Top Up State
+  const [topupAmount, setTopupAmount] = useState('');
+  const [topupCurrency, setTopupCurrency] = useState<Currency>('USD');
+  const [topupLoading, setTopupLoading] = useState(false);
+  const [topupSuccess, setTopupSuccess] = useState('');
+  const [topupError, setTopupError] = useState('');
+
   useEffect(() => {
     const tab = searchParams.get('tab');
+    const action = searchParams.get('action');
     if (tab === 'nfc') {
       setActiveTab('nfc');
+    } else if (action === 'topup') {
+      setActiveTab('topup');
     }
   }, [searchParams]);
 
@@ -102,6 +115,38 @@ export default function PaymentsContent() {
     }
   };
 
+  const handleTopUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setTopupLoading(true);
+    setTopupError('');
+    setTopupSuccess('');
+
+    try {
+      const response = await fetch('/api/balance/topup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: parseFloat(topupAmount),
+          currency: topupCurrency
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setTopupError(data.message || 'Failed to top up');
+        return;
+      }
+
+      setTopupSuccess(`Successfully added ${formatCurrencyAmount(parseFloat(topupAmount), topupCurrency)} to your account!`);
+      setTopupAmount('');
+    } catch (error) {
+      setTopupError('An error occurred. Please try again.');
+    } finally {
+      setTopupLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Navigation />
@@ -111,6 +156,16 @@ export default function PaymentsContent() {
 
         {/* Tabs */}
         <div className="flex space-x-2 mb-6">
+          <button
+            onClick={() => setActiveTab('topup')}
+            className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all ${
+              activeTab === 'topup'
+                ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
+                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+            }`}
+          >
+            Top Up
+          </button>
           <button
             onClick={() => setActiveTab('send')}
             className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all ${
@@ -132,6 +187,63 @@ export default function PaymentsContent() {
             NFC Payment
           </button>
         </div>
+
+        {/* Top Up Tab */}
+        {activeTab === 'topup' && (
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Add Money to Your Account</h2>
+            
+            <form onSubmit={handleTopUp} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Select Currency
+                </label>
+                <select
+                  value={topupCurrency}
+                  onChange={(e) => setTopupCurrency(e.target.value as Currency)}
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
+                >
+                  {getSupportedCurrencies().map((currency) => (
+                    <option key={currency} value={currency}>
+                      {currency}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <Input
+                label="Amount"
+                type="number"
+                value={topupAmount}
+                onChange={(e) => setTopupAmount(e.target.value)}
+                placeholder="0.00"
+                required
+                min="0.01"
+                step="0.01"
+              />
+
+              <Button
+                type="submit"
+                isLoading={topupLoading}
+                className="w-full"
+              >
+                Top Up Account
+              </Button>
+
+              {topupSuccess && (
+                <div className="p-4 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-lg">
+                  {topupSuccess}
+                </div>
+              )}
+
+              {topupError && (
+                <div className="p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg">
+                  {topupError}
+                </div>
+              )}
+            </form>
+          </div>
+        )}
 
         {/* Send Money Tab */}
         {activeTab === 'send' && (

@@ -2,6 +2,8 @@
 
 import { Transaction } from '@/lib/db/types';
 import { formatCurrency, formatDate } from '@/lib/utils/helpers';
+import { formatCurrencyAmount } from '@/lib/utils/currency';
+import { formatCryptoAmount } from '@/lib/utils/crypto';
 
 interface TransactionItemProps {
   transaction: Transaction;
@@ -18,6 +20,16 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
         return '↙️';
       case 'nfc_payment':
         return '📱';
+      case 'crypto_buy':
+        return '₿';
+      case 'crypto_sell':
+        return '💸';
+      case 'crypto_transfer':
+        return '🔄';
+      case 'currency_exchange':
+        return '💱';
+      case 'iban_transfer':
+        return '🏦';
       default:
         return '💳';
     }
@@ -33,6 +45,16 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
         return 'Received';
       case 'nfc_payment':
         return 'NFC Payment';
+      case 'crypto_buy':
+        return 'Crypto Buy';
+      case 'crypto_sell':
+        return 'Crypto Sell';
+      case 'crypto_transfer':
+        return 'Crypto Transfer';
+      case 'currency_exchange':
+        return 'Currency Exchange';
+      case 'iban_transfer':
+        return 'IBAN Transfer';
       default:
         return 'Transaction';
     }
@@ -52,11 +74,16 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
           </div>
           <div className="text-sm text-gray-500 dark:text-gray-400">
             {getTypeLabel(transaction.type)} • {formatDate(transaction.createdAt)}
+            {transaction.cryptoType && transaction.cryptoAmount && (
+              <span className="ml-2 text-purple-600 dark:text-purple-400">
+                {formatCryptoAmount(transaction.cryptoAmount, transaction.cryptoType)}
+              </span>
+            )}
           </div>
         </div>
       </div>
       <div className={`text-lg font-bold ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
-        {isPositive ? '+' : ''}{formatCurrency(transaction.amount)}
+        {isPositive ? '+' : ''}{formatCurrencyAmount(transaction.amount, transaction.currency)}
       </div>
     </div>
   );

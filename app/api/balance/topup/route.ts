@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { requireAuth } from '@/lib/auth/middleware';
 import { getUserById, updateUser, createTransaction } from '@/lib/db/database';
+import { Currency } from '@/lib/db/types';
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,7 +10,7 @@ export async function POST(request: NextRequest) {
     if (error) return error;
 
     const body = await request.json();
-    const { amount } = body;
+    const { amount, currency = 'USD' } = body;
 
     // Validate amount
     if (!amount || amount <= 0) {
@@ -28,11 +29,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const balanceBefore = user.balance;
+    // Initialize balances if not present
+    const userBalances = user.balances || [{ currency: 'USD', amount: user.balance || 0 }];
+    const currencyBalance = userBalances.find(b => b.currency === currency);
+    const balanceBefore = currencyBalance ? currencyBalance.amount : 0;
     const balanceAfter = balanceBefore + amount;
 
+    // Update or add balance for the specified currency
+    let updatedBalances;
+    if (currencyBalance) {
+      updatedBalances = userBalances.map(b => 
+        b.currency === currency ? { ...b, amount: balanceAfter } : b
+      );
+    } else {
+      updatedBalances = [...userBalances, { currency: currency as Currency, amount: balanceAfter }];
+    }
+
     // Update user balance in MongoDB
-    const updatedUser = await updateUser(user.id, { balance: balanceAfter });
+    const updatedUser = await updateUser(user.id, { 
+      balances: updatedBalances,
+      balance: currency === 'USD' ? balanceAfter : user.balance // Update legacy balance if USD
+    });
     if (!updatedUser) {
       return NextResponse.json(
         { error: 'Failed to update balance' },
@@ -46,9 +63,11 @@ export async function POST(request: NextRequest) {
       userId: user.id,
       type: 'top_up',
       amount,
+      currency: currency as Currency,
       balanceBefore,
       balanceAfter,
-      description: 'Balance top-up',
+      fee: 0,
+      description: `Balance top-up (${currency})`,
       status: 'completed',
       createdAt: new Date().toISOString()
     });
@@ -57,8 +76,10 @@ export async function POST(request: NextRequest) {
       {
         message: 'Balance topped up successfully',
         balance: balanceAfter,
+        currency,
         transaction: {
           amount,
+          currency,
           balanceBefore,
           balanceAfter,
           type: 'top_up'

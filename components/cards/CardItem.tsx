@@ -19,12 +19,19 @@ export default function Card({ card, onClick }: CardProps) {
       onClick={onClick}
       className={`relative p-6 rounded-2xl bg-gradient-to-br ${cardGradients[card.cardType]} text-white cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl ${card.status === 'frozen' ? 'opacity-60' : ''}`}
     >
-      {/* Card status badge */}
-      {card.status === 'frozen' && (
-        <div className="absolute top-3 right-3 bg-white/20 backdrop-blur px-3 py-1 rounded-full text-xs font-semibold">
-          ❄️ Frozen
-        </div>
-      )}
+      {/* Card badges */}
+      <div className="absolute top-3 right-3 flex gap-2">
+        {card.cardFormat && (
+          <div className="bg-white/20 backdrop-blur px-3 py-1 rounded-full text-xs font-semibold">
+            {card.cardFormat === 'physical' ? '💳 Physical' : '✨ Virtual'}
+          </div>
+        )}
+        {card.status === 'frozen' && (
+          <div className="bg-white/20 backdrop-blur px-3 py-1 rounded-full text-xs font-semibold">
+            ❄️ Frozen
+          </div>
+        )}
+      </div>
 
       {/* Card type logo */}
       <div className="flex justify-between items-start mb-8">
@@ -49,6 +56,12 @@ export default function Card({ card, onClick }: CardProps) {
           <div className="text-xs opacity-70 mb-1">CVV</div>
           <div className="text-sm font-semibold">•••</div>
         </div>
+        {card.currency && (
+          <div>
+            <div className="text-xs opacity-70 mb-1">CURRENCY</div>
+            <div className="text-sm font-semibold">{card.currency}</div>
+          </div>
+        )}
       </div>
     </div>
   );

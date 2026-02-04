@@ -4,6 +4,7 @@ import { createUser, getUserByEmail, getUserByUsername } from '@/lib/db/database
 import { hashPassword } from '@/lib/auth/password';
 import { generateToken, setAuthCookie } from '@/lib/auth/jwt';
 import { validateEmail, validatePassword } from '@/lib/utils/helpers';
+import { sendWelcomeEmail } from '@/lib/utils/email';
 
 export async function POST(request: NextRequest) {
   try {
@@ -55,13 +56,17 @@ export async function POST(request: NextRequest) {
     // Hash password using bcrypt
     const passwordHash = await hashPassword(password);
 
-    // Create user in MongoDB
+    // Create user in MongoDB with multi-currency support
     const newUser = await createUser({
       id: uuidv4(),
       email,
       username,
       passwordHash,
       balance: 0,
+      balances: [{ currency: 'USD', amount: 0 }], // Initialize with USD balance
+      cryptoWallets: [], // Empty crypto wallets
+      bankAccountIds: [], // No bank accounts yet
+      preferredCurrency: 'USD',
       createdAt: new Date().toISOString()
     });
 
@@ -74,6 +79,11 @@ export async function POST(request: NextRequest) {
 
     // Set httpOnly cookie
     await setAuthCookie(token);
+
+    // Send welcome email (don't wait for it to complete)
+    sendWelcomeEmail(newUser.email, newUser.username).catch(err => 
+      console.error('Failed to send welcome email:', err)
+    );
 
     // Return user data (without password hash)
     return NextResponse.json(
