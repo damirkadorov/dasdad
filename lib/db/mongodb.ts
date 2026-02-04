@@ -30,8 +30,8 @@ export async function connectToDatabase(): Promise<Db> {
   // Connect to MongoDB
   await client.connect();
 
-  // Get database instance
-  const db = client.db();
+  // Get database instance (database name should be in MONGODB_URI or specified here)
+  const db = client.db('dasdad');
 
   // Cache the connection for reuse
   cachedClient = client;

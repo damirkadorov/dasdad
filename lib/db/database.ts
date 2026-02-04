@@ -36,7 +36,8 @@ export async function updateUser(id: string, updates: Partial<User>): Promise<Us
     { $set: updates },
     { returnDocument: 'after' }
   );
-  return result || null;
+  // findOneAndUpdate returns null if document not found
+  return result ?? null;
 }
 
 // Card operations - now using MongoDB
@@ -63,7 +64,8 @@ export async function updateCard(id: string, updates: Partial<Card>): Promise<Ca
     { $set: updates },
     { returnDocument: 'after' }
   );
-  return result || null;
+  // findOneAndUpdate returns null if document not found
+  return result ?? null;
 }
 
 export async function deleteCard(id: string): Promise<boolean> {
