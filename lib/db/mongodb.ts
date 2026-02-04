@@ -2,11 +2,8 @@ import { MongoClient, Db, Collection } from 'mongodb';
 import { User, Card, Transaction } from './types';
 
 // MongoDB connection URI from environment variable
-const MONGODB_URI = process.env.MONGODB_URI as string;
-
-if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
-}
+// Will be validated when connecting, not at module load time (for build compatibility)
+const MONGODB_URI = process.env.MONGODB_URI;
 
 // Global variable to cache the MongoDB client for reuse in serverless functions
 let cachedClient: MongoClient | null = null;
@@ -17,6 +14,11 @@ let cachedDb: Db | null = null;
  * Reuses existing connection in serverless environment (Vercel)
  */
 export async function connectToDatabase(): Promise<Db> {
+  // Validate URI only when connecting
+  if (!MONGODB_URI) {
+    throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
+  }
+
   // Return cached connection if available
   if (cachedClient && cachedDb) {
     return cachedDb;
