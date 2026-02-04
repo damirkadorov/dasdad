@@ -45,11 +45,11 @@ export default function Dashboard() {
       }
 
       const profileData = await profileRes.json();
-      setProfile(profileData);
+      setProfile(profileData.user);
 
       if (transactionsRes.ok) {
         const transactionsData = await transactionsRes.json();
-        setTransactions(transactionsData.slice(0, 5));
+        setTransactions(transactionsData.transactions.slice(0, 5));
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load data');

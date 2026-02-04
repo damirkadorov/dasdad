@@ -41,8 +41,8 @@ export default function TransactionsPage() {
       }
 
       const data = await response.json();
-      setTransactions(data);
-      setFilteredTransactions(data);
+      setTransactions(data.transactions);
+      setFilteredTransactions(data.transactions);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load transactions');
     } finally {

@@ -33,7 +33,7 @@ export default function CardsPage() {
       }
 
       const data = await response.json();
-      setCards(data);
+      setCards(data.cards);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load cards');
     } finally {

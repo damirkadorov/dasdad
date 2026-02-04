@@ -55,18 +55,18 @@ export default function ProfilePage() {
       }
 
       const profileData = await profileRes.json();
-      setProfile(profileData);
+      setProfile(profileData.user);
 
       // Calculate stats
       if (cardsRes.ok && transactionsRes.ok) {
-        const cards = await cardsRes.json();
-        const transactions = await transactionsRes.json();
+        const cardsData = await cardsRes.json();
+        const transactionsData = await transactionsRes.json();
         
         setStats({
-          totalCards: cards.length,
-          totalTransactions: transactions.length,
-          activeCards: cards.filter((c: { status: string }) => c.status === 'active').length,
-          frozenCards: cards.filter((c: { status: string }) => c.status === 'frozen').length
+          totalCards: cardsData.cards.length,
+          totalTransactions: transactionsData.transactions.length,
+          activeCards: cardsData.cards.filter((c: { status: string }) => c.status === 'active').length,
+          frozenCards: cardsData.cards.filter((c: { status: string }) => c.status === 'frozen').length
         });
       }
     } catch (err) {

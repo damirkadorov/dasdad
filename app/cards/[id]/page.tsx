@@ -40,7 +40,7 @@ export default function CardDetailPage() {
       }
 
       const data = await response.json();
-      setCard(data);
+      setCard(data.card);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load card');
     } finally {
@@ -67,7 +67,7 @@ export default function CardDetailPage() {
       }
 
       const updatedCard = await response.json();
-      setCard(updatedCard);
+      setCard(updatedCard.card);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update card');
     } finally {
