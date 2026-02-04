@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import Navigation from '@/components/layout/Navigation';
 import Button from '@/components/ui/Button';
 import CardItem from '@/components/cards/CardItem';
-import { Card } from '@/lib/db/types';
+import { Card, Currency } from '@/lib/db/types';
+import { getSupportedCurrencies } from '@/lib/utils/currency';
 
 export default function CardsPage() {
   const router = useRouter();
@@ -15,6 +16,8 @@ export default function CardsPage() {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [creating, setCreating] = useState(false);
   const [cardType, setCardType] = useState<'visa' | 'mastercard'>('visa');
+  const [cardFormat, setCardFormat] = useState<'virtual' | 'physical'>('virtual');
+  const [cardCurrency, setCardCurrency] = useState<Currency>('USD');
 
   useEffect(() => {
     fetchCards();
@@ -54,7 +57,11 @@ export default function CardsPage() {
       const response = await fetch('/api/cards', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cardType })
+        body: JSON.stringify({ 
+          cardType, 
+          cardFormat,
+          currency: cardCurrency 
+        })
       });
 
       if (!response.ok) {
@@ -65,6 +72,8 @@ export default function CardsPage() {
       await fetchCards();
       setShowCreateForm(false);
       setCardType('visa');
+      setCardFormat('virtual');
+      setCardCurrency('USD');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create card');
     } finally {
@@ -129,6 +138,39 @@ export default function CardsPage() {
             
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Card Format
+              </label>
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  onClick={() => setCardFormat('virtual')}
+                  className={`p-4 rounded-lg border-2 transition-all ${
+                    cardFormat === 'virtual'
+                      ? 'border-purple-600 bg-purple-50 dark:bg-purple-900/20'
+                      : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
+                  }`}
+                >
+                  <div className="text-2xl mb-2">💳</div>
+                  <div className="font-semibold text-gray-900 dark:text-white">Virtual</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Instant, online use</div>
+                </button>
+                
+                <button
+                  onClick={() => setCardFormat('physical')}
+                  className={`p-4 rounded-lg border-2 transition-all ${
+                    cardFormat === 'physical'
+                      ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/20'
+                      : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
+                  }`}
+                >
+                  <div className="text-2xl mb-2">💳</div>
+                  <div className="font-semibold text-gray-900 dark:text-white">Physical</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Delivered by mail</div>
+                </button>
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Select Card Type
               </label>
               <div className="grid grid-cols-2 gap-4">
@@ -160,12 +202,29 @@ export default function CardsPage() {
               </div>
             </div>
 
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Card Currency
+              </label>
+              <select
+                value={cardCurrency}
+                onChange={(e) => setCardCurrency(e.target.value as Currency)}
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
+              >
+                {getSupportedCurrencies().map((currency) => (
+                  <option key={currency} value={currency}>
+                    {currency}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <Button 
               onClick={handleCreateCard}
               isLoading={creating}
               className="w-full"
             >
-              Create {cardType === 'visa' ? 'Visa' : 'Mastercard'} Card
+              Create {cardFormat === 'physical' ? 'Physical' : 'Virtual'} {cardType === 'visa' ? 'Visa' : 'Mastercard'} Card
             </Button>
           </div>
         )}

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { requireAuth } from '@/lib/auth/middleware';
 import { getUserById, updateUser, createTransaction } from '@/lib/db/database';
+import { Currency } from '@/lib/db/types';
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,7 +10,7 @@ export async function POST(request: NextRequest) {
     if (error) return error;
 
     const body = await request.json();
-    const { amount } = body;
+    const { amount, currency = 'USD' } = body;
 
     // Validate amount
     if (!amount || amount <= 0) {
@@ -46,9 +47,11 @@ export async function POST(request: NextRequest) {
       userId: user.id,
       type: 'top_up',
       amount,
+      currency: currency as Currency,
       balanceBefore,
       balanceAfter,
-      description: 'Balance top-up',
+      fee: 0,
+      description: `Balance top-up (${currency})`,
       status: 'completed',
       createdAt: new Date().toISOString()
     });
@@ -59,6 +62,7 @@ export async function POST(request: NextRequest) {
         balance: balanceAfter,
         transaction: {
           amount,
+          currency,
           balanceBefore,
           balanceAfter,
           type: 'top_up'

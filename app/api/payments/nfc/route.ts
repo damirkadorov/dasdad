@@ -73,9 +73,11 @@ export async function POST(request: NextRequest) {
       userId: user.id,
       type: 'nfc_payment',
       amount: -amount,
+      currency: 'USD',
       balanceBefore,
       balanceAfter,
       cardId,
+      fee: 0,
       description: description || 'NFC Payment',
       status: 'completed',
       createdAt: new Date().toISOString()
