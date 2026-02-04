@@ -26,8 +26,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get sender
-    const sender = getUserById(authUser!.userId);
+    // Get sender from MongoDB
+    const sender = await getUserById(authUser!.userId);
     if (!sender) {
       return NextResponse.json(
         { error: 'Sender not found' },
@@ -43,10 +43,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find recipient by username or email
-    let recipientUser = getUserByUsername(recipient);
+    // Find recipient by username or email from MongoDB
+    let recipientUser = await getUserByUsername(recipient);
     if (!recipientUser) {
-      recipientUser = getUserByEmail(recipient);
+      recipientUser = await getUserByEmail(recipient);
     }
 
     if (!recipientUser) {
@@ -64,17 +64,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Update balances
+    // Update balances in MongoDB
     const senderBalanceBefore = sender.balance;
     const senderBalanceAfter = senderBalanceBefore - amount;
     const recipientBalanceBefore = recipientUser.balance;
     const recipientBalanceAfter = recipientBalanceBefore + amount;
 
-    updateUser(sender.id, { balance: senderBalanceAfter });
-    updateUser(recipientUser.id, { balance: recipientBalanceAfter });
+    await updateUser(sender.id, { balance: senderBalanceAfter });
+    await updateUser(recipientUser.id, { balance: recipientBalanceAfter });
 
-    // Create transaction for sender
-    createTransaction({
+    // Create transaction for sender in MongoDB
+    await createTransaction({
       id: uuidv4(),
       userId: sender.id,
       type: 'send',
@@ -87,8 +87,8 @@ export async function POST(request: NextRequest) {
       createdAt: new Date().toISOString()
     });
 
-    // Create transaction for recipient
-    createTransaction({
+    // Create transaction for recipient in MongoDB
+    await createTransaction({
       id: uuidv4(),
       userId: recipientUser.id,
       type: 'receive',

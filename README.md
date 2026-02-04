@@ -64,7 +64,7 @@ A full-featured gaming payment application built with Next.js 14+, inspired by R
 - **Framework:** Next.js 14+ (App Router)
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
-- **Database:** JSON files (simple file-based storage)
+- **Database:** MongoDB Atlas (NoSQL cloud database)
 - **Authentication:** JWT with httpOnly cookies
 - **Password Hashing:** bcryptjs
 - **UUID Generation:** uuid
@@ -98,12 +98,22 @@ A full-featured gaming payment application built with Next.js 14+, inspired by R
 
    Edit `.env.local` and update the values:
    ```env
+   # MongoDB Atlas Connection String
+   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/database?retryWrites=true&w=majority
+
    # JWT Secret (use a strong random string in production)
    JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 
    # Application URL
    NEXT_PUBLIC_APP_URL=http://localhost:3000
    ```
+
+   **MongoDB Setup:**
+   - Create a free account at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+   - Create a new cluster
+   - Get your connection string from the "Connect" button
+   - Replace `username`, `password`, and `cluster` in the connection string
+   - Whitelist your IP address or use 0.0.0.0/0 for development
 
 4. **Run the development server**
    ```bash
@@ -134,6 +144,7 @@ This application is ready for deployment to Vercel:
 
 3. **Set Environment Variables in Vercel**
    - Go to Project Settings → Environment Variables
+   - Add `MONGODB_URI` with your MongoDB Atlas connection string
    - Add `JWT_SECRET` with a strong random value
    - Add `NEXT_PUBLIC_APP_URL` with your production URL
 
@@ -164,9 +175,8 @@ dasdad/
 │   └── layout/              # Layout components
 ├── lib/                     # Utility functions
 │   ├── auth/                # Authentication utilities
-│   ├── db/                  # Database operations
+│   ├── db/                  # Database operations (MongoDB)
 │   └── utils/               # Helper functions
-├── data/                    # JSON database (created at runtime)
 └── public/                  # Static assets
 ```
 
@@ -273,12 +283,10 @@ Password: Test1234
 
 ## 🐛 Known Limitations
 
-- Uses JSON file storage (not suitable for production at scale)
-- No real payment processing
+- No real payment processing (demo app with fake money)
 - No email verification
 - No password reset functionality
 - No 2FA authentication
-- Database is not optimized for concurrent access
 
 ## 🤝 Contributing
 

@@ -19,8 +19,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get user
-    const user = getUserById(authUser!.userId);
+    // Get user from MongoDB
+    const user = await getUserById(authUser!.userId);
     if (!user) {
       return NextResponse.json(
         { error: 'User not found' },
@@ -36,9 +36,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify card if provided
+    // Verify card if provided (from MongoDB)
     if (cardId) {
-      const card = getCardById(cardId);
+      const card = await getCardById(cardId);
       if (!card) {
         return NextResponse.json(
           { error: 'Card not found' },
@@ -64,11 +64,11 @@ export async function POST(request: NextRequest) {
     const balanceBefore = user.balance;
     const balanceAfter = balanceBefore - amount;
 
-    // Update user balance
-    updateUser(user.id, { balance: balanceAfter });
+    // Update user balance in MongoDB
+    await updateUser(user.id, { balance: balanceAfter });
 
-    // Create transaction record
-    createTransaction({
+    // Create transaction record in MongoDB
+    await createTransaction({
       id: uuidv4(),
       userId: user.id,
       type: 'nfc_payment',

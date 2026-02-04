@@ -9,7 +9,8 @@ export async function GET() {
     const { error, user } = await requireAuth();
     if (error) return error;
 
-    const cards = getCardsByUserId(user!.userId);
+    // Get cards from MongoDB
+    const cards = await getCardsByUserId(user!.userId);
 
     return NextResponse.json(
       { cards },
@@ -29,8 +30,8 @@ export async function POST(request: NextRequest) {
     const { error, user } = await requireAuth();
     if (error) return error;
 
-    // Check if user has reached the limit of 5 cards
-    const existingCards = getCardsByUserId(user!.userId);
+    // Check if user has reached the limit of 5 cards (from MongoDB)
+    const existingCards = await getCardsByUserId(user!.userId);
     if (existingCards.length >= 5) {
       return NextResponse.json(
         { error: 'Maximum of 5 cards per user reached' },
@@ -54,8 +55,8 @@ export async function POST(request: NextRequest) {
     const cvv = generateCVV();
     const expiryDate = generateExpiryDate();
 
-    // Create card
-    const newCard = createCard({
+    // Create card in MongoDB
+    const newCard = await createCard({
       id: uuidv4(),
       userId: user!.userId,
       cardNumber,

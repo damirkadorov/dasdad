@@ -7,7 +7,8 @@ export async function GET() {
     const { error, user: authUser } = await requireAuth();
     if (error) return error;
 
-    const user = getUserById(authUser!.userId);
+    // Get user from MongoDB
+    const user = await getUserById(authUser!.userId);
     if (!user) {
       return NextResponse.json(
         { error: 'User not found' },

@@ -1,125 +1,96 @@
-import fs from 'fs';
-import path from 'path';
-import { Database, User, Card, Transaction } from './types';
+// MongoDB database operations (replacing JSON file storage)
+import { User, Card, Transaction } from './types';
+import { getUsersCollection, getCardsCollection, getTransactionsCollection } from './mongodb';
 
-const DB_PATH = path.join(process.cwd(), 'data', 'database.json');
-
-// Ensure data directory and database file exist
-function ensureDatabase(): Database {
-  const dataDir = path.join(process.cwd(), 'data');
-  
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-  }
-
-  if (!fs.existsSync(DB_PATH)) {
-    const initialData: Database = {
-      users: [],
-      cards: [],
-      transactions: []
-    };
-    fs.writeFileSync(DB_PATH, JSON.stringify(initialData, null, 2));
-    return initialData;
-  }
-
-  const data = fs.readFileSync(DB_PATH, 'utf-8');
-  return JSON.parse(data);
+// User operations - now using MongoDB
+export async function getAllUsers(): Promise<User[]> {
+  const users = await getUsersCollection();
+  return await users.find({}).toArray();
 }
 
-function saveDatabase(db: Database): void {
-  fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2));
+export async function getUserById(id: string): Promise<User | null> {
+  const users = await getUsersCollection();
+  return await users.findOne({ id });
 }
 
-// User operations
-export function getAllUsers(): User[] {
-  const db = ensureDatabase();
-  return db.users;
+export async function getUserByEmail(email: string): Promise<User | null> {
+  const users = await getUsersCollection();
+  return await users.findOne({ email });
 }
 
-export function getUserById(id: string): User | undefined {
-  const db = ensureDatabase();
-  return db.users.find(user => user.id === id);
+export async function getUserByUsername(username: string): Promise<User | null> {
+  const users = await getUsersCollection();
+  return await users.findOne({ username });
 }
 
-export function getUserByEmail(email: string): User | undefined {
-  const db = ensureDatabase();
-  return db.users.find(user => user.email === email);
-}
-
-export function getUserByUsername(username: string): User | undefined {
-  const db = ensureDatabase();
-  return db.users.find(user => user.username === username);
-}
-
-export function createUser(user: User): User {
-  const db = ensureDatabase();
-  db.users.push(user);
-  saveDatabase(db);
+export async function createUser(user: User): Promise<User> {
+  const users = await getUsersCollection();
+  await users.insertOne(user);
   return user;
 }
 
-export function updateUser(id: string, updates: Partial<User>): User | null {
-  const db = ensureDatabase();
-  const userIndex = db.users.findIndex(user => user.id === id);
-  
-  if (userIndex === -1) return null;
-  
-  db.users[userIndex] = { ...db.users[userIndex], ...updates };
-  saveDatabase(db);
-  return db.users[userIndex];
+export async function updateUser(id: string, updates: Partial<User>): Promise<User | null> {
+  const users = await getUsersCollection();
+  const result = await users.findOneAndUpdate(
+    { id },
+    { $set: updates },
+    { returnDocument: 'after' }
+  );
+  // findOneAndUpdate returns null if document not found
+  return result ?? null;
 }
 
-// Card operations
-export function getCardsByUserId(userId: string): Card[] {
-  const db = ensureDatabase();
-  return db.cards.filter(card => card.userId === userId);
+// Card operations - now using MongoDB
+export async function getCardsByUserId(userId: string): Promise<Card[]> {
+  const cards = await getCardsCollection();
+  return await cards.find({ userId }).toArray();
 }
 
-export function getCardById(id: string): Card | undefined {
-  const db = ensureDatabase();
-  return db.cards.find(card => card.id === id);
+export async function getCardById(id: string): Promise<Card | null> {
+  const cards = await getCardsCollection();
+  return await cards.findOne({ id });
 }
 
-export function createCard(card: Card): Card {
-  const db = ensureDatabase();
-  db.cards.push(card);
-  saveDatabase(db);
+export async function createCard(card: Card): Promise<Card> {
+  const cards = await getCardsCollection();
+  await cards.insertOne(card);
   return card;
 }
 
-export function updateCard(id: string, updates: Partial<Card>): Card | null {
-  const db = ensureDatabase();
-  const cardIndex = db.cards.findIndex(card => card.id === id);
-  
-  if (cardIndex === -1) return null;
-  
-  db.cards[cardIndex] = { ...db.cards[cardIndex], ...updates };
-  saveDatabase(db);
-  return db.cards[cardIndex];
+export async function updateCard(id: string, updates: Partial<Card>): Promise<Card | null> {
+  const cards = await getCardsCollection();
+  const result = await cards.findOneAndUpdate(
+    { id },
+    { $set: updates },
+    { returnDocument: 'after' }
+  );
+  // findOneAndUpdate returns null if document not found
+  return result ?? null;
 }
 
-export function deleteCard(id: string): boolean {
-  const db = ensureDatabase();
-  const cardIndex = db.cards.findIndex(card => card.id === id);
-  
-  if (cardIndex === -1) return false;
-  
-  db.cards.splice(cardIndex, 1);
-  saveDatabase(db);
-  return true;
+export async function deleteCard(id: string): Promise<boolean> {
+  const cards = await getCardsCollection();
+  const result = await cards.deleteOne({ id });
+  return result.deletedCount > 0;
 }
 
-// Transaction operations
-export function getTransactionsByUserId(userId: string): Transaction[] {
-  const db = ensureDatabase();
-  return db.transactions
-    .filter(tx => tx.userId === userId || tx.recipientId === userId || tx.senderId === userId)
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+// Transaction operations - now using MongoDB
+export async function getTransactionsByUserId(userId: string): Promise<Transaction[]> {
+  const transactions = await getTransactionsCollection();
+  return await transactions
+    .find({
+      $or: [
+        { userId },
+        { recipientId: userId },
+        { senderId: userId }
+      ]
+    })
+    .sort({ createdAt: -1 })
+    .toArray();
 }
 
-export function createTransaction(transaction: Transaction): Transaction {
-  const db = ensureDatabase();
-  db.transactions.push(transaction);
-  saveDatabase(db);
+export async function createTransaction(transaction: Transaction): Promise<Transaction> {
+  const transactions = await getTransactionsCollection();
+  await transactions.insertOne(transaction);
   return transaction;
 }
