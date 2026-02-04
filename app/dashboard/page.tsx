@@ -7,7 +7,7 @@ import Navigation from '@/components/layout/Navigation';
 import Button from '@/components/ui/Button';
 import TransactionItem from '@/components/transactions/TransactionItem';
 import { formatCurrencyAmount } from '@/lib/utils/currency';
-import { formatCryptoAmount, calculatePortfolioValue } from '@/lib/utils/crypto';
+import { formatCryptoAmount, calculatePortfolioValue, cryptoToFiat } from '@/lib/utils/crypto';
 import { Transaction, CurrencyBalance, CryptoWallet, Currency } from '@/lib/db/types';
 import { LineChart, Line, PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
@@ -219,7 +219,7 @@ export default function Dashboard() {
                     </div>
                     <p className="font-bold text-gray-900 dark:text-white text-sm">
                       {formatCurrencyAmount(
-                        wallet.balance * (wallet.cryptoType === 'BTC' ? 43250 : wallet.cryptoType === 'ETH' ? 2280.5 : 1),
+                        cryptoToFiat(wallet.balance, wallet.cryptoType, profile.preferredCurrency),
                         profile.preferredCurrency
                       )}
                     </p>

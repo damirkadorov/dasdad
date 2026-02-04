@@ -87,10 +87,25 @@ export default function PortfolioPage() {
     ? calculatePortfolioValue(profile.cryptoWallets, profile.preferredCurrency)
     : 0;
 
+  // Deterministic color mapping for crypto types
+  const getCryptoColor = (cryptoType: string): string => {
+    const colorMap: Record<string, string> = {
+      'BTC': '#f7931a', // Bitcoin orange
+      'ETH': '#627eea', // Ethereum blue
+      'USDT': '#26a17b', // Tether green
+      'BNB': '#f3ba2f', // Binance yellow
+      'XRP': '#23292f', // Ripple dark
+      'ADA': '#0033ad', // Cardano blue
+      'SOL': '#14f195', // Solana green
+      'DOGE': '#c2a633', // Doge gold
+    };
+    return colorMap[cryptoType] || '#8b5cf6'; // Default purple
+  };
+
   const portfolioData = profile?.cryptoWallets.map(wallet => ({
     name: wallet.cryptoType,
     value: cryptoToFiat(wallet.balance, wallet.cryptoType, profile.preferredCurrency),
-    color: `hsl(${Math.random() * 360}, 70%, 60%)`
+    color: getCryptoColor(wallet.cryptoType)
   })) || [];
 
   const COLORS = ['#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4', '#84cc16'];

@@ -99,7 +99,7 @@ export function calculateCryptoFee(
   cryptoType: CryptoType,
   feePercentage: number = 1.0
 ): number {
-  return Math.round(cryptoAmount * feePercentage * 100000000) / 10000000000; // Keep precision
+  return (cryptoAmount * feePercentage) / 100;
 }
 
 /**
