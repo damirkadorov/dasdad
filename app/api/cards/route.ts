@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { requireAuth } from '@/lib/auth/middleware';
 import { getCardsByUserId, createCard } from '@/lib/db/database';
 import { generateCardNumber, generateCVV, generateExpiryDate } from '@/lib/utils/helpers';
+import { Currency } from '@/lib/db/types';
 
 export async function GET() {
   try {
@@ -40,7 +41,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { cardType } = body;
+    const { cardType, cardFormat = 'virtual', currency = 'USD' } = body;
 
     // Validate card type
     if (!cardType || !['visa', 'mastercard'].includes(cardType)) {
@@ -50,12 +51,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate card format
+    if (!['virtual', 'physical'].includes(cardFormat)) {
+      return NextResponse.json(
+        { error: 'Invalid card format. Must be "virtual" or "physical"' },
+        { status: 400 }
+      );
+    }
+
+    // Validate currency
+    const validCurrencies: Currency[] = ['USD', 'EUR', 'GBP', 'CHF', 'JPY', 'CAD', 'AUD'];
+    if (!validCurrencies.includes(currency as Currency)) {
+      return NextResponse.json(
+        { error: 'Invalid currency' },
+        { status: 400 }
+      );
+    }
+
     // Generate card details
     const cardNumber = generateCardNumber(cardType as 'visa' | 'mastercard');
     const cvv = generateCVV();
     const expiryDate = generateExpiryDate();
 
-    // Create card in MongoDB
+    // Create card in MongoDB with multi-currency support
     const newCard = await createCard({
       id: uuidv4(),
       userId: user!.userId,
@@ -63,6 +81,8 @@ export async function POST(request: NextRequest) {
       expiryDate,
       cvv,
       cardType: cardType as 'visa' | 'mastercard',
+      cardFormat: cardFormat as 'virtual' | 'physical',
+      currency: currency as Currency,
       status: 'active',
       createdAt: new Date().toISOString()
     });
