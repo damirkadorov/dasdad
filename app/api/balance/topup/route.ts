@@ -29,11 +29,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const balanceBefore = user.balance;
+    // Initialize balances if not present
+    const userBalances = user.balances || [{ currency: 'USD', amount: user.balance || 0 }];
+    const currencyBalance = userBalances.find(b => b.currency === currency);
+    const balanceBefore = currencyBalance ? currencyBalance.amount : 0;
     const balanceAfter = balanceBefore + amount;
 
+    // Update or add balance for the specified currency
+    let updatedBalances;
+    if (currencyBalance) {
+      updatedBalances = userBalances.map(b => 
+        b.currency === currency ? { ...b, amount: balanceAfter } : b
+      );
+    } else {
+      updatedBalances = [...userBalances, { currency: currency as Currency, amount: balanceAfter }];
+    }
+
     // Update user balance in MongoDB
-    const updatedUser = await updateUser(user.id, { balance: balanceAfter });
+    const updatedUser = await updateUser(user.id, { 
+      balances: updatedBalances,
+      balance: currency === 'USD' ? balanceAfter : user.balance // Update legacy balance if USD
+    });
     if (!updatedUser) {
       return NextResponse.json(
         { error: 'Failed to update balance' },
@@ -60,6 +76,7 @@ export async function POST(request: NextRequest) {
       {
         message: 'Balance topped up successfully',
         balance: balanceAfter,
+        currency,
         transaction: {
           amount,
           currency,
