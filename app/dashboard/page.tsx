@@ -72,7 +72,7 @@ export default function Dashboard() {
       if (!response.ok) throw new Error('Failed to top up');
 
       const data = await response.json();
-      setProfile({ ...profile, balance: data.newBalance });
+      setProfile({ ...profile, balance: data.balance });
       await fetchData(); // Refresh transactions
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to top up');
