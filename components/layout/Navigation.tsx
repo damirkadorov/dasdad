@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { HomeIcon, CardIcon, PaymentIcon, TransactionIcon, ProfileIcon, BankIcon, MenuIcon } from '@/components/icons/Icons';
+import { HomeIcon, CardIcon, PaymentIcon, TransactionIcon, ProfileIcon, MenuIcon } from '@/components/icons/Icons';
+import Logo from './Logo';
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -19,11 +20,8 @@ export default function Navigation() {
     <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Link href="/dashboard" className="flex items-center space-x-2">
-            <BankIcon className="text-purple-600" size={28} />
-            <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              Lingoung Bank
-            </span>
+          <Link href="/dashboard">
+            <Logo size={32} showText={true} />
           </Link>
           
           <div className="hidden md:flex space-x-1">
