@@ -10,6 +10,7 @@ import TransactionItem from '@/components/transactions/TransactionItem';
 import { formatCurrencyAmount } from '@/lib/utils/currency';
 import { formatCryptoAmount, calculatePortfolioValue, cryptoToFiat } from '@/lib/utils/crypto';
 import { Transaction, CurrencyBalance, CryptoWallet, Currency } from '@/lib/db/types';
+import { WalletIcon, TopUpIcon, SendIcon, CryptoIcon, CardIcon } from '@/components/icons/Icons';
 
 // Dynamically import Recharts to avoid SSR issues
 const LineChart = dynamic(() => import('recharts').then((mod) => mod.LineChart), { ssr: false });
@@ -135,7 +136,7 @@ export default function Dashboard() {
                 <h2 className="text-5xl font-bold">{formatCurrencyAmount(totalBalance, profile?.preferredCurrency || 'USD')}</h2>
               </div>
               <div className="bg-white/20 backdrop-blur-lg rounded-full p-3">
-                <span className="text-2xl">💰</span>
+                <WalletIcon className="text-white" size={28} />
               </div>
             </div>
 
@@ -182,28 +183,44 @@ export default function Dashboard() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <Link href="/payments?action=topup">
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 hover:shadow-lg transition-all cursor-pointer border-2 border-transparent hover:border-purple-600 text-center">
-              <div className="text-4xl mb-3">💰</div>
+              <div className="flex justify-center mb-3">
+                <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-full">
+                  <TopUpIcon className="text-purple-600 dark:text-purple-400" size={24} />
+                </div>
+              </div>
               <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Top Up</h3>
             </div>
           </Link>
 
           <Link href="/payments">
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 hover:shadow-lg transition-all cursor-pointer border-2 border-transparent hover:border-blue-600 text-center">
-              <div className="text-4xl mb-3">💸</div>
+              <div className="flex justify-center mb-3">
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+                  <SendIcon className="text-blue-600 dark:text-blue-400" size={24} />
+                </div>
+              </div>
               <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Send Money</h3>
             </div>
           </Link>
 
           <Link href="/trading">
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 hover:shadow-lg transition-all cursor-pointer border-2 border-transparent hover:border-orange-600 text-center">
-              <div className="text-4xl mb-3">₿</div>
+              <div className="flex justify-center mb-3">
+                <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-full">
+                  <CryptoIcon className="text-orange-600 dark:text-orange-400" size={24} />
+                </div>
+              </div>
               <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Buy Crypto</h3>
             </div>
           </Link>
 
           <Link href="/cards">
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 hover:shadow-lg transition-all cursor-pointer border-2 border-transparent hover:border-pink-600 text-center">
-              <div className="text-4xl mb-3">💳</div>
+              <div className="flex justify-center mb-3">
+                <div className="p-3 bg-pink-100 dark:bg-pink-900/30 rounded-full">
+                  <CardIcon className="text-pink-600 dark:text-pink-400" size={24} />
+                </div>
+              </div>
               <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Create Card</h3>
             </div>
           </Link>
@@ -238,7 +255,11 @@ export default function Dashboard() {
               </div>
             ) : (
               <div className="text-center py-8">
-                <div className="text-5xl mb-3">₿</div>
+                <div className="flex justify-center mb-3">
+                  <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-full">
+                    <CryptoIcon className="text-gray-400" size={32} />
+                  </div>
+                </div>
                 <p className="text-gray-600 dark:text-gray-400 text-sm">No crypto yet</p>
                 <Link href="/trading">
                   <Button size="sm" className="mt-4">Buy Crypto</Button>
