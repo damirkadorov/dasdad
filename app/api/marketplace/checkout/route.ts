@@ -4,6 +4,9 @@ import { requireAuth } from '@/lib/auth/middleware';
 import { getUserById, updateUser, getProductById, updateProduct, createOrder, createTransaction } from '@/lib/db/database';
 import { Order, Currency } from '@/lib/db/types';
 
+// Marketplace fee percentage
+const MARKETPLACE_FEE_PERCENTAGE = 0.02; // 2%
+
 // POST - Process marketplace checkout
 export async function POST(request: NextRequest) {
   try {
@@ -102,7 +105,7 @@ export async function POST(request: NextRequest) {
     const sellerBalances = seller.balances || [{ currency: 'USD', amount: seller.balance || 0 }];
     
     // Calculate marketplace fee (2%)
-    const fee = totalAmount * 0.02;
+    const fee = totalAmount * MARKETPLACE_FEE_PERCENTAGE;
     const sellerAmount = totalAmount - fee;
 
     // Update buyer balance (deduct)

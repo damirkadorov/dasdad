@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { getPaymentById, updatePayment, getAllCards, getUserById, updateUser, createTransaction } from '@/lib/db/database';
 
+// Payment gateway fee percentage
+const PAYMENT_GATEWAY_FEE_PERCENTAGE = 0.025; // 2.5%
+
 // GET - Get payment details for payment page
 export async function GET(
   request: NextRequest,
@@ -147,7 +150,7 @@ export async function POST(
     }
 
     // Calculate fee (2.5%)
-    const fee = payment.amount * 0.025;
+    const fee = payment.amount * PAYMENT_GATEWAY_FEE_PERCENTAGE;
     const merchantAmount = payment.amount - fee;
 
     // Initialize merchant balances if they don't exist

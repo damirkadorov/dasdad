@@ -245,7 +245,10 @@ if (data.success) {
         const submitBtn = document.getElementById('submitBtn');
 
         // Update this with your actual API URL
-        const API_URL = 'http://localhost:3000'; // Change to your deployment URL
+        // Automatically detect the current origin or use your deployed URL
+        const API_URL = window.location.origin.includes('localhost') 
+            ? 'http://localhost:3000' 
+            : window.location.origin; // Use current domain for production
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();

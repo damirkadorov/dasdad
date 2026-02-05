@@ -16,6 +16,7 @@ export default function PaymentSuccessPage() {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
+          router.push('/dashboard');
           return 0;
         }
         return prev - 1;
@@ -23,7 +24,7 @@ export default function PaymentSuccessPage() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [router]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 flex items-center justify-center p-4">
