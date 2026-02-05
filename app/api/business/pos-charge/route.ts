@@ -5,8 +5,9 @@ import { getUserById, updateUser, createTransaction, getAllCards } from '@/lib/d
 import { Currency } from '@/lib/db/types';
 
 // Helper functions to normalize card formats for comparison
-const normalizeCardNumber = (num: string) => num.replace(/\s/g, '');
-const normalizeExpiry = (exp: string) => exp.replace(/\//g, '');
+// Handle null/undefined gracefully by returning empty string
+const normalizeCardNumber = (num: string | null | undefined) => num?.replace(/\s/g, '') ?? '';
+const normalizeExpiry = (exp: string | null | undefined) => exp?.replace(/\//g, '') ?? '';
 
 export async function POST(request: NextRequest) {
   try {
@@ -42,9 +43,17 @@ export async function POST(request: NextRequest) {
     const normalizedInputExpiry = normalizeExpiry(expiryDate);
     
     const allCards = await getAllCards();
-    const card = allCards.find(c => 
-      normalizeCardNumber(c.cardNumber) === normalizedInputCardNumber && 
-      normalizeExpiry(c.expiryDate) === normalizedInputExpiry && 
+    
+    // Pre-normalize all database cards to avoid repeated normalization in the loop
+    const normalizedCards = allCards.map(c => ({
+      ...c,
+      normalizedCardNumber: normalizeCardNumber(c.cardNumber),
+      normalizedExpiry: normalizeExpiry(c.expiryDate)
+    }));
+    
+    const card = normalizedCards.find(c => 
+      c.normalizedCardNumber === normalizedInputCardNumber && 
+      c.normalizedExpiry === normalizedInputExpiry && 
       c.cvv === cvv &&
       c.status === 'active'
     );
