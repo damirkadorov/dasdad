@@ -23,6 +23,9 @@ export async function GET() {
           email: user.email,
           username: user.username,
           balance: user.balance,
+          balances: user.balances || [],
+          cryptoWallets: user.cryptoWallets || [],
+          preferredCurrency: user.preferredCurrency || 'USD',
           createdAt: user.createdAt
         }
       },
