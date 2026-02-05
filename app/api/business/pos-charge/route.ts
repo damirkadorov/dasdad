@@ -1,35 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verify } from 'jsonwebtoken';
-import { cookies } from 'next/headers';
-import { db } from '@/lib/db/database';
+import { v4 as uuidv4 } from 'uuid';
+import { requireAuth } from '@/lib/auth/middleware';
+import { getUserById, updateUser, createTransaction, getAllCards } from '@/lib/db/database';
 import { Currency } from '@/lib/db/types';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 export async function POST(request: NextRequest) {
   try {
     // Verify authentication
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
+    const { error, user: authUser } = await requireAuth();
+    if (error) return error;
 
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
-    let decoded: any;
-    try {
-      decoded = verify(token, JWT_SECRET);
-    } catch (error) {
-      return NextResponse.json(
-        { error: 'Invalid token' },
-        { status: 401 }
-      );
-    }
-
-    const merchantId = decoded.userId;
+    const merchantId = authUser!.userId;
     
     // Get request data
     const { cardNumber, expiryDate, cvv, amount, currency, description } = await request.json();
@@ -50,7 +31,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Find the card in the database
-    const card = db.getCards().find(c => 
+    const allCards = await getAllCards();
+    const card = allCards.find(c => 
       c.cardNumber === cardNumber && 
       c.expiryDate === expiryDate && 
       c.cvv === cvv &&
@@ -65,7 +47,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get the card owner
-    const cardOwner = db.getUsers().find(u => u.id === card.userId);
+    const cardOwner = await getUserById(card.userId);
     
     if (!cardOwner) {
       return NextResponse.json(
@@ -82,8 +64,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Initialize balances if they don't exist
+    const cardOwnerBalances = cardOwner.balances || [{ currency: 'USD', amount: cardOwner.balance || 0 }];
+    
     // Find the balance for the card's currency
-    const cardOwnerBalance = cardOwner.balances?.find(b => b.currency === (currency || 'USD'));
+    const cardOwnerBalance = cardOwnerBalances.find(b => b.currency === (currency || 'USD'));
     
     if (!cardOwnerBalance || cardOwnerBalance.amount < amount) {
       return NextResponse.json(
@@ -93,7 +78,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get merchant
-    const merchant = db.getUsers().find(u => u.id === merchantId);
+    const merchant = await getUserById(merchantId);
     
     if (!merchant) {
       return NextResponse.json(
@@ -102,34 +87,60 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Deduct from card owner
-    db.updateUserBalance(cardOwner.id, -amount, currency || 'USD');
+    // Initialize merchant balances if they don't exist
+    const merchantBalances = merchant.balances || [{ currency: 'USD', amount: merchant.balance || 0 }];
+    
+    // Update card owner balance (deduct)
+    const updatedCardOwnerBalances = cardOwnerBalances.map(b => 
+      b.currency === (currency || 'USD') 
+        ? { ...b, amount: b.amount - amount }
+        : b
+    );
+    
+    // Update merchant balance (add)
+    let merchantCurrencyBalance = merchantBalances.find(b => b.currency === (currency || 'USD'));
+    const updatedMerchantBalances = merchantCurrencyBalance
+      ? merchantBalances.map(b => 
+          b.currency === (currency || 'USD')
+            ? { ...b, amount: b.amount + amount }
+            : b
+        )
+      : [...merchantBalances, { currency: (currency || 'USD') as Currency, amount }];
 
-    // Add to merchant
-    db.updateUserBalance(merchant.id, amount, currency || 'USD');
+    // Update both users
+    await updateUser(cardOwner.id, { balances: updatedCardOwnerBalances });
+    await updateUser(merchant.id, { balances: updatedMerchantBalances });
 
     // Create transaction for card owner (debit)
-    const cardOwnerTransaction = db.createTransaction({
+    const cardOwnerTransaction = await createTransaction({
+      id: uuidv4(),
       userId: cardOwner.id,
       type: 'nfc_payment',
       amount: -amount,
-      currency: currency || 'USD',
+      currency: (currency || 'USD') as Currency,
       description: description || `POS payment to ${merchant.username}`,
       status: 'completed',
-      recipientId: merchant.id
+      recipientId: merchant.id,
+      createdAt: new Date().toISOString()
     });
 
     // Create transaction for merchant (credit)
-    const merchantTransaction = db.createTransaction({
+    const merchantTransaction = await createTransaction({
+      id: uuidv4(),
       userId: merchant.id,
       type: 'receive',
       amount: amount,
-      currency: currency || 'USD',
+      currency: (currency || 'USD') as Currency,
       description: description || `POS payment from ${cardOwner.username}`,
       status: 'completed',
       senderId: cardOwner.id,
-      cardId: card.id
+      cardId: card.id,
+      createdAt: new Date().toISOString()
     });
+
+    // Get updated merchant balance
+    const updatedMerchant = await getUserById(merchant.id);
+    const finalMerchantBalance = updatedMerchant?.balances?.find(b => b.currency === (currency || 'USD'))?.amount || 0;
 
     return NextResponse.json({
       success: true,
@@ -139,7 +150,7 @@ export async function POST(request: NextRequest) {
       cardLast4: cardNumber.slice(-4),
       transactionId: merchantTransaction.id,
       description: description || `POS payment from ${cardOwner.username}`,
-      merchantBalance: merchant.balances?.find(b => b.currency === (currency || 'USD'))?.amount || 0
+      merchantBalance: finalMerchantBalance
     });
   } catch (error) {
     console.error('POS charge error:', error);
