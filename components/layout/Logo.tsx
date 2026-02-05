@@ -4,9 +4,10 @@ interface LogoProps {
   size?: number;
   showText?: boolean;
   className?: string;
+  textWhite?: boolean;
 }
 
-export default function Logo({ size = 32, showText = true, className = '' }: LogoProps) {
+export default function Logo({ size = 32, showText = true, className = '', textWhite = false }: LogoProps) {
   return (
     <div className={`flex items-center space-x-2 ${className}`}>
       <Image 
@@ -17,7 +18,7 @@ export default function Logo({ size = 32, showText = true, className = '' }: Log
         className="text-purple-600"
       />
       {showText && (
-        <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+        <span className={`text-2xl font-bold ${textWhite ? 'text-white' : 'bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent'}`}>
           Lingoung Bank
         </span>
       )}

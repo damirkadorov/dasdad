@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
+import Logo from '@/components/layout/Logo';
 import { BankIcon, CardIcon, SendIcon, NFCIcon, SecurityIcon, AnalyticsIcon, GlobeIcon, SupportIcon } from '@/components/icons/Icons';
 
 export default function Home() {
@@ -9,10 +10,7 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700">
       {/* Navigation */}
       <nav className="container mx-auto px-4 py-6 flex justify-between items-center">
-        <div className="flex items-center space-x-2 text-white">
-          <BankIcon className="text-white" size={32} />
-          <span className="text-2xl font-bold">Lingoung Bank</span>
-        </div>
+        <Logo size={32} showText={true} textWhite={true} />
         <div className="flex gap-4">
           <Link href="/login">
             <Button variant="ghost" className="text-white hover:bg-white/20">
