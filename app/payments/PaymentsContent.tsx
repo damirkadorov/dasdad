@@ -290,7 +290,7 @@ export default function PaymentsContent() {
 
             <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
               <p className="text-sm text-blue-600 dark:text-blue-400">
-                💡 You can send money using the recipient's username or email address.
+                💡 You can send money using the recipient&apos;s username or email address.
               </p>
             </div>
           </div>
