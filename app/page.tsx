@@ -120,6 +120,45 @@ export default function Home() {
               </div>
             </div>
           </div>
+
+          {/* Business Banking Section */}
+          <div className="mt-16 bg-gradient-to-br from-slate-900 to-slate-800 backdrop-blur-lg rounded-2xl p-12 border border-amber-500/30">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl mb-4 shadow-2xl">
+                <span className="text-white font-bold text-3xl">B</span>
+              </div>
+              <h3 className="text-3xl font-bold text-white mb-3">Business Banking</h3>
+              <p className="text-slate-300 text-lg max-w-2xl mx-auto">
+                Premium banking services designed for businesses. Accept payments with our POS Terminal and manage your business finances with professional tools.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                <div className="text-3xl mb-3">💼</div>
+                <h4 className="text-lg font-bold text-white mb-2">Business Accounts</h4>
+                <p className="text-slate-400 text-sm">Professional banking with enhanced features and higher limits</p>
+              </div>
+              <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                <div className="text-3xl mb-3">💳</div>
+                <h4 className="text-lg font-bold text-white mb-2">POS Terminal</h4>
+                <p className="text-slate-400 text-sm">Accept card payments from customers within the ecosystem</p>
+              </div>
+              <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                <div className="text-3xl mb-3">📊</div>
+                <h4 className="text-lg font-bold text-white mb-2">Business Analytics</h4>
+                <p className="text-slate-400 text-sm">Track transactions and manage your business operations</p>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <Link href="/business">
+                <Button size="lg" className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-2xl">
+                  Explore Business Banking →
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>

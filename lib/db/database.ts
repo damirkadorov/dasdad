@@ -41,6 +41,11 @@ export async function updateUser(id: string, updates: Partial<User>): Promise<Us
 }
 
 // Card operations - now using MongoDB
+export async function getAllCards(): Promise<Card[]> {
+  const cards = await getCardsCollection();
+  return await cards.find({}).toArray();
+}
+
 export async function getCardsByUserId(userId: string): Promise<Card[]> {
   const cards = await getCardsCollection();
   return await cards.find({ userId }).toArray();
