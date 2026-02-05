@@ -1,6 +1,6 @@
 // MongoDB database operations (replacing JSON file storage)
-import { User, Card, Transaction, BankAccount, Trade, Loan, SavingsAccount, CreditCard, Bill, Investment, Product, Order } from './types';
-import { getUsersCollection, getCardsCollection, getTransactionsCollection, getBankAccountsCollection, getTradesCollection, getLoansCollection, getSavingsAccountsCollection, getCreditCardsCollection, getBillsCollection, getInvestmentsCollection, getProductsCollection, getOrdersCollection } from './mongodb';
+import { User, Card, Transaction, BankAccount, Trade, Loan, SavingsAccount, CreditCard, Bill, Investment, Product, Order, ApiKey, Payment } from './types';
+import { getUsersCollection, getCardsCollection, getTransactionsCollection, getBankAccountsCollection, getTradesCollection, getLoansCollection, getSavingsAccountsCollection, getCreditCardsCollection, getBillsCollection, getInvestmentsCollection, getProductsCollection, getOrdersCollection, getApiKeysCollection, getPaymentsCollection } from './mongodb';
 
 // User operations - now using MongoDB
 export async function getAllUsers(): Promise<User[]> {
@@ -285,6 +285,60 @@ export async function createOrder(order: Order): Promise<Order> {
 export async function updateOrder(id: string, updates: Partial<Order>): Promise<Order | null> {
   const orders = await getOrdersCollection();
   const result = await orders.findOneAndUpdate(
+    { id },
+    { $set: updates },
+    { returnDocument: 'after' }
+  );
+  return result ?? null;
+}
+
+// API Key operations - Payment Gateway
+export async function getApiKeysByUserId(userId: string): Promise<ApiKey[]> {
+  const apiKeys = await getApiKeysCollection();
+  return await apiKeys.find({ userId }).toArray();
+}
+
+export async function getApiKeyByKey(key: string): Promise<ApiKey | null> {
+  const apiKeys = await getApiKeysCollection();
+  return await apiKeys.findOne({ key, status: 'active' });
+}
+
+export async function createApiKey(apiKey: ApiKey): Promise<ApiKey> {
+  const apiKeys = await getApiKeysCollection();
+  await apiKeys.insertOne(apiKey);
+  return apiKey;
+}
+
+export async function updateApiKey(id: string, updates: Partial<ApiKey>): Promise<ApiKey | null> {
+  const apiKeys = await getApiKeysCollection();
+  const result = await apiKeys.findOneAndUpdate(
+    { id },
+    { $set: updates },
+    { returnDocument: 'after' }
+  );
+  return result ?? null;
+}
+
+// Payment operations - Payment Gateway
+export async function getPaymentById(id: string): Promise<Payment | null> {
+  const payments = await getPaymentsCollection();
+  return await payments.findOne({ id });
+}
+
+export async function getPaymentsByMerchantId(merchantId: string): Promise<Payment[]> {
+  const payments = await getPaymentsCollection();
+  return await payments.find({ merchantId }).sort({ createdAt: -1 }).toArray();
+}
+
+export async function createPayment(payment: Payment): Promise<Payment> {
+  const payments = await getPaymentsCollection();
+  await payments.insertOne(payment);
+  return payment;
+}
+
+export async function updatePayment(id: string, updates: Partial<Payment>): Promise<Payment | null> {
+  const payments = await getPaymentsCollection();
+  const result = await payments.findOneAndUpdate(
     { id },
     { $set: updates },
     { returnDocument: 'after' }

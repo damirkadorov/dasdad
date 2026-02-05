@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Gateway Integration Example</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #1a202c;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        p {
+            color: #718096;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #4a5568;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-error {
+            background: #fed7d7;
+            color: #c53030;
+            border: 1px solid #fc8181;
+        }
+
+        .alert-success {
+            background: #c6f6d5;
+            color: #2f855a;
+            border: 1px solid #9ae6b4;
+        }
+
+        .code-block {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+
+        .code-block h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .code-block pre {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .info-box {
+            background: #edf2f7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-box h3 {
+            color: #1a202c;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .info-box p {
+            color: #4a5568;
+            margin: 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Payment Gateway Demo</h1>
+        <p>This is an example of integrating our payment gateway into your website. Enter your API key and payment details to test the integration.</p>
+
+        <!-- Error/Success Messages -->
+        <div id="message"></div>
+
+        <!-- Payment Form -->
+        <form id="paymentForm">
+            <div class="form-group">
+                <label for="apiKey">API Key *</label>
+                <input type="text" id="apiKey" placeholder="pk_xxxxxxxxxxxxxxxx" required>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount *</label>
+                <input type="number" id="amount" placeholder="100" min="0.01" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label for="currency">Currency *</label>
+                <input type="text" id="currency" placeholder="USD" value="USD" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description *</label>
+                <input type="text" id="description" placeholder="Order #12345" required>
+            </div>
+
+            <div class="form-group">
+                <label for="customerEmail">Customer Email</label>
+                <input type="email" id="customerEmail" placeholder="customer@example.com">
+            </div>
+
+            <div class="form-group">
+                <label for="orderId">Order ID (optional)</label>
+                <input type="text" id="orderId" placeholder="12345">
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">
+                Create Payment
+            </button>
+        </form>
+
+        <!-- Info Box -->
+        <div class="info-box">
+            <h3>ℹ️ How it works</h3>
+            <p>1. Fill in the form with your API key and payment details</p>
+            <p>2. Click "Create Payment" to initialize the payment</p>
+            <p>3. You'll be redirected to the secure payment page</p>
+            <p>4. Customer completes the payment</p>
+            <p>5. You receive a webhook notification (if configured)</p>
+        </div>
+
+        <!-- Code Example -->
+        <div class="code-block">
+            <h3>📄 JavaScript Integration Example</h3>
+            <pre>// Create a payment
+const response = await fetch('YOUR_API_URL/api/payment-gateway/payments', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': 'your_api_key_here'
+    },
+    body: JSON.stringify({
+        amount: 100,
+        currency: 'USD',
+        description: 'Order #12345',
+        customerEmail: 'customer@example.com',
+        orderId: '12345',
+        successUrl: 'https://yoursite.com/success',
+        webhookUrl: 'https://yoursite.com/webhook'
+    })
+});
+
+const data = await response.json();
+
+if (data.success) {
+    // Redirect to payment page
+    window.location.href = data.paymentUrl;
+}</pre>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('paymentForm');
+        const messageDiv = document.getElementById('message');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Update this with your actual API URL
+        const API_URL = 'http://localhost:3000'; // Change to your deployment URL
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Clear previous messages
+            messageDiv.innerHTML = '';
+            
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
+
+            try {
+                // Get form values
+                const apiKey = document.getElementById('apiKey').value;
+                const amount = parseFloat(document.getElementById('amount').value);
+                const currency = document.getElementById('currency').value;
+                const description = document.getElementById('description').value;
+                const customerEmail = document.getElementById('customerEmail').value;
+                const orderId = document.getElementById('orderId').value;
+
+                // Create payment
+                const response = await fetch(`${API_URL}/api/payment-gateway/payments`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': apiKey
+                    },
+                    body: JSON.stringify({
+                        amount,
+                        currency,
+                        description,
+                        customerEmail: customerEmail || undefined,
+                        orderId: orderId || undefined,
+                        successUrl: window.location.href + '?success=true',
+                        cancelUrl: window.location.href + '?cancelled=true'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Show success message
+                    messageDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            Payment created successfully! Redirecting to payment page...
+                        </div>
+                    `;
+
+                    // Redirect to payment page after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = data.paymentUrl;
+                    }, 2000);
+                } else {
+                    throw new Error(data.error || 'Failed to create payment');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                messageDiv.innerHTML = `
+                    <div class="alert alert-error">
+                        Error: ${error.message}
+                    </div>
+                `;
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Create Payment';
+            }
+        });
+
+        // Check for return parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success') === 'true') {
+            messageDiv.innerHTML = `
+                <div class="alert alert-success">
+                    Payment completed successfully! ✓
+                </div>
+            `;
+        } else if (urlParams.get('cancelled') === 'true') {
+            messageDiv.innerHTML = `
+                <div class="alert alert-error">
+                    Payment was cancelled.
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

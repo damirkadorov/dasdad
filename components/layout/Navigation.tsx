@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { HomeIcon, CardIcon, PaymentIcon, TransactionIcon, ProfileIcon, MenuIcon } from '@/components/icons/Icons';
+import { HomeIcon, CardIcon, PaymentIcon, TransactionIcon, ProfileIcon, MenuIcon, CodeIcon } from '@/components/icons/Icons';
 import Logo from './Logo';
 
 export default function Navigation() {
@@ -13,6 +13,7 @@ export default function Navigation() {
     { href: '/cards', label: 'Cards', Icon: CardIcon },
     { href: '/payments', label: 'Payments', Icon: PaymentIcon },
     { href: '/transactions', label: 'Transactions', Icon: TransactionIcon },
+    { href: '/developer', label: 'Developer', Icon: CodeIcon },
     { href: '/profile', label: 'Profile', Icon: ProfileIcon },
   ];
 
@@ -48,7 +49,7 @@ export default function Navigation() {
         </div>
         
         {/* Mobile navigation */}
-        <div className="md:hidden pb-4 grid grid-cols-5 gap-2">
+        <div className="md:hidden pb-4 grid grid-cols-6 gap-2">
           {links.map((link) => (
             <Link
               key={link.href}

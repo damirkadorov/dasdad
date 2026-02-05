@@ -224,6 +224,42 @@ export interface Order {
   completedAt?: string;
 }
 
+// Payment Gateway API Key
+export interface ApiKey {
+  id: string;
+  userId: string;
+  key: string;
+  name: string;
+  domain?: string;
+  status: 'active' | 'inactive';
+  createdAt: string;
+  lastUsed?: string;
+}
+
+// Payment Gateway Payment
+export interface Payment {
+  id: string;
+  apiKeyId: string;
+  merchantId: string;
+  amount: number;
+  currency: Currency;
+  description: string;
+  customerEmail?: string;
+  customerName?: string;
+  orderId?: string;
+  metadata?: Record<string, any>;
+  status: 'pending' | 'processing' | 'completed' | 'failed' | 'refunded';
+  paymentMethod?: 'card' | 'balance';
+  cardId?: string;
+  payerId?: string;
+  successUrl?: string;
+  cancelUrl?: string;
+  webhookUrl?: string;
+  createdAt: string;
+  completedAt?: string;
+  failedReason?: string;
+}
+
 export interface Database {
   users: User[];
   cards: Card[];
@@ -237,4 +273,6 @@ export interface Database {
   investments?: Investment[];
   products?: Product[];
   orders?: Order[];
+  apiKeys?: ApiKey[];
+  payments?: Payment[];
 }
