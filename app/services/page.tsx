@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Navigation from '@/components/layout/Navigation';
 import {
@@ -42,7 +40,6 @@ interface Service {
 }
 
 export default function ServicesPage() {
-  const router = useRouter();
 
   const services: Service[] = [
     {

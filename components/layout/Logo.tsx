@@ -15,7 +15,6 @@ export default function Logo({ size = 32, showText = true, className = '', textW
         alt="Lingoung Bank Logo" 
         width={size} 
         height={size}
-        className="text-purple-600"
       />
       {showText && (
         <span className={`text-2xl font-bold ${textWhite ? 'text-white' : 'bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent'}`}>

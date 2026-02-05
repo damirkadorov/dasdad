@@ -191,6 +191,15 @@ export default function PaymentsContent() {
     }
   };
 
+  // Helper function for tab button styling
+  const getTabClassName = (tab: typeof activeTab) => {
+    return `flex-1 py-3 px-4 rounded-lg font-semibold transition-all whitespace-nowrap ${
+      activeTab === tab
+        ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
+        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+    }`;
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Navigation />
@@ -202,41 +211,25 @@ export default function PaymentsContent() {
         <div className="flex space-x-2 mb-6 overflow-x-auto">
           <button
             onClick={() => setActiveTab('topup')}
-            className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all whitespace-nowrap ${
-              activeTab === 'topup'
-                ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
-                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-            }`}
+            className={getTabClassName('topup')}
           >
             Top Up
           </button>
           <button
             onClick={() => setActiveTab('send')}
-            className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all whitespace-nowrap ${
-              activeTab === 'send'
-                ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
-                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-            }`}
+            className={getTabClassName('send')}
           >
             Send Money
           </button>
           <button
             onClick={() => setActiveTab('iban')}
-            className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all whitespace-nowrap ${
-              activeTab === 'iban'
-                ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
-                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-            }`}
+            className={getTabClassName('iban')}
           >
             IBAN Transfer
           </button>
           <button
             onClick={() => setActiveTab('nfc')}
-            className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all whitespace-nowrap ${
-              activeTab === 'nfc'
-                ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
-                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-            }`}
+            className={getTabClassName('nfc')}
           >
             NFC Payment
           </button>
