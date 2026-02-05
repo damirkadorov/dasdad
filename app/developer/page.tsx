@@ -282,70 +282,174 @@ export default function DeveloperPage() {
         <div className="mt-8 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl shadow-md p-6">
           <h2 className="text-xl font-bold text-gray-800 mb-4">📚 Quick Start Guide</h2>
           
-          <div className="space-y-4 text-sm">
-            <div>
-              <h3 className="font-semibold text-gray-800 mb-2">1. Create a Payment</h3>
-              <pre className="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto">
+          <div className="space-y-6 text-sm">
+            {/* Step 1 */}
+            <div className="bg-white rounded-lg p-5 shadow-sm">
+              <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                <span className="bg-purple-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
+                Create a Payment
+              </h3>
+              <p className="text-gray-600 mb-3">
+                Send a POST request to create a new payment. The response will include a <code className="bg-gray-200 px-2 py-1 rounded">paymentUrl</code> where your customer will complete the payment.
+              </p>
+              <pre className="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs">
 {`POST /api/payment-gateway/payments
 Headers:
   X-API-Key: your_api_key_here
   Content-Type: application/json
 
-Body:
+Request Body:
 {
+  "amount": 100,              // Required: Payment amount
+  "currency": "USD",          // Required: USD, EUR, GBP, CHF, JPY, CAD, AUD
+  "description": "Order #123",// Required: Payment description
+  "customerEmail": "customer@example.com",  // Optional
+  "orderId": "12345",         // Optional: Your order reference
+  "successUrl": "https://yoursite.com/success",  // Optional: Redirect after payment
+  "webhookUrl": "https://yoursite.com/webhook"   // Optional: Receive notifications
+}`}
+              </pre>
+              <div className="mt-3 p-3 bg-green-50 rounded-lg">
+                <p className="font-medium text-green-800 mb-2">✅ Success Response (201):</p>
+                <pre className="text-green-700 text-xs overflow-x-auto">
+{`{
+  "success": true,
+  "paymentId": "abc123-uuid",
+  "paymentUrl": "https://yourbank.com/payment/abc123-uuid",
+  "status": "pending",
   "amount": 100,
-  "currency": "USD",
-  "description": "Order #12345",
-  "customerEmail": "customer@example.com",
-  "orderId": "12345",
-  "successUrl": "https://yoursite.com/success",
-  "webhookUrl": "https://yoursite.com/webhook"
+  "currency": "USD"
+}`}
+                </pre>
+              </div>
+            </div>
+
+            {/* Step 2 */}
+            <div className="bg-white rounded-lg p-5 shadow-sm">
+              <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                <span className="bg-purple-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
+                Redirect Customer
+              </h3>
+              <p className="text-gray-600 mb-3">
+                Redirect your customer to the <code className="bg-gray-200 px-2 py-1 rounded">paymentUrl</code> returned in the response. They will enter their card details on our secure payment page.
+              </p>
+              <pre className="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs">
+{`// JavaScript example
+if (response.success) {
+  // Redirect customer to payment page
+  window.location.href = response.paymentUrl;
 }`}
               </pre>
             </div>
 
-            <div>
-              <h3 className="font-semibold text-gray-800 mb-2">2. Redirect Customer</h3>
-              <p className="text-gray-600 mb-2">
-                Redirect your customer to the <code className="bg-gray-200 px-2 py-1 rounded">paymentUrl</code> returned in the response.
+            {/* Step 3 */}
+            <div className="bg-white rounded-lg p-5 shadow-sm">
+              <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                <span className="bg-purple-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
+                Handle Webhook Notifications
+              </h3>
+              <p className="text-gray-600 mb-3">
+                When a payment is completed, we&apos;ll send a POST request to your <code className="bg-gray-200 px-2 py-1 rounded">webhookUrl</code> with the payment details. Use this to fulfill the order.
               </p>
-            </div>
-
-            <div>
-              <h3 className="font-semibold text-gray-800 mb-2">3. Handle Webhook</h3>
-              <p className="text-gray-600 mb-2">
-                Receive payment confirmation via webhook when the payment is completed.
-              </p>
-              <pre className="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto">
-{`{
+              <pre className="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs">
+{`// Webhook payload you will receive:
+{
   "event": "payment.completed",
-  "paymentId": "uuid",
+  "paymentId": "abc123-uuid",
   "amount": 100,
   "currency": "USD",
   "orderId": "12345",
   "timestamp": "2024-01-01T00:00:00.000Z"
-}`}
+}
+
+// Example webhook handler (Node.js/Express):
+app.post('/webhook', (req, res) => {
+  const { event, paymentId, orderId, amount } = req.body;
+  
+  if (event === 'payment.completed') {
+    // Fulfill the order
+    console.log(\`Payment \${paymentId} completed for order \${orderId}\`);
+    processOrder(orderId);
+  }
+  
+  res.status(200).send('OK');
+});`}
               </pre>
             </div>
 
-            <div>
-              <h3 className="font-semibold text-gray-800 mb-2">4. Check Payment Status</h3>
-              <pre className="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto">
-{`GET /api/payment-gateway/payments?paymentId=xxx
+            {/* Step 4 */}
+            <div className="bg-white rounded-lg p-5 shadow-sm">
+              <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                <span className="bg-purple-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">4</span>
+                Check Payment Status (Optional)
+              </h3>
+              <p className="text-gray-600 mb-3">
+                You can check the status of any payment using the payment ID.
+              </p>
+              <pre className="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs">
+{`GET /api/payment-gateway/payments?paymentId=abc123-uuid
 Headers:
   X-API-Key: your_api_key_here`}
               </pre>
+              <div className="mt-3 p-3 bg-blue-50 rounded-lg">
+                <p className="font-medium text-blue-800 mb-2">📋 Response:</p>
+                <pre className="text-blue-700 text-xs overflow-x-auto">
+{`{
+  "paymentId": "abc123-uuid",
+  "status": "completed",  // pending, processing, completed, failed
+  "amount": 100,
+  "currency": "USD",
+  "description": "Order #123",
+  "orderId": "12345",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "completedAt": "2024-01-01T00:01:00.000Z"
+}`}
+                </pre>
+              </div>
             </div>
           </div>
 
-          <div className="mt-6 pt-6 border-t border-purple-200">
-            <h3 className="font-semibold text-gray-800 mb-2">Supported Currencies</h3>
-            <p className="text-gray-600">USD, EUR, GBP, CHF, JPY, CAD, AUD</p>
+          {/* API Reference */}
+          <div className="mt-8 pt-6 border-t border-purple-200">
+            <h3 className="font-bold text-gray-800 mb-4">📖 API Reference</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <h4 className="font-semibold text-gray-800 mb-2">Supported Currencies</h4>
+                <div className="flex flex-wrap gap-2">
+                  {['🇺🇸 USD', '🇪🇺 EUR', '🇬🇧 GBP', '🇨🇭 CHF', '🇯🇵 JPY', '🇨🇦 CAD', '🇦🇺 AUD'].map(c => (
+                    <span key={c} className="px-2 py-1 bg-gray-100 rounded text-xs">{c}</span>
+                  ))}
+                </div>
+              </div>
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <h4 className="font-semibold text-gray-800 mb-2">Transaction Fee</h4>
+                <p className="text-gray-600">
+                  <span className="text-2xl font-bold text-purple-600">2.5%</span>
+                  <span className="text-sm ml-2">per successful transaction</span>
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div className="mt-4">
-            <h3 className="font-semibold text-gray-800 mb-2">Transaction Fee</h3>
-            <p className="text-gray-600">2.5% per transaction</p>
+          {/* Error Handling */}
+          <div className="mt-6 pt-6 border-t border-purple-200">
+            <h3 className="font-bold text-gray-800 mb-4">⚠️ Error Handling</h3>
+            <div className="bg-white rounded-lg p-4 shadow-sm">
+              <p className="text-gray-600 mb-3">All errors return a JSON response with an <code className="bg-gray-200 px-1 py-0.5 rounded">error</code> field:</p>
+              <pre className="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs">
+{`// Error Response Example:
+{
+  "error": "Invalid API key"  // Description of the error
+}
+
+// Common HTTP Status Codes:
+// 400 - Bad Request (missing/invalid fields)
+// 401 - Unauthorized (invalid API key)
+// 403 - Forbidden (not authorized for this resource)
+// 404 - Not Found (payment not found)
+// 500 - Internal Server Error`}
+              </pre>
+            </div>
           </div>
         </div>
       </div>
