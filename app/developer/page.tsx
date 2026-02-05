@@ -134,6 +134,27 @@ export default function DeveloperPage() {
           </p>
         </div>
 
+        {/* Info Banner - Where to find API keys */}
+        <div className="mb-6 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl p-5">
+          <div className="flex items-start space-x-3">
+            <div className="flex-shrink-0">
+              <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <h3 className="text-sm font-semibold text-gray-800 mb-1">
+                ℹ️ Правильное место для создания API ключей
+              </h3>
+              <p className="text-sm text-gray-700">
+                <strong>Вы находитесь на правильной странице!</strong> Здесь создаются API ключи для интеграции платежной системы на ваш сайт. 
+                API ключи <strong className="text-red-600">НЕ создаются</strong> в бизнес-дашборде (<code className="bg-gray-200 px-1 py-0.5 rounded">/business/dashboard</code>) - 
+                там только управление банковским счетом.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Create API Key Button */}
         <div className="mb-6">
           <Button
