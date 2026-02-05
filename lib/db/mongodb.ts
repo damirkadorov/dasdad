@@ -1,5 +1,5 @@
 import { MongoClient, Db, Collection } from 'mongodb';
-import { User, Card, Transaction, BankAccount, Trade } from './types';
+import { User, Card, Transaction, BankAccount, Trade, Loan, SavingsAccount, CreditCard, Bill, Investment } from './types';
 
 // MongoDB connection URI from environment variable
 // Will be validated when connecting, not at module load time (for build compatibility)
@@ -78,4 +78,44 @@ export async function getBankAccountsCollection(): Promise<Collection<BankAccoun
 export async function getTradesCollection(): Promise<Collection<Trade>> {
   const db = await connectToDatabase();
   return db.collection<Trade>('trades');
+}
+
+/**
+ * Get the loans collection
+ */
+export async function getLoansCollection(): Promise<Collection<Loan>> {
+  const db = await connectToDatabase();
+  return db.collection<Loan>('loans');
+}
+
+/**
+ * Get the savings accounts collection
+ */
+export async function getSavingsAccountsCollection(): Promise<Collection<SavingsAccount>> {
+  const db = await connectToDatabase();
+  return db.collection<SavingsAccount>('savingsAccounts');
+}
+
+/**
+ * Get the credit cards collection
+ */
+export async function getCreditCardsCollection(): Promise<Collection<CreditCard>> {
+  const db = await connectToDatabase();
+  return db.collection<CreditCard>('creditCards');
+}
+
+/**
+ * Get the bills collection
+ */
+export async function getBillsCollection(): Promise<Collection<Bill>> {
+  const db = await connectToDatabase();
+  return db.collection<Bill>('bills');
+}
+
+/**
+ * Get the investments collection
+ */
+export async function getInvestmentsCollection(): Promise<Collection<Investment>> {
+  const db = await connectToDatabase();
+  return db.collection<Investment>('investments');
 }

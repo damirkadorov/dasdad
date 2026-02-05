@@ -1,6 +1,6 @@
 // MongoDB database operations (replacing JSON file storage)
-import { User, Card, Transaction, BankAccount, Trade } from './types';
-import { getUsersCollection, getCardsCollection, getTransactionsCollection, getBankAccountsCollection, getTradesCollection } from './mongodb';
+import { User, Card, Transaction, BankAccount, Trade, Loan, SavingsAccount, CreditCard, Bill, Investment } from './types';
+import { getUsersCollection, getCardsCollection, getTransactionsCollection, getBankAccountsCollection, getTradesCollection, getLoansCollection, getSavingsAccountsCollection, getCreditCardsCollection, getBillsCollection, getInvestmentsCollection } from './mongodb';
 
 // User operations - now using MongoDB
 export async function getAllUsers(): Promise<User[]> {
@@ -137,4 +137,88 @@ export async function createTrade(trade: Trade): Promise<Trade> {
   const trades = await getTradesCollection();
   await trades.insertOne(trade);
   return trade;
+}
+
+// Loan operations
+export async function getLoansByUserId(userId: string): Promise<Loan[]> {
+  const loans = await getLoansCollection();
+  return await loans.find({ userId }).sort({ createdAt: -1 }).toArray();
+}
+
+export async function getLoanById(id: string): Promise<Loan | null> {
+  const loans = await getLoansCollection();
+  return await loans.findOne({ id });
+}
+
+export async function createLoan(loan: Loan): Promise<Loan> {
+  const loans = await getLoansCollection();
+  await loans.insertOne(loan);
+  return loan;
+}
+
+export async function updateLoan(id: string, updates: Partial<Loan>): Promise<Loan | null> {
+  const loans = await getLoansCollection();
+  const result = await loans.findOneAndUpdate(
+    { id },
+    { $set: updates },
+    { returnDocument: 'after' }
+  );
+  return result ?? null;
+}
+
+// Savings account operations
+export async function getSavingsAccountsByUserId(userId: string): Promise<SavingsAccount[]> {
+  const savingsAccounts = await getSavingsAccountsCollection();
+  return await savingsAccounts.find({ userId }).toArray();
+}
+
+export async function createSavingsAccount(savingsAccount: SavingsAccount): Promise<SavingsAccount> {
+  const savingsAccounts = await getSavingsAccountsCollection();
+  await savingsAccounts.insertOne(savingsAccount);
+  return savingsAccount;
+}
+
+// Credit card operations
+export async function getCreditCardsByUserId(userId: string): Promise<CreditCard[]> {
+  const creditCards = await getCreditCardsCollection();
+  return await creditCards.find({ userId }).toArray();
+}
+
+export async function createCreditCard(creditCard: CreditCard): Promise<CreditCard> {
+  const creditCards = await getCreditCardsCollection();
+  await creditCards.insertOne(creditCard);
+  return creditCard;
+}
+
+// Bill operations
+export async function getBillsByUserId(userId: string): Promise<Bill[]> {
+  const bills = await getBillsCollection();
+  return await bills.find({ userId }).toArray();
+}
+
+export async function getBillById(id: string): Promise<Bill | null> {
+  const bills = await getBillsCollection();
+  return await bills.findOne({ id });
+}
+
+export async function updateBill(id: string, updates: Partial<Bill>): Promise<Bill | null> {
+  const bills = await getBillsCollection();
+  const result = await bills.findOneAndUpdate(
+    { id },
+    { $set: updates },
+    { returnDocument: 'after' }
+  );
+  return result ?? null;
+}
+
+// Investment operations
+export async function getInvestmentsByUserId(userId: string): Promise<Investment[]> {
+  const investments = await getInvestmentsCollection();
+  return await investments.find({ userId }).toArray();
+}
+
+export async function createInvestment(investment: Investment): Promise<Investment> {
+  const investments = await getInvestmentsCollection();
+  await investments.insertOne(investment);
+  return investment;
 }

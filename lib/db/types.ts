@@ -59,22 +59,34 @@ export interface Card {
 export interface Transaction {
   id: string;
   userId: string;
-  type: 'top_up' | 'send' | 'receive' | 'nfc_payment' | 'crypto_buy' | 'crypto_sell' | 'crypto_transfer' | 'currency_exchange' | 'iban_transfer';
+  type: 'top_up' | 'send' | 'receive' | 'nfc_payment' | 'crypto_buy' | 'crypto_sell' | 'crypto_transfer' | 'currency_exchange' | 'iban_transfer' | 'IBAN_TRANSFER' | 'IBAN_RECEIVE' | 'LOAN_DISBURSED' | 'LOAN_PAYMENT' | 'SAVINGS_DEPOSIT' | 'SAVINGS_WITHDRAWAL' | 'BILL_PAYMENT' | 'INVESTMENT_BUY' | 'INVESTMENT_SELL';
   amount: number;
   currency: Currency; // Transaction currency
   cryptoAmount?: number; // For crypto transactions
   cryptoType?: CryptoType; // For crypto transactions
-  balanceBefore: number;
-  balanceAfter: number;
+  balanceBefore?: number;
+  balanceAfter?: number;
   recipientId?: string;
   senderId?: string;
   cardId?: string;
   bankAccountId?: string; // For IBAN transfers
-  fee: number; // Transaction fee
+  loanId?: string;
+  savingsAccountId?: string;
+  billId?: string;
+  billType?: string;
+  investmentId?: string;
+  investmentType?: string;
+  symbol?: string;
+  from?: string;
+  to?: string;
+  iban?: string;
+  reference?: string;
+  fee?: number; // Transaction fee
   exchangeRate?: number; // For currency/crypto exchange
-  description: string;
-  status: 'completed' | 'failed' | 'pending';
-  createdAt: string;
+  description?: string;
+  status?: 'completed' | 'failed' | 'pending';
+  createdAt?: string;
+  timestamp?: string;
 }
 
 // Crypto trade
@@ -92,10 +104,100 @@ export interface Trade {
   createdAt: string;
 }
 
+// Loan
+export interface Loan {
+  id: string;
+  userId: string;
+  amount: number;
+  currency: Currency;
+  termMonths: number;
+  interestRate: number;
+  monthlyPayment: number;
+  remainingAmount: number;
+  purpose: string;
+  status: 'active' | 'paid' | 'defaulted';
+  disbursedAt: string;
+  nextPaymentDue: string;
+  paidAt?: string;
+  createdAt: string;
+}
+
+// Savings Account
+export interface SavingsAccount {
+  id: string;
+  userId: string;
+  name: string;
+  currency: Currency;
+  balance: number;
+  interestRate: number;
+  termMonths?: number;
+  status: 'active' | 'closed';
+  createdAt: string;
+  maturityDate: string | null;
+}
+
+// Credit Card
+export interface CreditCard {
+  id: string;
+  userId: string;
+  cardNumber: string;
+  cardType: string;
+  currency: Currency;
+  creditLimit: number;
+  availableCredit: number;
+  usedCredit: number;
+  apr: number;
+  minimumPayment: number;
+  statementBalance: number;
+  nextStatementDate: string;
+  paymentDueDate: string;
+  status: 'active' | 'frozen' | 'closed';
+  rewards: number;
+  cvv: string;
+  expiryDate: string;
+  createdAt: string;
+}
+
+// Bill
+export interface Bill {
+  id: string;
+  userId: string;
+  type: string;
+  amount: number;
+  currency: Currency;
+  dueDate: string;
+  status: 'pending' | 'paid' | 'overdue';
+  provider: string;
+  paidAt?: string;
+  createdAt: string;
+}
+
+// Investment
+export interface Investment {
+  id: string;
+  userId: string;
+  type: string; // 'stock', 'bond', 'etf'
+  symbol: string;
+  quantity: number;
+  purchasePrice: number;
+  currentPrice: number;
+  purchaseAmount: number;
+  currentValue: number;
+  currency: Currency;
+  status: 'active' | 'sold';
+  purchasedAt: string;
+  soldAt?: string;
+}
+
 export interface Database {
   users: User[];
   cards: Card[];
   transactions: Transaction[];
   bankAccounts: BankAccount[];
   trades: Trade[];
+  loans?: Loan[];
+  savingsAccounts?: SavingsAccount[];
+  creditCards?: CreditCard[];
+  bills?: Bill[];
+  investments?: Investment[];
 }
