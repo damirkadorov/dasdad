@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
+import { ExchangeIcon } from '@/components/icons/Icons';
 import { formatCurrencyAmount, getSupportedCurrencies, convertCurrency, getExchangeRate } from '@/lib/utils/currency';
 import { formatCryptoAmount, getSupportedCryptos, getCryptoPrice, cryptoToFiat, fiatToCrypto } from '@/lib/utils/crypto';
 import { Currency, CryptoType } from '@/lib/db/types';
@@ -78,9 +79,12 @@ export default function CurrencyConverter() {
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-        Currency Converter 💱
-      </h2>
+      <div className="flex items-center space-x-2 mb-6">
+        <ExchangeIcon className="text-purple-600 dark:text-purple-400" size={24} />
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Currency Converter
+        </h2>
+      </div>
 
       <div className="space-y-4">
         {/* From */}
@@ -122,11 +126,10 @@ export default function CurrencyConverter() {
         <div className="flex justify-center">
           <button
             onClick={handleSwap}
-            className="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 hover:bg-purple-200 dark:hover:bg-purple-900/50 flex items-center justify-center transition-all"
+            className="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 hover:bg-purple-200 dark:hover:bg-purple-900/50 flex items-center justify-center transition-all hover:scale-110"
+            aria-label="Swap currencies"
           >
-            <svg className="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-            </svg>
+            <ExchangeIcon className="text-purple-600 dark:text-purple-400" size={20} />
           </button>
         </div>
 

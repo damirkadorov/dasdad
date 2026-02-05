@@ -6,6 +6,23 @@ import { getCryptoPrice, cryptoToFiat, fiatToCrypto, calculateCryptoFee } from '
 import { CryptoType, Currency } from '@/lib/db/types';
 import { sendCryptoTradeNotification } from '@/lib/utils/email';
 
+// Generate unique crypto address
+function generateCryptoAddress(cryptoType: string): string {
+  const prefixes: Record<string, string> = {
+    BTC: '1',
+    ETH: '0x',
+    USDT: '0x',
+    BNB: 'bnb',
+    XRP: 'r',
+    ADA: 'addr1',
+    SOL: '',
+    DOGE: 'D',
+  };
+  const prefix = prefixes[cryptoType] || '';
+  const randomPart = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  return prefix + randomPart;
+}
+
 /**
  * POST /api/crypto/trade
  * Buy or sell cryptocurrency
@@ -53,11 +70,21 @@ export async function POST(request: NextRequest) {
     const cryptoWallets = user.cryptoWallets || [];
     const balances = user.balances || [];
 
-    // Find wallet
-    const walletIndex = cryptoWallets.findIndex(w => w.cryptoType === cryptoType);
-    if (walletIndex === -1) {
+    // Find or create wallet
+    let walletIndex = cryptoWallets.findIndex(w => w.cryptoType === cryptoType);
+    if (walletIndex === -1 && type === 'buy') {
+      // Create new wallet when buying crypto for the first time
+      cryptoWallets.push({
+        cryptoType: cryptoType as CryptoType,
+        address: generateCryptoAddress(cryptoType),
+        balance: 0,
+        createdAt: new Date().toISOString(),
+      });
+      walletIndex = cryptoWallets.length - 1;
+    } else if (walletIndex === -1) {
+      // Can't sell if no wallet exists
       return NextResponse.json(
-        { error: `You don't have a ${cryptoType} wallet. Create one first.` },
+        { message: `You don't have any ${cryptoType} to sell.` },
         { status: 400 }
       );
     }
@@ -88,7 +115,7 @@ export async function POST(request: NextRequest) {
       // Check balance
       if (currentBalance < totalCost) {
         return NextResponse.json(
-          { error: 'Insufficient balance' },
+          { message: `Insufficient ${currency} balance. You need ${totalCost.toFixed(2)} ${currency} but only have ${currentBalance.toFixed(2)} ${currency}. Please top up your balance.` },
           { status: 400 }
         );
       }
@@ -105,7 +132,7 @@ export async function POST(request: NextRequest) {
       // Check crypto balance
       if (currentCryptoBalance < cryptoAmount) {
         return NextResponse.json(
-          { error: 'Insufficient crypto balance' },
+          { message: `Insufficient ${cryptoType} balance. You need ${cryptoAmount.toFixed(8)} ${cryptoType} but only have ${currentCryptoBalance.toFixed(8)} ${cryptoType}.` },
           { status: 400 }
         );
       }
@@ -184,7 +211,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Crypto trade error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { message: 'Failed to process crypto trade. Please try again later.' },
       { status: 500 }
     );
   }

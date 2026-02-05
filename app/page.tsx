@@ -2,13 +2,17 @@
 
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
+import { BankIcon, CardIcon, SendIcon, NFCIcon, SecurityIcon, AnalyticsIcon, GlobeIcon, SupportIcon } from '@/components/icons/Icons';
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700">
       {/* Navigation */}
       <nav className="container mx-auto px-4 py-6 flex justify-between items-center">
-        <div className="text-white text-2xl font-bold">PayDemo</div>
+        <div className="flex items-center space-x-2 text-white">
+          <BankIcon className="text-white" size={32} />
+          <span className="text-2xl font-bold">Lingoung Bank</span>
+        </div>
         <div className="flex gap-4">
           <Link href="/login">
             <Button variant="ghost" className="text-white hover:bg-white/20">
@@ -52,25 +56,37 @@ export default function Home() {
           {/* Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
             <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 hover:bg-white/20 transition-all duration-300">
-              <div className="text-5xl mb-4">💳</div>
-              <h3 className="text-xl font-bold text-white mb-3">Virtual Cards</h3>
-              <p className="text-white/80">
-                Create and manage multiple virtual cards instantly. Freeze or delete them anytime.
+              <div className="flex justify-center mb-4">
+                <div className="p-4 bg-white/20 rounded-full">
+                  <CardIcon className="text-white" size={32} />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3 text-center">Virtual & Physical Cards</h3>
+              <p className="text-white/80 text-center">
+                Create and manage multiple cards instantly. Freeze or delete them anytime.
               </p>
             </div>
             
             <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 hover:bg-white/20 transition-all duration-300">
-              <div className="text-5xl mb-4">⚡</div>
-              <h3 className="text-xl font-bold text-white mb-3">Instant Transfers</h3>
-              <p className="text-white/80">
-                Send money to anyone instantly. No delays, no hidden fees.
+              <div className="flex justify-center mb-4">
+                <div className="p-4 bg-white/20 rounded-full">
+                  <SendIcon className="text-white" size={32} />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3 text-center">Instant Transfers</h3>
+              <p className="text-white/80 text-center">
+                Send money to anyone instantly. Multi-currency support, no delays.
               </p>
             </div>
             
             <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 hover:bg-white/20 transition-all duration-300">
-              <div className="text-5xl mb-4">📱</div>
-              <h3 className="text-xl font-bold text-white mb-3">NFC Payments</h3>
-              <p className="text-white/80">
+              <div className="flex justify-center mb-4">
+                <div className="p-4 bg-white/20 rounded-full">
+                  <NFCIcon className="text-white" size={32} />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3 text-center">NFC Payments</h3>
+              <p className="text-white/80 text-center">
                 Tap to pay with your phone. Fast, secure, and contactless.
               </p>
             </div>
@@ -78,23 +94,31 @@ export default function Home() {
 
           {/* Additional Features */}
           <div className="mt-16 bg-white/10 backdrop-blur-lg rounded-2xl p-8">
-            <h3 className="text-2xl font-bold text-white mb-6">Everything you need</h3>
+            <h3 className="text-2xl font-bold text-white mb-6 text-center">Everything you need in one place</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-white/90">
               <div className="flex flex-col items-center">
-                <div className="text-3xl mb-2">🔒</div>
-                <div className="text-sm">Bank-level Security</div>
+                <div className="p-3 bg-white/20 rounded-full mb-2">
+                  <SecurityIcon className="text-white" size={24} />
+                </div>
+                <div className="text-sm text-center">Bank-level Security</div>
               </div>
               <div className="flex flex-col items-center">
-                <div className="text-3xl mb-2">📊</div>
-                <div className="text-sm">Real-time Analytics</div>
+                <div className="p-3 bg-white/20 rounded-full mb-2">
+                  <AnalyticsIcon className="text-white" size={24} />
+                </div>
+                <div className="text-sm text-center">Real-time Analytics</div>
               </div>
               <div className="flex flex-col items-center">
-                <div className="text-3xl mb-2">🌍</div>
-                <div className="text-sm">Global Transfers</div>
+                <div className="p-3 bg-white/20 rounded-full mb-2">
+                  <GlobeIcon className="text-white" size={24} />
+                </div>
+                <div className="text-sm text-center">Global Transfers</div>
               </div>
               <div className="flex flex-col items-center">
-                <div className="text-3xl mb-2">💯</div>
-                <div className="text-sm">24/7 Support</div>
+                <div className="p-3 bg-white/20 rounded-full mb-2">
+                  <SupportIcon className="text-white" size={24} />
+                </div>
+                <div className="text-sm text-center">24/7 Support</div>
               </div>
             </div>
           </div>
