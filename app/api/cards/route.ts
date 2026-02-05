@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { cardType, cardFormat = 'virtual', currency = 'USD' } = body;
+    const { cardType, cardFormat = 'virtual', currency = 'USD', accountType = 'personal' } = body;
 
     // Validate card type
     if (!cardType || !['visa', 'mastercard'].includes(cardType)) {
@@ -68,6 +68,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate account type
+    if (!['personal', 'business'].includes(accountType)) {
+      return NextResponse.json(
+        { error: 'Invalid account type. Must be "personal" or "business"' },
+        { status: 400 }
+      );
+    }
+
     // Generate card details
     const cardNumber = generateCardNumber(cardType as 'visa' | 'mastercard');
     const cvv = generateCVV();
@@ -83,6 +91,7 @@ export async function POST(request: NextRequest) {
       cardType: cardType as 'visa' | 'mastercard',
       cardFormat: cardFormat as 'virtual' | 'physical',
       currency: currency as Currency,
+      accountType: accountType as 'personal' | 'business',
       status: 'active',
       createdAt: new Date().toISOString()
     });

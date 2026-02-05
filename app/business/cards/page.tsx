@@ -60,7 +60,8 @@ export default function BusinessCardsPage() {
         body: JSON.stringify({ 
           cardType, 
           cardFormat,
-          currency: cardCurrency 
+          currency: cardCurrency,
+          accountType: 'business' // Business cards are for business accounts
         })
       });
 
