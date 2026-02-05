@@ -101,7 +101,7 @@ export default function Dashboard() {
 
   const totalFiatBalance = profile?.balances?.reduce((sum, b) => sum + b.amount, 0) || 0;
   const cryptoPortfolioValue = profile?.cryptoWallets && profile.cryptoWallets.length > 0
-    ? calculatePortfolioValue(profile.cryptoWallets, profile.preferredCurrency)
+    ? calculatePortfolioValue(profile.cryptoWallets, profile.preferredCurrency || 'USD')
     : 0;
   const totalBalance = totalFiatBalance + cryptoPortfolioValue;
 
