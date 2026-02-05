@@ -47,3 +47,21 @@ export async function getCurrentUser(): Promise<TokenPayload | null> {
   if (!token) return null;
   return verifyToken(token);
 }
+
+export async function getUserFromRequest(request: Request): Promise<TokenPayload | null> {
+  // Try to get token from cookie
+  const cookieHeader = request.headers.get('cookie');
+  if (!cookieHeader) return null;
+
+  // Parse cookies
+  const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
+    const [key, value] = cookie.trim().split('=');
+    acc[key] = value;
+    return acc;
+  }, {} as Record<string, string>);
+
+  const token = cookies['auth_token'];
+  if (!token) return null;
+
+  return verifyToken(token);
+}
