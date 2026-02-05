@@ -144,7 +144,7 @@ export default function DeveloperPage() {
             </div>
             <div className="flex-1">
               <h3 className="text-sm font-semibold text-gray-800 mb-1">
-                ℹ️ Правильное место для создания API ключей
+                <span aria-hidden="true">ℹ️</span> Правильное место для создания API ключей
               </h3>
               <p className="text-sm text-gray-700">
                 <strong>Вы находитесь на правильной странице!</strong> Здесь создаются API ключи для интеграции платежной системы на ваш сайт. 

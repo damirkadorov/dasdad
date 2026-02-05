@@ -147,7 +147,9 @@ export default function BusinessDashboard() {
                 </svg>
               </div>
               <div className="flex-1">
-                <h3 className="text-xl font-bold text-white mb-2">💳 Payment Gateway API</h3>
+                <h3 className="text-xl font-bold text-white mb-2">
+                  <span aria-hidden="true">💳</span> Payment Gateway API
+                </h3>
                 <p className="text-slate-300 mb-4">
                   Интегрируйте платежную систему в ваш сайт или маркетплейс. Получите API ключи для приема платежей от клиентов.
                 </p>
@@ -155,8 +157,12 @@ export default function BusinessDashboard() {
                   <strong className="text-amber-400">Важно:</strong> API ключи создаются на специальной странице для разработчиков, а не в этом бизнес-дашборде.
                 </p>
                 <Link href="/developer">
-                  <Button variant="primary" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
-                    🔑 Перейти к API ключам
+                  <Button 
+                    variant="primary" 
+                    className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                    aria-label="Go to API Keys page"
+                  >
+                    <span aria-hidden="true">🔑</span> Перейти к API ключам
                   </Button>
                 </Link>
               </div>
