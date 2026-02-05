@@ -349,7 +349,7 @@ export default function POSTerminal() {
         {/* Info Box */}
         <div className="mt-6 bg-blue-900/20 border border-blue-700 rounded-xl p-4">
           <p className="text-blue-400 text-sm">
-            💡 <strong>Tip:</strong> Enter card details from users within your ecosystem. The amount will be deducted from the card owner's balance.
+            💡 <strong>Tip:</strong> Enter <strong>personal card</strong> details from customers. Business POS terminals can only charge personal customer cards, not business cards.
           </p>
         </div>
       </div>

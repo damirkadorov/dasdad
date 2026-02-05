@@ -21,6 +21,15 @@ export default function Card({ card, onClick }: CardProps) {
     >
       {/* Card badges */}
       <div className="absolute top-3 right-3 flex gap-2">
+        {card.accountType && (
+          <div className={`backdrop-blur px-3 py-1 rounded-full text-xs font-semibold ${
+            card.accountType === 'business' 
+              ? 'bg-amber-500/30 text-amber-100 border border-amber-400/50' 
+              : 'bg-blue-500/30 text-blue-100 border border-blue-400/50'
+          }`}>
+            {card.accountType === 'business' ? '💼 Business' : '👤 Personal'}
+          </div>
+        )}
         {card.cardFormat && (
           <div className="bg-white/20 backdrop-blur px-3 py-1 rounded-full text-xs font-semibold">
             {card.cardFormat === 'physical' ? '💳 Physical' : '✨ Virtual'}
