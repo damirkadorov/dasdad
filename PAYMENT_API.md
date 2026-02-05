@@ -18,11 +18,18 @@ Integrate our payment gateway into your website in minutes. Accept payments from
 
 ### 1. Create an API Key
 
+⚠️ **IMPORTANT: API keys are NOT created in your business banking dashboard!**
+
+API keys are created on the **Developer Portal page**:
+
 1. Log in to your account at [https://yourapp.com/developer](https://dasdad-alpha.vercel.app/)
-2. Click "Create New API Key"
-3. Give your API key a name (e.g., "My Website")
-4. Optionally, add your domain for security
-5. Copy and securely store your API key
+2. Navigate to the **`/developer`** page (Developer Portal)
+3. Click the "**Create New API Key**" button
+4. Give your API key a name (e.g., "My Website")
+5. Optionally, add your domain for security
+6. Copy and securely store your API key (starts with `pk_`)
+
+💡 **Tip:** If you're on the business dashboard (`/business/dashboard`), look for the "Payment Gateway API" section and click "🔑 Go to API Keys"
 
 ### 2. Test the Integration
 
