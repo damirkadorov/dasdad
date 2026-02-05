@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Navigation from '@/components/layout/Navigation';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import { CryptoIcon, WalletIcon, TrendingUpIcon } from '@/components/icons/Icons';
 import { formatCurrencyAmount, getSupportedCurrencies } from '@/lib/utils/currency';
 import { formatCryptoAmount, getCryptoPrice, fiatToCrypto, cryptoToFiat, getSupportedCryptos, getCryptoName, CRYPTO_PRICES } from '@/lib/utils/crypto';
 import { CryptoType, Currency, CurrencyBalance } from '@/lib/db/types';
@@ -110,11 +111,14 @@ export default function TradingPage() {
       
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Crypto Trading ₿
-          </h1>
+          <div className="flex items-center space-x-2 mb-2">
+            <CryptoIcon className="text-purple-600 dark:text-purple-400" size={32} />
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              Crypto Trading
+            </h1>
+          </div>
           <p className="text-gray-600 dark:text-gray-400">
-            Buy and sell cryptocurrencies instantly
+            Buy and sell cryptocurrencies instantly with Lingoung Bank
           </p>
         </div>
 
@@ -259,7 +263,10 @@ export default function TradingPage() {
 
           <div className="space-y-6">
             <div className="bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl p-6 text-white shadow-lg">
-              <p className="text-white/80 text-sm mb-2">Current Price</p>
+              <div className="flex items-center space-x-2 mb-2">
+                <TrendingUpIcon className="text-white" size={20} />
+                <p className="text-white/80 text-sm">Current Price</p>
+              </div>
               <h3 className="text-3xl font-bold mb-1">
                 {formatCurrencyAmount(currentPrice, selectedCurrency)}
               </h3>
@@ -267,7 +274,10 @@ export default function TradingPage() {
             </div>
 
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Market Prices</h3>
+              <div className="flex items-center space-x-2 mb-4">
+                <CryptoIcon className="text-purple-600 dark:text-purple-400" size={20} />
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Market Prices</h3>
+              </div>
               <div className="space-y-3">
                 {supportedCryptos.slice(0, 5).map((crypto) => (
                   <div key={crypto} className="flex justify-between items-center">
@@ -290,7 +300,10 @@ export default function TradingPage() {
 
             {profile?.balances && (
               <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Your Balances</h3>
+                <div className="flex items-center space-x-2 mb-4">
+                  <WalletIcon className="text-purple-600 dark:text-purple-400" size={20} />
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white">Your Balances</h3>
+                </div>
                 <div className="space-y-2">
                   {profile.balances.slice(0, 3).map((balance) => (
                     <div key={balance.currency} className="flex justify-between text-sm">
