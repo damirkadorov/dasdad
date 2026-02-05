@@ -73,7 +73,7 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
             {transaction.description}
           </div>
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            {getTypeLabel(transaction.type)} • {formatDate(transaction.createdAt)}
+            {getTypeLabel(transaction.type)} • {formatDate(transaction.createdAt || transaction.timestamp || '')}
             {transaction.cryptoType && transaction.cryptoAmount && (
               <span className="ml-2 text-purple-600 dark:text-purple-400">
                 {formatCryptoAmount(transaction.cryptoAmount, transaction.cryptoType)}

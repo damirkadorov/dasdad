@@ -47,3 +47,26 @@ export async function getCurrentUser(): Promise<TokenPayload | null> {
   if (!token) return null;
   return verifyToken(token);
 }
+
+export async function getUserFromRequest(request: Request): Promise<TokenPayload | null> {
+  // Try to get token from cookie
+  const cookieHeader = request.headers.get('cookie');
+  if (!cookieHeader) return null;
+
+  // Parse cookies - handle '=' in values and URL-encoded content
+  const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
+    const trimmed = cookie.trim();
+    const eqIndex = trimmed.indexOf('=');
+    if (eqIndex > 0) {
+      const key = trimmed.substring(0, eqIndex);
+      const value = decodeURIComponent(trimmed.substring(eqIndex + 1));
+      acc[key] = value;
+    }
+    return acc;
+  }, {} as Record<string, string>);
+
+  const token = cookies['auth_token'];
+  if (!token) return null;
+
+  return verifyToken(token);
+}
