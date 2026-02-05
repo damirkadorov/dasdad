@@ -68,6 +68,20 @@ A full-featured multi-currency banking and cryptocurrency exchange application b
 - Real-time balance updates
 - Email notifications for all transactions
 
+### 🚀 Payment Gateway API (NEW!)
+- **Complete payment integration API** for external websites
+- RESTful API with API key authentication
+- CORS-enabled for cross-origin requests
+- Webhook notifications for payment events
+- Secure payment processing page
+- Support for all 7 currencies
+- 2.5% transaction fee
+- Full API documentation included
+- JavaScript, PHP, Python integration examples
+- Test mode with fake payments
+
+**Integrate payments into your website in minutes!** See [PAYMENT_API.md](PAYMENT_API.md) for full documentation.
+
 ### 📈 Transaction History
 - Complete transaction history with filtering
 - Multiple transaction types: Top Up, Send, Receive, NFC, Crypto Buy/Sell, IBAN Transfer
@@ -358,6 +372,18 @@ Created as a demonstration of modern web development practices with Next.js 14, 
 - Portfolio tracking with charts
 - 1% transaction fees on trades
 
+### Payment Gateway API (v2.1) 🆕
+- **Complete payment integration API** for external websites and marketplaces
+- RESTful API with secure API key authentication
+- CORS support for cross-domain requests
+- Real-time webhook notifications
+- Hosted payment page with secure card processing
+- Multi-currency support (7 currencies)
+- 2.5% transaction fee per payment
+- Full API documentation with code examples
+- Integration examples in JavaScript, PHP, Python
+- Developer dashboard for API key management
+
 ### Enhanced Features
 - Email notifications via SMTP
 - Currency and crypto converter
@@ -388,6 +414,17 @@ Created as a demonstration of modern web development practices with Next.js 14, 
 ### Payments
 - `POST /api/payments/send` - Send money (multi-currency)
 - `POST /api/payments/nfc` - Process NFC payment
+
+### Payment Gateway API (External Integration)
+- `POST /api/payment-gateway/payments` - Initialize payment (requires API key)
+- `GET /api/payment-gateway/payments?paymentId={id}` - Check payment status (requires API key)
+- `GET /api/payment-gateway/keys` - Get user's API keys
+- `POST /api/payment-gateway/keys` - Create new API key
+- `PATCH /api/payment-gateway/keys` - Update API key status
+- `GET /api/payment-gateway/process/[id]` - Get payment details for payment page
+- `POST /api/payment-gateway/process/[id]` - Process payment with card
+
+See [PAYMENT_API.md](PAYMENT_API.md) for complete API documentation and integration examples.
 
 ### Cryptocurrency
 - `GET /api/crypto/wallets` - Get all crypto wallets
@@ -594,6 +631,87 @@ This project demonstrates:
 8. Responsive design with Tailwind CSS
 9. IBAN generation algorithms
 10. Currency conversion systems
+11. **RESTful API design with authentication**
+12. **Payment gateway integration**
+13. **Webhook implementation**
+14. **CORS configuration for external APIs**
+
+## 💻 Payment Gateway Integration
+
+### For Developers: Integrate Payments Into Your Website
+
+This application includes a complete **Payment Gateway API** that you can integrate into any external website or marketplace.
+
+#### Quick Start
+
+1. **Get API Key**
+   - Log in to the application
+   - Navigate to `/developer` page
+   - Create a new API key
+   - Copy your API key (starts with `pk_`)
+
+2. **Test Integration**
+   - Open `/public/integration-example.html` in your browser
+   - Enter your API key
+   - Test creating a payment
+   - Complete payment on the hosted payment page
+
+3. **Integrate Into Your Website**
+   ```javascript
+   // Initialize a payment
+   const response = await fetch('YOUR_APP_URL/api/payment-gateway/payments', {
+     method: 'POST',
+     headers: {
+       'Content-Type': 'application/json',
+       'X-API-Key': 'pk_your_api_key_here'
+     },
+     body: JSON.stringify({
+       amount: 100,
+       currency: 'USD',
+       description: 'Order #12345',
+       successUrl: 'https://yoursite.com/success',
+       webhookUrl: 'https://yoursite.com/webhook'
+     })
+   });
+   
+   const data = await response.json();
+   
+   // Redirect customer to payment page
+   window.location.href = data.paymentUrl;
+   ```
+
+4. **Receive Webhook Notifications**
+   ```javascript
+   app.post('/webhook', (req, res) => {
+     const { event, paymentId, amount } = req.body;
+     
+     if (event === 'payment.completed') {
+       // Process the order
+       fulfillOrder(paymentId);
+     }
+     
+     res.status(200).send('OK');
+   });
+   ```
+
+#### Features
+
+✅ Simple REST API with API key authentication  
+✅ Hosted secure payment page  
+✅ Multi-currency support (7 currencies)  
+✅ Real-time webhook notifications  
+✅ CORS enabled for external websites  
+✅ Transaction fee: 2.5%  
+✅ Full documentation with code examples  
+
+#### Resources
+
+- **Full API Documentation:** [PAYMENT_API.md](PAYMENT_API.md)
+- **Developer Dashboard:** `/developer` page
+- **Integration Example:** `/public/integration-example.html`
+- **Supported Languages:** JavaScript, PHP, Python, and more
+
+This makes it easy to add payment processing to any website, marketplace, or application!
 
 ## 🤝 Contributing
 
