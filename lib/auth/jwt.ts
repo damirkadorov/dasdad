@@ -53,10 +53,15 @@ export async function getUserFromRequest(request: Request): Promise<TokenPayload
   const cookieHeader = request.headers.get('cookie');
   if (!cookieHeader) return null;
 
-  // Parse cookies
+  // Parse cookies - handle '=' in values and URL-encoded content
   const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
-    const [key, value] = cookie.trim().split('=');
-    acc[key] = value;
+    const trimmed = cookie.trim();
+    const eqIndex = trimmed.indexOf('=');
+    if (eqIndex > 0) {
+      const key = trimmed.substring(0, eqIndex);
+      const value = decodeURIComponent(trimmed.substring(eqIndex + 1));
+      acc[key] = value;
+    }
     return acc;
   }, {} as Record<string, string>);
 
