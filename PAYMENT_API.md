@@ -18,7 +18,7 @@ Integrate our payment gateway into your website in minutes. Accept payments from
 
 ### 1. Create an API Key
 
-1. Log in to your account at [https://yourapp.com/developer](https://yourapp.com/developer)
+1. Log in to your account at [https://yourapp.com/developer](https://dasdad-alpha.vercel.app/)
 2. Click "Create New API Key"
 3. Give your API key a name (e.g., "My Website")
 4. Optionally, add your domain for security
@@ -397,13 +397,6 @@ A: We handle all card data securely. You never touch sensitive card information.
 
 ### Q: Can I test without real money?
 A: Yes! This is a demo application. All money is fake for testing purposes.
-
-## Support
-
-Need help? Contact us:
-- Email: support@yourapp.com
-- Documentation: https://yourapp.com/developer
-- GitHub: https://github.com/yourusername/yourrepo
 
 ## Changelog
 
