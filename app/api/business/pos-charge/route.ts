@@ -46,6 +46,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if card belongs to a personal account (not business)
+    // Business POS should only charge personal cards, not other business cards
+    if (card.accountType === 'business') {
+      return NextResponse.json(
+        { error: 'Cannot charge business cards. Please use a personal card for POS payments.' },
+        { status: 400 }
+      );
+    }
+
     // Get the card owner
     const cardOwner = await getUserById(card.userId);
     

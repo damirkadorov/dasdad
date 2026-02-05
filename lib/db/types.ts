@@ -40,6 +40,7 @@ export interface User {
   cryptoWallets: CryptoWallet[]; // Crypto wallets
   bankAccountIds: string[]; // References to BankAccount IDs
   preferredCurrency: Currency; // Default display currency
+  accountType?: 'personal' | 'business'; // Account type (default: personal)
   createdAt: string;
 }
 
@@ -52,6 +53,7 @@ export interface Card {
   cardType: 'visa' | 'mastercard';
   cardFormat: 'virtual' | 'physical'; // Virtual or physical card
   currency: Currency; // Card currency
+  accountType?: 'personal' | 'business'; // Account type the card belongs to (default: personal)
   status: 'active' | 'frozen' | 'blocked';
   createdAt: string;
 }
