@@ -167,7 +167,7 @@ export default function POSTerminal() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">Card:</span>
-                    <span className="text-white">****  {transactionDetails?.cardLast4}</span>
+                    <span className="text-white">**** {transactionDetails?.cardLast4}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">Transaction ID:</span>

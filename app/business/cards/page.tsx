@@ -128,7 +128,7 @@ export default function BusinessCardsPage() {
         {/* Warning */}
         {cards.length >= 5 && (
           <div className="bg-orange-900/20 border border-orange-700 text-orange-400 p-4 rounded-lg mb-6">
-            ⚠️ You&apos;ve reached the maximum limit of 5 cards
+            ⚠️ You've reached the maximum limit of 5 cards
           </div>
         )}
 
