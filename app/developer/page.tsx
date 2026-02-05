@@ -301,7 +301,7 @@ Headers:
 Request Body:
 {
   "amount": 100,              // Required: Payment amount
-  "currency": "USD",          // Required: USD, EUR, GBP, CHF, JPY, CAD, AUD
+  "currency": "USD",          // Required: See supported currencies below
   "description": "Order #123",// Required: Payment description
   "customerEmail": "customer@example.com",  // Optional
   "orderId": "12345",         // Optional: Your order reference

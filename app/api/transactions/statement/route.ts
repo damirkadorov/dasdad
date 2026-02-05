@@ -167,7 +167,7 @@ function generateCSV(transactions: Transaction[], username: string): string {
   const rows = transactions.map(t => {
     const date = formatStatementDate(t.createdAt || t.timestamp);
     const type = t.type;
-    const description = (t.description || '').replace(/,/g, ';').replace(/"/g, "'");
+    const description = (t.description || '').replace(/,/g, ';').replace(/"/g, "'").replace(/[\r\n]+/g, ' ');
     const amount = t.amount.toFixed(2);
     const currency = t.currency;
     const status = t.status || 'completed';

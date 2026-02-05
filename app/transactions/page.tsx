@@ -293,7 +293,7 @@ export default function TransactionsPage() {
                       <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 text-center">
                         <p className="text-sm text-purple-600 dark:text-purple-400">Net Change</p>
                         <p className={`text-xl font-bold ${statement.summary.netChange >= 0 ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'}`}>
-                          {statement.summary.netChange >= 0 ? '+' : ''}{statement.summary.netChange.toFixed(2)}
+                          {statement.summary.netChange >= 0 ? '+$' : '-$'}{Math.abs(statement.summary.netChange).toFixed(2)}
                         </p>
                       </div>
                     </div>
