@@ -29,7 +29,7 @@ function calculateCheckDigits(countryCode: string, bban: string): string {
   );
   
   // Calculate mod 97
-  let remainder = numeric.split('').reduce((acc, digit) => {
+  const remainder = numeric.split('').reduce((acc, digit) => {
     return (acc * 10 + parseInt(digit)) % 97;
   }, 0);
   
