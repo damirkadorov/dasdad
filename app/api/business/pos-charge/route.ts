@@ -31,10 +31,19 @@ export async function POST(request: NextRequest) {
     }
 
     // Find the card in the database
+    // Normalize formats for comparison:
+    // - Card numbers: Database stores with spaces "XXXX XXXX XXXX XXXX", frontend sends without
+    // - Expiry dates: Database stores as "MM/YY", frontend sends as "MMYY"
+    const normalizeCardNumber = (num: string) => num.replace(/\s/g, '');
+    const normalizeExpiry = (exp: string) => exp.replace(/\//g, '');
+    
+    const normalizedInputCardNumber = normalizeCardNumber(cardNumber);
+    const normalizedInputExpiry = normalizeExpiry(expiryDate);
+    
     const allCards = await getAllCards();
     const card = allCards.find(c => 
-      c.cardNumber === cardNumber && 
-      c.expiryDate === expiryDate && 
+      normalizeCardNumber(c.cardNumber) === normalizedInputCardNumber && 
+      normalizeExpiry(c.expiryDate) === normalizedInputExpiry && 
       c.cvv === cvv &&
       c.status === 'active'
     );
