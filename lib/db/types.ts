@@ -61,7 +61,7 @@ export interface Card {
 export interface Transaction {
   id: string;
   userId: string;
-  type: 'top_up' | 'send' | 'receive' | 'nfc_payment' | 'crypto_buy' | 'crypto_sell' | 'crypto_transfer' | 'currency_exchange' | 'iban_transfer' | 'IBAN_TRANSFER' | 'IBAN_RECEIVE' | 'LOAN_DISBURSED' | 'LOAN_PAYMENT' | 'SAVINGS_DEPOSIT' | 'SAVINGS_WITHDRAWAL' | 'BILL_PAYMENT' | 'INVESTMENT_BUY' | 'INVESTMENT_SELL';
+  type: 'top_up' | 'send' | 'receive' | 'nfc_payment' | 'crypto_buy' | 'crypto_sell' | 'crypto_transfer' | 'currency_exchange' | 'iban_transfer' | 'IBAN_TRANSFER' | 'IBAN_RECEIVE' | 'LOAN_DISBURSED' | 'LOAN_PAYMENT' | 'SAVINGS_DEPOSIT' | 'SAVINGS_WITHDRAWAL' | 'BILL_PAYMENT' | 'INVESTMENT_BUY' | 'INVESTMENT_SELL' | 'marketplace_purchase' | 'marketplace_sale';
   amount: number;
   currency: Currency; // Transaction currency
   cryptoAmount?: number; // For crypto transactions
@@ -87,6 +87,8 @@ export interface Transaction {
   exchangeRate?: number; // For currency/crypto exchange
   description?: string;
   status?: 'completed' | 'failed' | 'pending';
+  orderId?: string; // For marketplace orders
+  productId?: string; // For marketplace orders
   createdAt?: string;
   timestamp?: string;
 }
@@ -191,6 +193,37 @@ export interface Investment {
   soldAt?: string;
 }
 
+// Marketplace Product
+export interface Product {
+  id: string;
+  sellerId: string;
+  name: string;
+  description: string;
+  price: number;
+  currency: Currency;
+  category: string;
+  imageUrl?: string;
+  stock: number;
+  status: 'active' | 'inactive' | 'sold_out';
+  createdAt: string;
+}
+
+// Marketplace Order
+export interface Order {
+  id: string;
+  buyerId: string;
+  sellerId: string;
+  productId: string;
+  productName: string;
+  quantity: number;
+  totalAmount: number;
+  currency: Currency;
+  status: 'pending' | 'completed' | 'cancelled';
+  shippingAddress?: string;
+  createdAt: string;
+  completedAt?: string;
+}
+
 export interface Database {
   users: User[];
   cards: Card[];
@@ -202,4 +235,6 @@ export interface Database {
   creditCards?: CreditCard[];
   bills?: Bill[];
   investments?: Investment[];
+  products?: Product[];
+  orders?: Order[];
 }
