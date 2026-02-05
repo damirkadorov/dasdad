@@ -4,6 +4,10 @@ import { requireAuth } from '@/lib/auth/middleware';
 import { getUserById, updateUser, createTransaction, getAllCards } from '@/lib/db/database';
 import { Currency } from '@/lib/db/types';
 
+// Helper functions to normalize card formats for comparison
+const normalizeCardNumber = (num: string) => num.replace(/\s/g, '');
+const normalizeExpiry = (exp: string) => exp.replace(/\//g, '');
+
 export async function POST(request: NextRequest) {
   try {
     // Verify authentication
@@ -34,9 +38,6 @@ export async function POST(request: NextRequest) {
     // Normalize formats for comparison:
     // - Card numbers: Database stores with spaces "XXXX XXXX XXXX XXXX", frontend sends without
     // - Expiry dates: Database stores as "MM/YY", frontend sends as "MMYY"
-    const normalizeCardNumber = (num: string) => num.replace(/\s/g, '');
-    const normalizeExpiry = (exp: string) => exp.replace(/\//g, '');
-    
     const normalizedInputCardNumber = normalizeCardNumber(cardNumber);
     const normalizedInputExpiry = normalizeExpiry(expiryDate);
     
