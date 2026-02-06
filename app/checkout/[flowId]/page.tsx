@@ -270,7 +270,7 @@ export default function CheckoutPage() {
               >
                 <option value="">YY</option>
                 {Array.from({ length: 10 }, (_, i) => {
-                  const year = (new Date().getFullYear() % 100 + i).toString().padStart(2, '0');
+                  const year = ((new Date().getFullYear() + i) % 100).toString().padStart(2, '0');
                   return <option key={year} value={year}>{year}</option>;
                 })}
               </select>

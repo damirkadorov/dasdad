@@ -60,7 +60,7 @@ export async function updateNovapayFlow(flowId: string, updates: Partial<Novapay
     { $set: updates },
     { returnDocument: 'after' }
   );
-  return result ?? null;
+  return result;
 }
 
 /**

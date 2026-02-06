@@ -709,10 +709,16 @@ function findMatchingCard(
 
 /**
  * Check if a card has expired
+ * Assumes YY format (00-99 represents 2000-2099)
  */
 function isCardExpired(expiryDate: string): boolean {
   const [month, year] = expiryDate.split('/');
-  const expiry = new Date(2000 + parseInt(year), parseInt(month) - 1, 1);
+  const yearNum = parseInt(year, 10);
+  // Validate it's a 2-digit year
+  if (isNaN(yearNum) || year.length !== 2) {
+    return true; // Treat invalid format as expired
+  }
+  const expiry = new Date(2000 + yearNum, parseInt(month, 10) - 1, 1);
   expiry.setMonth(expiry.getMonth() + 1); // End of expiry month
   return expiry < new Date();
 }
