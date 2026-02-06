@@ -63,6 +63,7 @@ export async function POST(request: Request) {
     // All NovaPay cards start with "7"
     const generateCardNumber = () => {
       // NovaPay credit cards use prefix 72
+      // 2-digit prefix + 13 random digits + 1 check digit = 16 total digits
       let cardNumber = '72';
       
       for (let i = 0; i < 13; i++) {

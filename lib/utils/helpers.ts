@@ -8,7 +8,7 @@ export function generateCardNumber(type: NovapayCardType): string {
   const prefix = type === 'nova' ? '70' : '71';
   let cardNumber = prefix;
 
-  // Generate 13 more random digits (total 16 digits, minus prefix, minus check digit)
+  // Generate 13 more random digits (2-digit prefix + 13 random + 1 check digit = 16 total)
   for (let i = 0; i < 13; i++) {
     cardNumber += Math.floor(Math.random() * 10);
   }
