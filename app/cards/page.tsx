@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Navigation from '@/components/layout/Navigation';
 import Button from '@/components/ui/Button';
 import CardItem from '@/components/cards/CardItem';
-import { Card, Currency } from '@/lib/db/types';
+import { Card, Currency, NovapayCardType } from '@/lib/db/types';
 import { getSupportedCurrencies } from '@/lib/utils/currency';
 
 export default function CardsPage() {
@@ -15,7 +15,7 @@ export default function CardsPage() {
   const [error, setError] = useState('');
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [creating, setCreating] = useState(false);
-  const [cardType, setCardType] = useState<'visa' | 'mastercard'>('visa');
+  const [cardType, setCardType] = useState<NovapayCardType>('nova');
   const [cardFormat, setCardFormat] = useState<'virtual' | 'physical'>('virtual');
   const [cardCurrency, setCardCurrency] = useState<Currency>('USD');
 
@@ -71,7 +71,7 @@ export default function CardsPage() {
 
       await fetchCards();
       setShowCreateForm(false);
-      setCardType('visa');
+      setCardType('nova');
       setCardFormat('virtual');
       setCardCurrency('USD');
     } catch (err) {
@@ -175,29 +175,29 @@ export default function CardsPage() {
               </label>
               <div className="grid grid-cols-2 gap-4">
                 <button
-                  onClick={() => setCardType('visa')}
+                  onClick={() => setCardType('nova')}
                   className={`p-4 rounded-lg border-2 transition-all ${
-                    cardType === 'visa'
+                    cardType === 'nova'
+                      ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-900/20'
+                      : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
+                  }`}
+                >
+                  <div className="text-2xl mb-2">💳</div>
+                  <div className="font-semibold text-gray-900 dark:text-white">NovaPay</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Teal gradient</div>
+                </button>
+                
+                <button
+                  onClick={() => setCardType('nova-plus')}
+                  className={`p-4 rounded-lg border-2 transition-all ${
+                    cardType === 'nova-plus'
                       ? 'border-purple-600 bg-purple-50 dark:bg-purple-900/20'
                       : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
                   }`}
                 >
                   <div className="text-2xl mb-2">💳</div>
-                  <div className="font-semibold text-gray-900 dark:text-white">Visa</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Blue gradient</div>
-                </button>
-                
-                <button
-                  onClick={() => setCardType('mastercard')}
-                  className={`p-4 rounded-lg border-2 transition-all ${
-                    cardType === 'mastercard'
-                      ? 'border-orange-600 bg-orange-50 dark:bg-orange-900/20'
-                      : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
-                  }`}
-                >
-                  <div className="text-2xl mb-2">💳</div>
-                  <div className="font-semibold text-gray-900 dark:text-white">Mastercard</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Orange gradient</div>
+                  <div className="font-semibold text-gray-900 dark:text-white">NovaPay+</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Purple gradient</div>
                 </button>
               </div>
             </div>
@@ -224,7 +224,7 @@ export default function CardsPage() {
               isLoading={creating}
               className="w-full"
             >
-              Create {cardFormat === 'physical' ? 'Physical' : 'Virtual'} {cardType === 'visa' ? 'Visa' : 'Mastercard'} Card
+              Create {cardFormat === 'physical' ? 'Physical' : 'Virtual'} {cardType === 'nova' ? 'NovaPay' : 'NovaPay+'} Card
             </Button>
           </div>
         )}

@@ -9,15 +9,19 @@ interface CardProps {
 }
 
 export default function Card({ card, onClick }: CardProps) {
+  // NovaPay network card gradients
   const cardGradients = {
-    visa: 'from-blue-500 via-blue-600 to-indigo-700',
-    mastercard: 'from-orange-500 via-red-500 to-pink-600'
+    'nova': 'from-emerald-500 via-teal-600 to-cyan-700',
+    'nova-plus': 'from-purple-500 via-violet-600 to-indigo-700'
   };
+
+  // Get the gradient, with fallback for legacy cards
+  const gradient = cardGradients[card.cardType] || 'from-emerald-500 via-teal-600 to-cyan-700';
 
   return (
     <div
       onClick={onClick}
-      className={`relative p-6 rounded-2xl bg-gradient-to-br ${cardGradients[card.cardType]} text-white cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl ${card.status === 'frozen' ? 'opacity-60' : ''}`}
+      className={`relative p-6 rounded-2xl bg-gradient-to-br ${gradient} text-white cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl ${card.status === 'frozen' ? 'opacity-60' : ''}`}
     >
       {/* Card badges */}
       <div className="absolute top-3 right-3 flex gap-2">
@@ -42,12 +46,14 @@ export default function Card({ card, onClick }: CardProps) {
         )}
       </div>
 
-      {/* Card type logo */}
+      {/* Card type logo - NovaPay branding */}
       <div className="flex justify-between items-start mb-8">
         <div className="text-xl font-bold">
-          {card.cardType === 'visa' ? 'VISA' : 'Mastercard'}
+          {card.cardType === 'nova' ? 'NovaPay' : card.cardType === 'nova-plus' ? 'NovaPay+' : 'NovaPay'}
         </div>
-        <div className="w-12 h-8 bg-white/20 rounded backdrop-blur" />
+        <div className="w-12 h-8 bg-white/20 rounded backdrop-blur flex items-center justify-center">
+          <span className="text-lg font-bold">N</span>
+        </div>
       </div>
 
       {/* Card number */}

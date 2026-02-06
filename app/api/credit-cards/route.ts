@@ -59,12 +59,13 @@ export async function POST(request: Request) {
     const creditLimit = requestedLimit || 5000;
     const apr = 18.9; // Annual Percentage Rate
 
-    // Generate card number using Luhn algorithm
-    const generateCardNumber = (type: string) => {
-      const prefix = type === 'Visa' ? '4' : '5';
-      let cardNumber = prefix;
+    // Generate NovaPay card number using Luhn algorithm
+    // All NovaPay cards start with "7"
+    const generateCardNumber = () => {
+      // NovaPay credit cards use prefix 72
+      let cardNumber = '72';
       
-      for (let i = 0; i < 14; i++) {
+      for (let i = 0; i < 13; i++) {
         cardNumber += Math.floor(Math.random() * 10);
       }
       
@@ -91,8 +92,8 @@ export async function POST(request: Request) {
     const creditCard = {
       id: crypto.randomUUID(),
       userId: user.userId,
-      cardNumber: generateCardNumber(cardType),
-      cardType,
+      cardNumber: generateCardNumber(),
+      cardType: 'NovaPay Credit', // NovaPay network credit card
       currency,
       creditLimit,
       availableCredit: creditLimit,

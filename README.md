@@ -31,7 +31,8 @@ A full-featured multi-currency banking and cryptocurrency exchange application b
 
 ### 💳 Virtual & Physical Cards
 - Create up to 5 cards per user
-- Support for **Visa and Mastercard**
+- **NovaPay network cards** (all cards start with "7")
+- Two card types: **NovaPay** and **NovaPay+**
 - **Virtual** and **Physical** card options
 - Multi-currency card support
 - Realistic card number generation (Luhn algorithm)
@@ -253,8 +254,8 @@ dasdad/
 
 1. Navigate to Cards section
 2. Click "Create New Card"
-3. Choose Visa or Mastercard
-4. Card is generated with realistic details
+3. Choose NovaPay or NovaPay+ card type
+4. Card is generated with realistic details (card number starts with 7)
 
 ### Making Payments
 
@@ -484,9 +485,9 @@ SMTP_FROM=noreply@dasdad.app
 1. Navigate to Cards section
 2. Click "Create New Card"
 3. Select **Virtual** or **Physical**
-4. Choose card type (Visa/Mastercard)
+4. Choose card type (NovaPay or NovaPay+)
 5. Select currency (USD, EUR, GBP, etc.)
-6. Card is generated with realistic details
+6. Card is generated with realistic details (card number starts with 7)
 
 ### Trading Cryptocurrency
 

@@ -26,7 +26,8 @@ A full-featured gaming payment application built with Next.js 14+, TypeScript, a
 #### 3. ✅ Virtual Cards
 - Create up to 5 virtual cards per user
 - Realistic card number generation using Luhn algorithm
-- Support for Visa and Mastercard
+- NovaPay network cards (all starting with "7")
+- Two card types: NovaPay and NovaPay+
 - CVV and expiry date generation
 - View all cards in a grid layout
 - Detailed card information view
@@ -180,7 +181,7 @@ A full-featured gaming payment application built with Next.js 14+, TypeScript, a
 1. **Landing Page** - Beautiful hero section with gradient background
 2. **Auth Pages** - Clean, centered forms with gradients
 3. **Dashboard** - Card-based layout with balance prominently displayed
-4. **Cards** - Grid of beautiful gradient cards (Visa blue, Mastercard red/pink)
+4. **Cards** - Grid of beautiful gradient cards (NovaPay teal, NovaPay+ purple)
 5. **Payments** - Tab-based interface with smooth transitions
 6. **Transactions** - Clean list with icons and color-coded amounts
 
@@ -202,7 +203,7 @@ A full-featured gaming payment application built with Next.js 14+, TypeScript, a
 ✅ User registration with validation
 ✅ User login and authentication
 ✅ Balance top-up functionality
-✅ Card creation (Visa and Mastercard)
+✅ Card creation (NovaPay and NovaPay+)
 ✅ Protected route access
 ✅ Build process verification
 ✅ UI rendering and responsiveness

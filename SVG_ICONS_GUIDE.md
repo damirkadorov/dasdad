@@ -8,15 +8,15 @@ All files should be uploaded to: **`/public/icons/`**
 
 ## 💳 Card & Payment Icons / Иконки карт и платежей
 
-### 1. `visa.svg`
-**What to download:** Visa logo (blue and white)  
-**Что скачать:** Логотип Visa (синий и белый)  
-**Search on svgrepo.com:** "visa logo" or "visa card"
+### 1. `novapay.svg`
+**What to download:** NovaPay logo (teal/green gradient)  
+**Что скачать:** Логотип NovaPay (бирюзовый/зеленый градиент)  
+**Note:** Use a generic payment card icon with "N" or create a custom NovaPay logo
 
-### 2. `mastercard.svg`
-**What to download:** Mastercard logo (red and yellow circles)  
-**Что скачать:** Логотип Mastercard (красные и желтые круги)  
-**Search on svgrepo.com:** "mastercard logo"
+### 2. `novapay-plus.svg`
+**What to download:** NovaPay+ logo (purple gradient)  
+**Что скачать:** Логотип NovaPay+ (фиолетовый градиент)  
+**Note:** Use a premium card icon with "N+" or create a custom NovaPay+ logo
 
 ### 3. `american-express.svg`
 **What to download:** American Express logo  
@@ -289,8 +289,8 @@ After uploading, you should have these files:
 
 ```
 public/icons/
-├── visa.svg ⬜
-├── mastercard.svg ⬜
+├── novapay.svg ⬜
+├── novapay-plus.svg ⬜
 ├── american-express.svg ⬜
 ├── credit-card.svg ✅
 ├── debit-card.svg ⬜

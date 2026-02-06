@@ -44,13 +44,16 @@ export interface User {
   createdAt: string;
 }
 
+// NovaPay card types - proprietary closed-loop payment network
+export type NovapayCardType = 'nova' | 'nova-plus';
+
 export interface Card {
   id: string;
   userId: string;
   cardNumber: string;
   expiryDate: string;
   cvv: string;
-  cardType: 'visa' | 'mastercard';
+  cardType: NovapayCardType; // NovaPay network card type (all cards start with "7")
   cardFormat: 'virtual' | 'physical'; // Virtual or physical card
   currency: Currency; // Card currency
   accountType?: 'personal' | 'business'; // Account type the card belongs to (default: personal)
