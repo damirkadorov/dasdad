@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { requireAuth } from '@/lib/auth/middleware';
 import { getCardsByUserId, createCard } from '@/lib/db/database';
 import { generateCardNumber, generateCVV, generateExpiryDate } from '@/lib/utils/helpers';
-import { Currency } from '@/lib/db/types';
+import { Currency, NovapayCardType } from '@/lib/db/types';
 
 export async function GET() {
   try {
@@ -43,10 +43,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { cardType, cardFormat = 'virtual', currency = 'USD', accountType = 'personal' } = body;
 
-    // Validate card type
-    if (!cardType || !['visa', 'mastercard'].includes(cardType)) {
+    // Validate card type - NovaPay network cards only
+    if (!cardType || !['nova', 'nova-plus'].includes(cardType)) {
       return NextResponse.json(
-        { error: 'Invalid card type. Must be "visa" or "mastercard"' },
+        { error: 'Invalid card type. Must be "nova" or "nova-plus"' },
         { status: 400 }
       );
     }
@@ -76,8 +76,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate card details
-    const cardNumber = generateCardNumber(cardType as 'visa' | 'mastercard');
+    // Generate NovaPay card details (all cards start with "7")
+    const cardNumber = generateCardNumber(cardType as NovapayCardType);
     const cvv = generateCVV();
     const expiryDate = generateExpiryDate();
 
@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
       cardNumber,
       expiryDate,
       cvv,
-      cardType: cardType as 'visa' | 'mastercard',
+      cardType: cardType as NovapayCardType,
       cardFormat: cardFormat as 'virtual' | 'physical',
       currency: currency as Currency,
       accountType: accountType as 'personal' | 'business',

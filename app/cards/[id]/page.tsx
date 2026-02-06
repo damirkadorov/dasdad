@@ -132,10 +132,14 @@ export default function CardDetailPage() {
 
   if (!card) return null;
 
-  const cardGradients = {
-    visa: 'from-blue-500 via-blue-600 to-indigo-700',
-    mastercard: 'from-orange-500 via-red-500 to-pink-600'
+  // NovaPay network card gradients
+  const cardGradients: Record<string, string> = {
+    'nova': 'from-emerald-500 via-teal-600 to-cyan-700',
+    'nova-plus': 'from-purple-500 via-violet-600 to-indigo-700'
   };
+  
+  // Get the gradient, with fallback for legacy cards
+  const gradient = cardGradients[card.cardType] || 'from-emerald-500 via-teal-600 to-cyan-700';
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -153,7 +157,7 @@ export default function CardDetailPage() {
 
         {/* Card Display */}
         <div className="mb-8">
-          <div className={`relative p-8 rounded-2xl bg-gradient-to-br ${cardGradients[card.cardType]} text-white shadow-2xl max-w-md mx-auto ${card.status === 'frozen' ? 'opacity-60' : ''}`}>
+          <div className={`relative p-8 rounded-2xl bg-gradient-to-br ${gradient} text-white shadow-2xl max-w-md mx-auto ${card.status === 'frozen' ? 'opacity-60' : ''}`}>
             {card.status === 'frozen' && (
               <div className="absolute top-4 right-4 bg-white/20 backdrop-blur px-4 py-2 rounded-full text-sm font-semibold">
                 ❄️ Frozen
@@ -162,9 +166,11 @@ export default function CardDetailPage() {
 
             <div className="flex justify-between items-start mb-12">
               <div className="text-2xl font-bold">
-                {card.cardType === 'visa' ? 'VISA' : 'Mastercard'}
+                {card.cardType === 'nova' ? 'NovaPay' : card.cardType === 'nova-plus' ? 'NovaPay+' : 'NovaPay'}
               </div>
-              <div className="w-16 h-10 bg-white/20 rounded backdrop-blur" />
+              <div className="w-16 h-10 bg-white/20 rounded backdrop-blur flex items-center justify-center">
+                <span className="text-xl font-bold">N</span>
+              </div>
             </div>
 
             <div className="mb-8 text-2xl font-mono tracking-wider">

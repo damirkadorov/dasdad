@@ -1,11 +1,15 @@
-// Generate realistic card number using Luhn algorithm
-export function generateCardNumber(type: 'visa' | 'mastercard'): string {
-  // Visa starts with 4, Mastercard starts with 5
-  const prefix = type === 'visa' ? '4' : '5';
+import { NovapayCardType } from '@/lib/db/types';
+
+// Generate NovaPay card number using Luhn algorithm
+// All NovaPay cards start with "7" as per the proprietary network standard
+export function generateCardNumber(type: NovapayCardType): string {
+  // All NovaPay cards start with 7
+  // Nova cards use prefix 70, Nova Plus cards use prefix 71
+  const prefix = type === 'nova' ? '70' : '71';
   let cardNumber = prefix;
 
-  // Generate 15 more random digits (total 16 digits)
-  for (let i = 0; i < 14; i++) {
+  // Generate 13 more random digits (2-digit prefix + 13 random + 1 check digit = 16 total)
+  for (let i = 0; i < 13; i++) {
     cardNumber += Math.floor(Math.random() * 10);
   }
 

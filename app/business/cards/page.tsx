@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import BusinessNavigation from '@/components/business/BusinessNavigation';
 import Button from '@/components/ui/Button';
 import CardItem from '@/components/cards/CardItem';
-import { Card, Currency } from '@/lib/db/types';
+import { Card, Currency, NovapayCardType } from '@/lib/db/types';
 import { getSupportedCurrencies } from '@/lib/utils/currency';
 
 export default function BusinessCardsPage() {
@@ -15,7 +15,7 @@ export default function BusinessCardsPage() {
   const [error, setError] = useState('');
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [creating, setCreating] = useState(false);
-  const [cardType, setCardType] = useState<'visa' | 'mastercard'>('visa');
+  const [cardType, setCardType] = useState<NovapayCardType>('nova');
   const [cardFormat, setCardFormat] = useState<'virtual' | 'physical'>('virtual');
   const [cardCurrency, setCardCurrency] = useState<Currency>('USD');
 
@@ -72,7 +72,7 @@ export default function BusinessCardsPage() {
 
       await fetchCards();
       setShowCreateForm(false);
-      setCardType('visa');
+      setCardType('nova');
       setCardFormat('virtual');
       setCardCurrency('USD');
     } catch (err) {
@@ -179,29 +179,29 @@ export default function BusinessCardsPage() {
               </label>
               <div className="grid grid-cols-2 gap-4">
                 <button
-                  onClick={() => setCardType('visa')}
+                  onClick={() => setCardType('nova')}
                   className={`p-4 rounded-lg border-2 transition-all ${
-                    cardType === 'visa'
+                    cardType === 'nova'
                       ? 'border-amber-500 bg-amber-500/10'
                       : 'border-slate-600 hover:border-slate-500'
                   }`}
                 >
                   <div className="text-2xl mb-2">💳</div>
-                  <div className="font-semibold text-white">Visa</div>
-                  <div className="text-sm text-slate-400">Blue gradient</div>
+                  <div className="font-semibold text-white">NovaPay</div>
+                  <div className="text-sm text-slate-400">Teal gradient</div>
                 </button>
                 
                 <button
-                  onClick={() => setCardType('mastercard')}
+                  onClick={() => setCardType('nova-plus')}
                   className={`p-4 rounded-lg border-2 transition-all ${
-                    cardType === 'mastercard'
-                      ? 'border-orange-500 bg-orange-500/10'
+                    cardType === 'nova-plus'
+                      ? 'border-purple-500 bg-purple-500/10'
                       : 'border-slate-600 hover:border-slate-500'
                   }`}
                 >
                   <div className="text-2xl mb-2">💳</div>
-                  <div className="font-semibold text-white">Mastercard</div>
-                  <div className="text-sm text-slate-400">Orange gradient</div>
+                  <div className="font-semibold text-white">NovaPay+</div>
+                  <div className="text-sm text-slate-400">Purple gradient</div>
                 </button>
               </div>
             </div>
@@ -228,7 +228,7 @@ export default function BusinessCardsPage() {
               isLoading={creating}
               className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700"
             >
-              Create {cardFormat === 'physical' ? 'Physical' : 'Virtual'} {cardType === 'visa' ? 'Visa' : 'Mastercard'} Card
+              Create {cardFormat === 'physical' ? 'Physical' : 'Virtual'} {cardType === 'nova' ? 'NovaPay' : 'NovaPay+'} Card
             </Button>
           </div>
         )}
