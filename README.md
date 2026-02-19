@@ -319,6 +319,51 @@ Password: Test1234
 - `GET /api/cards/[id]` - Get card details
 - `PATCH /api/cards/[id]` - Update card status (freeze/unfreeze)
 - `DELETE /api/cards/[id]` - Delete card
+- `GET /api/cards/by-token/{token}` - Get card by NFC token (for NFC terminals)
+
+## 🎯 NFC Tokens
+
+Каждая карта имеет уникальный 32-символьный HEX токен для безопасного использования с NFC-терминалами.
+
+### Миграция существующих карт
+
+Для добавления токенов к существующим картам запустите:
+
+```bash
+node scripts/add-tokens-to-cards.js
+```
+
+### API для NFC терминала
+
+**GET /api/cards/by-token/{token}** - получение данных карты по токену
+
+**Пример запроса:**
+```bash
+curl http://localhost:3000/api/cards/by-token/a1b2c3d4e5f6789012345678901234ab
+```
+
+**Успешный ответ (200):**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "card-uuid",
+    "userId": "user-uuid",
+    "cardType": "nova",
+    "cardFormat": "physical",
+    "currency": "USD",
+    "status": "active",
+    "lastFourDigits": "1234"
+  }
+}
+```
+
+**Ошибки:**
+- `400 Bad Request` - неверный формат токена
+- `404 Not Found` - карта не найдена
+- `500 Internal Server Error` - ошибка сервера
+
+**Примечание:** В целях безопасности API возвращает только ограниченные данные карты (без CVV и полного номера).
 
 ### Payment Endpoints
 

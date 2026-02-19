@@ -1,4 +1,5 @@
 import { NovapayCardType } from '@/lib/db/types';
+import crypto from 'crypto';
 
 // Generate NovaPay card number using Luhn algorithm
 // All NovaPay cards start with "7" as per the proprietary network standard
@@ -102,4 +103,11 @@ export function formatDate(dateString: string): string {
     hour: '2-digit',
     minute: '2-digit'
   }).format(date);
+}
+
+/**
+ * Generate 32-character HEX token for NFC
+ */
+export function generateNfcToken(): string {
+  return crypto.randomBytes(16).toString('hex');
 }
