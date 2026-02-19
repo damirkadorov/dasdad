@@ -106,7 +106,7 @@ export function formatDate(dateString: string): string {
 }
 
 /**
- * Генерация 32-символьного HEX токена для NFC
+ * Generate 32-character HEX token for NFC
  */
 export function generateNfcToken(): string {
   return crypto.randomBytes(16).toString('hex');

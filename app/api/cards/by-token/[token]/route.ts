@@ -8,7 +8,7 @@ export async function GET(
   try {
     const { token } = await params;
     
-    // Валидация токена (32 hex символа)
+    // Validate token format (32 hex characters)
     if (!token || !/^[a-f0-9]{32}$/.test(token)) {
       return NextResponse.json(
         { error: 'Invalid token format' },
@@ -26,7 +26,16 @@ export async function GET(
       );
     }
     
-    // Возвращаем ограниченные данные (без CVV и полного номера карты)
+    // Validate card has required fields
+    if (!card.cardNumber) {
+      console.error('Card missing cardNumber field:', card.id);
+      return NextResponse.json(
+        { error: 'Invalid card data' },
+        { status: 500 }
+      );
+    }
+    
+    // Return limited data (without CVV and full card number for security)
     return NextResponse.json({
       success: true,
       data: {

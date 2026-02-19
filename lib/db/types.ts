@@ -58,7 +58,7 @@ export interface Card {
   currency: Currency; // Card currency
   accountType?: 'personal' | 'business'; // Account type the card belongs to (default: personal)
   status: 'active' | 'frozen' | 'blocked';
-  token?: string; // 32-символьный HEX токен для NFC
+  token?: string; // 32-character HEX token for NFC
   createdAt: string;
 }
 
