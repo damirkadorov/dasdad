@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFC Terminal API Tester</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .response {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .response.success {
+            border-left-color: #4caf50;
+            background: #f1f8f4;
+        }
+
+        .response.error {
+            border-left-color: #f44336;
+            background: #fef1f0;
+        }
+
+        .token-display {
+            background: #fffacd;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            word-break: break-all;
+            margin-top: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏦 NFC Terminal API Tester</h1>
+        <p class="subtitle">Инструмент для тестирования API сервера</p>
+
+        <!-- Настройки -->
+        <div class="section">
+            <h2>⚙️ Настройки</h2>
+            <div class="form-group">
+                <label>API URL:</label>
+                <input type="text" id="apiUrl" value="http://localhost:3001" />
+            </div>
+            <div class="form-group">
+                <label>API Key:</label>
+                <input type="text" id="apiKey" value="your-secret-api-key-change-this-in-production" />
+            </div>
+        </div>
+
+        <!-- Создание карты -->
+        <div class="section">
+            <h2>💳 Создать новую карту</h2>
+            <div class="grid">
+                <div class="form-group">
+                    <label>Владелец:</label>
+                    <input type="text" id="cardOwner" value="Тестовый Пользователь" />
+                </div>
+                <div class="form-group">
+                    <label>Баланс (руб):</label>
+                    <input type="number" id="cardBalance" value="500" />
+                </div>
+            </div>
+            <button onclick="createCard()">Создать карту</button>
+            <div id="createResponse" class="response" style="display: none;"></div>
+        </div>
+
+        <!-- Обработка платежа -->
+        <div class="section">
+            <h2>💰 Обработать платеж</h2>
+            <div class="form-group">
+                <label>Токен карты:</label>
+                <input type="text" id="paymentToken" placeholder="32-символьный hex токен" />
+            </div>
+            <div class="grid">
+                <div class="form-group">
+                    <label>Сумма (руб):</label>
+                    <input type="number" id="paymentAmount" value="50" />
+                </div>
+                <div class="form-group">
+                    <label>Terminal ID:</label>
+                    <input type="text" id="terminalId" value="test-terminal-001" />
+                </div>
+            </div>
+            <button onclick="processPayment()">Обработать платеж</button>
+            <div id="paymentResponse" class="response" style="display: none;"></div>
+        </div>
+
+        <!-- Получить карту -->
+        <div class="section">
+            <h2>🔍 Получить информацию о карте</h2>
+            <div class="form-group">
+                <label>Токен карты:</label>
+                <input type="text" id="getCardToken" placeholder="32-символьный hex токен" />
+            </div>
+            <button onclick="getCard()">Получить информацию</button>
+            <div id="getCardResponse" class="response" style="display: none;"></div>
+        </div>
+
+        <!-- Получить все карты -->
+        <div class="section">
+            <h2>📋 Получить все карты</h2>
+            <button onclick="getAllCards()">Получить список</button>
+            <div id="allCardsResponse" class="response" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        function getApiUrl() {
+            return document.getElementById('apiUrl').value;
+        }
+
+        function getApiKey() {
+            return document.getElementById('apiKey').value;
+        }
+
+        function showResponse(elementId, data, isSuccess) {
+            const element = document.getElementById(elementId);
+            element.textContent = JSON.stringify(data, null, 2);
+            element.style.display = 'block';
+            element.className = 'response ' + (isSuccess ? 'success' : 'error');
+        }
+
+        async function createCard() {
+            const owner = document.getElementById('cardOwner').value;
+            const balance = parseInt(document.getElementById('cardBalance').value) * 100;
+
+            try {
+                const response = await fetch(`${getApiUrl()}/api/cards`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': getApiKey()
+                    },
+                    body: JSON.stringify({ owner, balance })
+                });
+
+                const data = await response.json();
+                showResponse('createResponse', data, response.ok);
+
+                if (data.success && data.data.token) {
+                    document.getElementById('paymentToken').value = data.data.token;
+                    document.getElementById('getCardToken').value = data.data.token;
+                }
+            } catch (error) {
+                showResponse('createResponse', { error: error.message }, false);
+            }
+        }
+
+        async function processPayment() {
+            const token = document.getElementById('paymentToken').value;
+            const amount = parseInt(document.getElementById('paymentAmount').value) * 100;
+            const terminalId = document.getElementById('terminalId').value;
+
+            try {
+                const response = await fetch(`${getApiUrl()}/api/pay`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': getApiKey(),
+                        'X-Terminal-Id': terminalId
+                    },
+                    body: JSON.stringify({ token, amount, terminalId })
+                });
+
+                const data = await response.json();
+                showResponse('paymentResponse', data, response.ok);
+            } catch (error) {
+                showResponse('paymentResponse', { error: error.message }, false);
+            }
+        }
+
+        async function getCard() {
+            const token = document.getElementById('getCardToken').value;
+
+            try {
+                const response = await fetch(`${getApiUrl()}/api/cards/${token}`, {
+                    headers: {
+                        'X-API-Key': getApiKey()
+                    }
+                });
+
+                const data = await response.json();
+                showResponse('getCardResponse', data, response.ok);
+            } catch (error) {
+                showResponse('getCardResponse', { error: error.message }, false);
+            }
+        }
+
+        async function getAllCards() {
+            try {
+                const response = await fetch(`${getApiUrl()}/api/cards`, {
+                    headers: {
+                        'X-API-Key': getApiKey()
+                    }
+                });
+
+                const data = await response.json();
+                showResponse('allCardsResponse', data, response.ok);
+            } catch (error) {
+                showResponse('allCardsResponse', { error: error.message }, false);
+            }
+        }
+    </script>
+</body>
+</html>
