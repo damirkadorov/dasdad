@@ -42,3 +42,20 @@ next-env.d.ts
 
 # database
 /data/database.json
+
+# NFC Terminal Server (Node.js)
+server/node_modules
+server/.env
+server/package-lock.json
+
+# Android
+android/.gradle
+android/.idea
+android/build
+android/app/build
+android/local.properties
+android/*.iml
+android/.DS_Store
+android/captures
+android/.externalNativeBuild
+android/.cxx
