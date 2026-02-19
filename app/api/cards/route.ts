@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { requireAuth } from '@/lib/auth/middleware';
 import { getCardsByUserId, createCard } from '@/lib/db/database';
-import { generateCardNumber, generateCVV, generateExpiryDate } from '@/lib/utils/helpers';
+import { generateCardNumber, generateCVV, generateExpiryDate, generateNfcToken } from '@/lib/utils/helpers';
 import { Currency, NovapayCardType } from '@/lib/db/types';
 
 export async function GET() {
@@ -93,6 +93,7 @@ export async function POST(request: NextRequest) {
       currency: currency as Currency,
       accountType: accountType as 'personal' | 'business',
       status: 'active',
+      token: generateNfcToken(),
       createdAt: new Date().toISOString()
     });
 
