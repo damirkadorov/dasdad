@@ -97,7 +97,7 @@ async function seed() {
 
     console.log('\n🎉 Инициализация завершена успешно!');
     console.log('\n📝 Сохраните токены карт для тестирования:');
-    console.log('=' .repeat(80));
+    console.log('='.repeat(80));
     cards.forEach((card, index) => {
       console.log(`\nКарта ${index + 1}: ${card.owner}`);
       console.log(`Токен: ${card.token}`);

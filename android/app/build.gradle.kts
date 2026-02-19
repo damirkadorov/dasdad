@@ -54,7 +54,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     
     // Для безопасного хранения
-    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+    implementation("androidx.security:security-crypto:1.0.0")
     
     // Lifecycle
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
