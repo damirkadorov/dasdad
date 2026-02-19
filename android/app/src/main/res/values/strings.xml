@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NFC Терминал</string>
+    <string name="enter_amount">Введите сумму</string>
+    <string name="pay">Оплатить</string>
+    <string name="settings">Настройки</string>
+    <string name="api_key">API ключ</string>
+    <string name="server_url">URL сервера</string>
+    <string name="save">Сохранить</string>
+    <string name="cancel">Отмена</string>
+    <string name="payment_processing">Обработка платежа...</string>
+    <string name="payment_success">Платеж успешно обработан</string>
+    <string name="payment_failed">Ошибка обработки платежа</string>
+    <string name="nfc_instruction">Приложите NFC карту к телефону</string>
+</resources>
