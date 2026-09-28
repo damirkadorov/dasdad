@@ -92,7 +92,10 @@ export async function POST(request: NextRequest) {
       updatedBalances.push({ currency: currency as Currency, amount });
     }
 
-    await updateUser(userData.id, { balances: updatedBalances });
+    await updateUser(userData.id, { 
+      balances: updatedBalances,
+      balance: currency === 'USD' ? (balanceIndex >= 0 ? updatedBalances[balanceIndex].amount : amount) : userData.balance
+    });
 
     // Create transaction
     await createTransaction({

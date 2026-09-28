@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { requireAuth } from '@/lib/auth/middleware';
-import { getCardsByUserId, createCard } from '@/lib/db/database';
+import { getCardsByUserId, createCard, getUserById } from '@/lib/db/database';
 import { generateCardNumber, generateCVV, generateExpiryDate } from '@/lib/utils/helpers';
 import { Currency, NovapayCardType } from '@/lib/db/types';
 
@@ -10,11 +10,24 @@ export async function GET() {
     const { error, user } = await requireAuth();
     if (error) return error;
 
-    // Get cards from MongoDB
-    const cards = await getCardsByUserId(user!.userId);
+    // Get cards and user from MongoDB
+    const [cards, userRecord] = await Promise.all([
+      getCardsByUserId(user!.userId),
+      getUserById(user!.userId)
+    ]);
+
+    const userBalances = userRecord?.balances && userRecord.balances.length > 0
+      ? userRecord.balances
+      : [{ currency: 'USD' as Currency, amount: userRecord?.balance || 0 }];
+
+    const enrichedCards = cards.map(c => {
+      const match = userBalances.find(b => b.currency === c.currency);
+      const bal = match ? match.amount : (c.currency === 'USD' ? (userRecord?.balance || 0) : 0);
+      return { ...c, balance: bal };
+    });
 
     return NextResponse.json(
-      { cards },
+      { cards: enrichedCards },
       { status: 200 }
     );
   } catch (error) {
@@ -96,10 +109,17 @@ export async function POST(request: NextRequest) {
       createdAt: new Date().toISOString()
     });
 
+    const userRecord = await getUserById(user!.userId);
+    const userBalances = userRecord?.balances && userRecord.balances.length > 0
+      ? userRecord.balances
+      : [{ currency: 'USD' as Currency, amount: userRecord?.balance || 0 }];
+    const match = userBalances.find(b => b.currency === currency);
+    const bal = match ? match.amount : (currency === 'USD' ? (userRecord?.balance || 0) : 0);
+
     return NextResponse.json(
       {
         message: 'Card created successfully',
-        card: newCard
+        card: { ...newCard, balance: bal }
       },
       { status: 201 }
     );

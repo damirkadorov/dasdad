@@ -1,6 +1,13 @@
 import { NextResponse } from 'next/server';
 import { getUserFromRequest } from '@/lib/auth/jwt';
-import { getDb } from '@/lib/db';
+import { 
+  getUserById, 
+  updateUser, 
+  getSavingsAccountsByUserId, 
+  createSavingsAccount, 
+  createTransaction 
+} from '@/lib/db/database';
+import { SavingsAccount, Currency } from '@/lib/db/types';
 
 export async function GET(request: Request) {
   try {
@@ -9,9 +16,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const db = getDb();
-    const savingsAccounts = db.savingsAccounts?.filter((acc) => acc.userId === user.userId) || [];
-
+    const savingsAccounts = await getSavingsAccountsByUserId(user.userId);
     return NextResponse.json({ savingsAccounts });
   } catch (error) {
     console.error('Get savings error:', error);
@@ -30,81 +35,95 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { name, currency, initialDeposit, interestRate, termMonths } = body;
+    const { name, currency, initialDeposit = 0, interestRate, termMonths } = body;
 
-    if (!name || !currency || initialDeposit === undefined) {
+    if (!name || !currency) {
       return NextResponse.json(
-        { error: 'Name, currency, and initial deposit are required' },
+        { error: 'Name and currency are required' },
         { status: 400 }
       );
     }
 
-    if (initialDeposit < 0) {
+    const deposit = Number(initialDeposit);
+    if (deposit < 0) {
       return NextResponse.json(
         { error: 'Initial deposit cannot be negative' },
         { status: 400 }
       );
     }
 
-    const db = getDb();
-    const userData = db.users.find((u) => u.id === user.userId);
-    
+    const userData = await getUserById(user.userId);
     if (!userData) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // Check if user has sufficient balance
-    if (initialDeposit > 0) {
-      const balanceIndex = userData.balances?.findIndex(b => b.currency === currency) ?? -1;
-      const currentBalance = balanceIndex >= 0 ? userData.balances![balanceIndex].amount : 0;
+    // Initialize balances
+    const userBalances = userData.balances && userData.balances.length > 0
+      ? userData.balances
+      : [{ currency: 'USD' as Currency, amount: userData.balance || 0 }];
 
-      if (currentBalance < initialDeposit) {
-        return NextResponse.json(
-          { error: 'Insufficient balance' },
-          { status: 400 }
-        );
-      }
+    const balanceIndex = userBalances.findIndex(b => b.currency === currency);
+    const currentBalance = balanceIndex >= 0 
+      ? userBalances[balanceIndex].amount 
+      : (currency === 'USD' ? (userData.balance || 0) : 0);
 
-      // Deduct from balance
-      if (balanceIndex >= 0) {
-        userData.balances![balanceIndex].amount -= initialDeposit;
-      }
+    if (deposit > 0 && currentBalance < deposit) {
+      return NextResponse.json(
+        { error: `Insufficient ${currency} balance. You need ${deposit.toFixed(2)} ${currency} but only have ${currentBalance.toFixed(2)} ${currency}.` },
+        { status: 400 }
+      );
     }
 
-    const savingsAccount = {
+    let updatedBalances = userBalances;
+    let newBal = currentBalance;
+
+    if (deposit > 0) {
+      newBal = currentBalance - deposit;
+      updatedBalances = balanceIndex >= 0
+        ? userBalances.map((b, idx) => idx === balanceIndex ? { ...b, amount: newBal } : b)
+        : [...userBalances, { currency: currency as Currency, amount: newBal }];
+
+      await updateUser(userData.id, {
+        balances: updatedBalances,
+        balance: currency === 'USD' ? newBal : userData.balance
+      });
+    }
+
+    const savingsAccount: SavingsAccount = {
       id: crypto.randomUUID(),
       userId: user.userId,
       name,
-      currency,
-      balance: initialDeposit,
+      currency: currency as Currency,
+      balance: deposit,
       interestRate: interestRate || 3.5,
       termMonths: termMonths || 12,
-      status: 'active' as const,
+      status: 'active',
       createdAt: new Date().toISOString(),
       maturityDate: termMonths 
         ? new Date(Date.now() + termMonths * 30 * 24 * 60 * 60 * 1000).toISOString()
         : null,
     };
 
-    if (!db.savingsAccounts) db.savingsAccounts = [];
-    db.savingsAccounts.push(savingsAccount);
+    await createSavingsAccount(savingsAccount);
 
-    if (initialDeposit > 0) {
-      const transaction = {
+    if (deposit > 0) {
+      await createTransaction({
         id: crypto.randomUUID(),
         userId: user.userId,
-        type: 'SAVINGS_DEPOSIT' as const,
-        amount: -initialDeposit,
-        currency,
-        savingsAccountId: savingsAccount.id,
-        timestamp: new Date().toISOString(),
-      };
-
-      if (!db.transactions) db.transactions = [];
-      db.transactions.push(transaction);
+        type: 'SAVINGS_DEPOSIT' as any,
+        amount: -deposit,
+        currency: currency as Currency,
+        description: `Deposit to high-yield savings: ${name}`,
+        status: 'completed',
+        createdAt: new Date().toISOString(),
+      });
     }
 
-    return NextResponse.json({ success: true, savingsAccount });
+    return NextResponse.json({ 
+      success: true, 
+      savingsAccount,
+      newBalance: newBal
+    });
   } catch (error) {
     console.error('Create savings account error:', error);
     return NextResponse.json(

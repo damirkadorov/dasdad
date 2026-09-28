@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth/middleware';
-import { getCardById, updateCard, deleteCard } from '@/lib/db/database';
+import { getCardById, updateCard, deleteCard, getUserById } from '@/lib/db/database';
+import { Currency } from '@/lib/db/types';
 
 interface Params {
   params: Promise<{
@@ -32,8 +33,15 @@ export async function GET(request: NextRequest, { params }: Params) {
       );
     }
 
+    const userRecord = await getUserById(user!.userId);
+    const userBalances = userRecord?.balances && userRecord.balances.length > 0
+      ? userRecord.balances
+      : [{ currency: 'USD' as Currency, amount: userRecord?.balance || 0 }];
+    const match = userBalances.find(b => b.currency === card.currency);
+    const bal = match ? match.amount : (card.currency === 'USD' ? (userRecord?.balance || 0) : 0);
+
     return NextResponse.json(
-      { card },
+      { card: { ...card, balance: bal } },
       { status: 200 }
     );
   } catch (error) {
@@ -81,11 +89,24 @@ export async function PATCH(request: NextRequest, { params }: Params) {
 
     // Update card in MongoDB
     const updatedCard = await updateCard(id, { status });
+    if (!updatedCard) {
+      return NextResponse.json(
+        { error: 'Failed to update card' },
+        { status: 500 }
+      );
+    }
+
+    const userRecord = await getUserById(user!.userId);
+    const userBalances = userRecord?.balances && userRecord.balances.length > 0
+      ? userRecord.balances
+      : [{ currency: 'USD' as Currency, amount: userRecord?.balance || 0 }];
+    const match = userBalances.find(b => b.currency === updatedCard.currency);
+    const bal = match ? match.amount : (updatedCard.currency === 'USD' ? (userRecord?.balance || 0) : 0);
 
     return NextResponse.json(
       {
         message: `Card ${status === 'frozen' ? 'frozen' : 'unfrozen'} successfully`,
-        card: updatedCard
+        card: { ...updatedCard, balance: bal }
       },
       { status: 200 }
     );

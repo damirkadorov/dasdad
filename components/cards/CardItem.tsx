@@ -33,8 +33,8 @@ export default function Card({ card, onClick }: CardProps) {
 
         {/* Balance Badge Pill */}
         <div className="bg-white text-gray-950 font-bold px-3 py-0.5 rounded-xl text-xs font-mono shadow-md flex items-center gap-1">
-          <span>{card.currency === 'USD' ? '$' : card.currency === 'EUR' ? '€' : '£'}</span>
-          <span>1,000.00</span>
+          <span>{card.currency === 'USD' ? '$' : card.currency === 'EUR' ? '€' : card.currency === 'GBP' ? '£' : card.currency + ' '}</span>
+          <span>{card.balance !== undefined ? card.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}</span>
         </div>
       </div>
 

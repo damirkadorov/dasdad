@@ -216,6 +216,12 @@ export async function updateBill(id: string, updates: Partial<Bill>): Promise<Bi
   return result ?? null;
 }
 
+export async function createBill(bill: Bill): Promise<Bill> {
+  const bills = await getBillsCollection();
+  await bills.insertOne(bill);
+  return bill;
+}
+
 // Investment operations
 export async function getInvestmentsByUserId(userId: string): Promise<Investment[]> {
   const investments = await getInvestmentsCollection();

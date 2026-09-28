@@ -187,7 +187,8 @@ export default function CardDetailPage() {
               
               {/* White Balance Pill (Reference: Image 1) */}
               <div className="bg-white text-gray-950 font-bold px-3.5 py-1 rounded-xl text-sm font-mono shadow-md">
-                ${card.currency === 'USD' ? '1,000.00' : '850.00'}
+                {card.currency === 'USD' ? '$' : card.currency === 'EUR' ? '€' : card.currency === 'GBP' ? '£' : card.currency + ' '}
+                {card.balance !== undefined ? card.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}
               </div>
             </div>
 
@@ -225,7 +226,8 @@ export default function CardDetailPage() {
               {new Date(card.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
             </p>
             <p className="text-base font-bold font-mono text-gray-900 dark:text-white mt-0.5">
-              ${card.currency === 'USD' ? '1,000.00' : '850.00'}
+              {card.currency === 'USD' ? '$' : card.currency === 'EUR' ? '€' : card.currency === 'GBP' ? '£' : card.currency + ' '}
+              {card.balance !== undefined ? card.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}
             </p>
           </div>
           <div className="flex items-center gap-2">

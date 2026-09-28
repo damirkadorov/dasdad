@@ -68,7 +68,8 @@ export default function PaymentsContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           recipient,
-          amount: parseFloat(sendAmount)
+          amount: parseFloat(sendAmount),
+          currency: sendCurrency
         })
       });
 

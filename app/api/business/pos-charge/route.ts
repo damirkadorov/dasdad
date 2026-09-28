@@ -136,8 +136,18 @@ export async function POST(request: NextRequest) {
       : [...merchantBalances, { currency: (currency || 'USD') as Currency, amount }];
 
     // Update both users
-    await updateUser(cardOwner.id, { balances: updatedCardOwnerBalances });
-    await updateUser(merchant.id, { balances: updatedMerchantBalances });
+    const chargeCurrency = currency || 'USD';
+    const cardOwnerNewBal = cardOwnerBalance.amount - amount;
+    const merchantNewBal = merchantCurrencyBalance ? merchantCurrencyBalance.amount + amount : amount;
+
+    await updateUser(cardOwner.id, { 
+      balances: updatedCardOwnerBalances,
+      balance: chargeCurrency === 'USD' ? cardOwnerNewBal : cardOwner.balance
+    });
+    await updateUser(merchant.id, { 
+      balances: updatedMerchantBalances,
+      balance: chargeCurrency === 'USD' ? merchantNewBal : merchant.balance
+    });
 
     // Create transaction for card owner (debit)
     const cardOwnerTransaction = await createTransaction({

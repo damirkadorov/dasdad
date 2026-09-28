@@ -146,8 +146,17 @@ export async function POST(request: NextRequest) {
     };
 
     // Update all entities
-    await updateUser(buyerId, { balances: updatedBuyerBalances });
-    await updateUser(seller.id, { balances: updatedSellerBalances });
+    const buyerBalanceAfter = buyerBalance.amount - totalAmount;
+    const sellerBalanceAfter = sellerCurrencyBalance ? sellerCurrencyBalance.amount + sellerAmount : sellerAmount;
+
+    await updateUser(buyerId, { 
+      balances: updatedBuyerBalances,
+      balance: currency === 'USD' ? buyerBalanceAfter : buyer.balance
+    });
+    await updateUser(seller.id, { 
+      balances: updatedSellerBalances,
+      balance: currency === 'USD' ? sellerBalanceAfter : seller.balance
+    });
     await updateProduct(productId, { stock: newStock, status: productStatus });
     await createOrder(order);
 

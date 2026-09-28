@@ -16,14 +16,21 @@ export async function GET() {
       );
     }
 
+    let balances = user.balances && user.balances.length > 0
+      ? [...user.balances]
+      : [{ currency: 'USD' as any, amount: user.balance || 0 }];
+
+    const usdBal = balances.find(b => b.currency === 'USD');
+    const effectiveBalance = usdBal ? usdBal.amount : (user.balance || 0);
+
     return NextResponse.json(
       {
         user: {
           id: user.id,
           email: user.email,
           username: user.username,
-          balance: user.balance,
-          balances: user.balances || [],
+          balance: effectiveBalance,
+          balances,
           cryptoWallets: user.cryptoWallets || [],
           preferredCurrency: user.preferredCurrency || 'USD',
           createdAt: user.createdAt

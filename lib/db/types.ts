@@ -58,6 +58,7 @@ export interface Card {
   currency: Currency; // Card currency
   accountType?: 'personal' | 'business'; // Account type the card belongs to (default: personal)
   status: 'active' | 'frozen' | 'blocked';
+  balance?: number; // Current available balance in card's currency
   createdAt: string;
 }
 
@@ -175,6 +176,7 @@ export interface Bill {
   dueDate: string;
   status: 'pending' | 'paid' | 'overdue';
   provider: string;
+  title?: string;
   paidAt?: string;
   createdAt: string;
 }

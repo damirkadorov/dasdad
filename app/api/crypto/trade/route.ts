@@ -99,6 +99,9 @@ export async function POST(request: NextRequest) {
     const currentBalance = balances[currencyBalanceIndex].amount;
     const currentCryptoBalance = cryptoWallets[walletIndex].balance;
 
+    const currentCryptoPrice = getCryptoPrice(cryptoType as CryptoType, currency as Currency);
+    const isAmountInCrypto = Boolean(body.isAmountInCrypto);
+
     let cryptoAmount: number;
     let fiatAmount: number;
     let fee: number;
@@ -107,8 +110,13 @@ export async function POST(request: NextRequest) {
 
     if (type === 'buy') {
       // Buy crypto with fiat
-      fiatAmount = amount;
-      cryptoAmount = fiatToCrypto(fiatAmount, currency as Currency, cryptoType as CryptoType);
+      if (isAmountInCrypto) {
+        cryptoAmount = amount;
+        fiatAmount = cryptoAmount * currentCryptoPrice;
+      } else {
+        fiatAmount = amount;
+        cryptoAmount = fiatToCrypto(fiatAmount, currency as Currency, cryptoType as CryptoType);
+      }
       fee = fiatAmount * 0.01; // 1% fee
       const totalCost = fiatAmount + fee;
 
@@ -124,8 +132,13 @@ export async function POST(request: NextRequest) {
       newCryptoBalance = currentCryptoBalance + cryptoAmount;
     } else {
       // Sell crypto for fiat
-      cryptoAmount = amount;
-      fiatAmount = cryptoToFiat(cryptoAmount, cryptoType as CryptoType, currency as Currency);
+      if (isAmountInCrypto) {
+        cryptoAmount = amount;
+        fiatAmount = cryptoToFiat(cryptoAmount, cryptoType as CryptoType, currency as Currency);
+      } else {
+        fiatAmount = amount;
+        cryptoAmount = currentCryptoPrice > 0 ? (fiatAmount / currentCryptoPrice) : 0;
+      }
       fee = fiatAmount * 0.01; // 1% fee
       const netAmount = fiatAmount - fee;
 
@@ -145,10 +158,14 @@ export async function POST(request: NextRequest) {
     balances[currencyBalanceIndex].amount = newBalance;
     cryptoWallets[walletIndex].balance = newCryptoBalance;
 
+    const usdBalance = currency === 'USD' 
+      ? newBalance 
+      : (balances.find(b => b.currency === 'USD')?.amount ?? user.balance);
+
     await updateUser(user.id, {
       balances,
       cryptoWallets,
-      balance: newBalance, // Update legacy balance if using USD
+      balance: usdBalance,
     });
 
     // Create trade record

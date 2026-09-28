@@ -80,6 +80,23 @@ export default function PaymentPage() {
         throw new Error(data.error || 'Payment failed');
       }
 
+      // Broadcast payment success to parent window / iframe modal
+      if (typeof window !== 'undefined') {
+        const successMsg = {
+          type: 'lingoung.payment.success',
+          event: 'payment.completed',
+          paymentId,
+          amount: payment?.amount,
+          currency: payment?.currency
+        };
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage(successMsg, '*');
+        }
+        if (window.opener) {
+          window.opener.postMessage(successMsg, '*');
+        }
+      }
+
       // Redirect to success page or merchant's success URL
       if (data.successUrl) {
         window.location.href = data.successUrl;

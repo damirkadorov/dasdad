@@ -174,8 +174,17 @@ export async function POST(
       : [...merchantBalances, { currency: payment.currency, amount: merchantAmount }];
 
     // Update both users
-    await updateUser(payer.id, { balances: updatedPayerBalances });
-    await updateUser(merchant.id, { balances: updatedMerchantBalances });
+    const payerNewBal = payerBalance.amount - payment.amount;
+    const merchantNewBal = merchantCurrencyBalance ? merchantCurrencyBalance.amount + merchantAmount : merchantAmount;
+
+    await updateUser(payer.id, { 
+      balances: updatedPayerBalances,
+      balance: payment.currency === 'USD' ? payerNewBal : payer.balance
+    });
+    await updateUser(merchant.id, { 
+      balances: updatedMerchantBalances,
+      balance: payment.currency === 'USD' ? merchantNewBal : merchant.balance
+    });
 
     // Update payment status
     await updatePayment(paymentId, { 

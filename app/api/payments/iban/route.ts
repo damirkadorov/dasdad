@@ -50,7 +50,11 @@ export async function POST(request: NextRequest) {
       updatedBalances[balanceIndex] = { ...updatedBalances[balanceIndex], amount: currentBalance - amount };
     }
 
-    await updateUser(sender.id, { balances: updatedBalances });
+    const senderBalanceAfter = currentBalance - amount;
+    await updateUser(sender.id, { 
+      balances: updatedBalances,
+      balance: currency === 'USD' ? senderBalanceAfter : sender.balance
+    });
 
     // Find bank account by IBAN
     const bankAccount = await getBankAccountByIban(iban);
@@ -65,16 +69,21 @@ export async function POST(request: NextRequest) {
         const recipientBalanceIndex = recipientBalances.findIndex(b => b.currency === currency);
         
         const updatedRecipientBalances = [...recipientBalances];
+        let recipientNewBal = amount;
         if (recipientBalanceIndex >= 0) {
+          recipientNewBal = updatedRecipientBalances[recipientBalanceIndex].amount + amount;
           updatedRecipientBalances[recipientBalanceIndex] = {
             ...updatedRecipientBalances[recipientBalanceIndex],
-            amount: updatedRecipientBalances[recipientBalanceIndex].amount + amount
+            amount: recipientNewBal
           };
         } else {
           updatedRecipientBalances.push({ currency: currency as Currency, amount });
         }
 
-        await updateUser(recipient.id, { balances: updatedRecipientBalances });
+        await updateUser(recipient.id, { 
+          balances: updatedRecipientBalances,
+          balance: currency === 'USD' ? recipientNewBal : recipient.balance
+        });
 
         // Create transaction for recipient
         await createTransaction({

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { requireAuth } from '@/lib/auth/middleware';
 import { getUserById, updateUser, createTransaction, getCardById } from '@/lib/db/database';
+import { Currency } from '@/lib/db/types';
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,17 +29,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if user has sufficient balance
-    if (user.balance < amount) {
-      return NextResponse.json(
-        { error: 'Insufficient balance' },
-        { status: 400 }
-      );
-    }
-
     // Verify card if provided (from MongoDB)
+    let card = null;
     if (cardId) {
-      const card = await getCardById(cardId);
+      card = await getCardById(cardId);
       if (!card) {
         return NextResponse.json(
           { error: 'Card not found' },
@@ -61,11 +55,33 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const balanceBefore = user.balance;
+    const paymentCurrency: Currency = card ? card.currency : 'USD';
+    const userBalances = user.balances && user.balances.length > 0
+      ? user.balances
+      : [{ currency: 'USD' as Currency, amount: user.balance || 0 }];
+
+    const balanceIndex = userBalances.findIndex(b => b.currency === paymentCurrency);
+    const balanceBefore = balanceIndex >= 0 
+      ? userBalances[balanceIndex].amount 
+      : (paymentCurrency === 'USD' ? (user.balance || 0) : 0);
+
+    if (balanceBefore < amount) {
+      return NextResponse.json(
+        { error: `Insufficient ${paymentCurrency} balance` },
+        { status: 400 }
+      );
+    }
+
     const balanceAfter = balanceBefore - amount;
+    const updatedBalances = balanceIndex >= 0
+      ? userBalances.map((b, idx) => idx === balanceIndex ? { ...b, amount: balanceAfter } : b)
+      : [...userBalances, { currency: paymentCurrency, amount: balanceAfter }];
 
     // Update user balance in MongoDB
-    await updateUser(user.id, { balance: balanceAfter });
+    await updateUser(user.id, { 
+      balances: updatedBalances,
+      balance: paymentCurrency === 'USD' ? balanceAfter : user.balance 
+    });
 
     // Create transaction record in MongoDB
     await createTransaction({
@@ -73,7 +89,7 @@ export async function POST(request: NextRequest) {
       userId: user.id,
       type: 'nfc_payment',
       amount: -amount,
-      currency: 'USD',
+      currency: paymentCurrency,
       balanceBefore,
       balanceAfter,
       cardId,

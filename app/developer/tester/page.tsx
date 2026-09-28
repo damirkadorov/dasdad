@@ -157,7 +157,9 @@ export default function PaymentGatewayTesterPage() {
     setError(null);
   };
 
-  const curlCommand = `curl -X POST "${typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'}/api/payment-gateway/payments" \\
+  const hostOrigin = typeof window !== 'undefined' ? window.location.origin : 'https://lingoung-bank.vercel.app';
+
+  const curlCommand = `curl -X POST "${hostOrigin}/api/payment-gateway/payments" \\
   -H "Content-Type: application/json" \\
   -H "X-API-Key: ${apiKey}" \\
   -d '{
@@ -167,6 +169,71 @@ export default function PaymentGatewayTesterPage() {
     "customerEmail": "${customerEmail}",
     "customerName": "${customerName}"
   }'`;
+
+  const dropInHtmlSnippet = `<!-- Lingoung Bank Ready-to-Use HTML Integration -->
+<script src="${hostOrigin}/lingoung-pay.js"></script>
+
+<button 
+  data-lingoung-pay
+  data-key="${apiKey}"
+  data-amount="${amount}"
+  data-currency="${currency}"
+  data-description="${description}"
+  data-customer-name="${customerName}"
+  data-customer-email="${customerEmail}"
+  style="background:#d4ff00;color:#05070B;font-weight:800;padding:14px 28px;border-radius:12px;border:none;cursor:pointer;font-family:sans-serif;box-shadow:0 10px 20px rgba(212,255,0,0.25);">
+  ⚡ Pay ${amount} ${currency} with Lingoung Bank
+</button>
+
+<script>
+  document.querySelector('[data-lingoung-pay]').addEventListener('lingoung:success', function(e) {
+    alert('Payment successful! Transaction ID: ' + e.detail.paymentId);
+  });
+</script>`;
+
+  const downloadHtmlDemo = () => {
+    const fullHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lingoung Bank Payment Demo</title>
+  <script src="${hostOrigin}/lingoung-pay.js"></script>
+  <style>
+    body { background: #05070B; color: #fff; font-family: sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
+    .card { background: #090d16; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .price { font-size: 38px; font-weight: 900; margin: 16px 0; color: #d4ff00; }
+    .btn { background: #d4ff00; color: #000; font-weight: 800; padding: 16px 24px; border-radius: 12px; border: none; cursor: pointer; width: 100%; font-size: 16px; transition: transform 0.2s; }
+    .btn:hover { transform: scale(1.02); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;">Lingoung Bank Checkout</div>
+    <h2>${description}</h2>
+    <p style="color:#94a3b8;font-size:14px;margin-bottom:16px;">${customerName} (${customerEmail})</p>
+    <div class="price">${amount} ${currency}</div>
+    <button class="btn" data-lingoung-pay data-key="${apiKey}" data-amount="${amount}" data-currency="${currency}" data-description="${description}">
+      ⚡ Pay with Lingoung Bank
+    </button>
+  </div>
+  <script>
+    document.querySelector('[data-lingoung-pay]').addEventListener('lingoung:success', function(e) {
+      alert('Payment Completed! Transaction ID: ' + e.detail.paymentId);
+    });
+  </script>
+</body>
+</html>`;
+    const blob = new Blob([fullHtml], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `lingoung-checkout-${currency.toLowerCase()}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-[#05070B] text-zinc-100 bg-cyber-grid">
@@ -630,6 +697,37 @@ export default function PaymentGatewayTesterPage() {
               </div>
               <div className="bg-[#05070B] p-4 rounded-2xl font-mono text-xs text-emerald-400 overflow-x-auto border border-white/10">
                 <pre>{curlCommand}</pre>
+              </div>
+            </div>
+
+            {/* Drop-in HTML Integration Card */}
+            <div className="p-6 rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-xl shadow-2xl relative overflow-hidden">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+                <div>
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#d4ff00] flex items-center gap-1.5">
+                    <span>🌐 Ready-to-Use Drop-in HTML Code</span>
+                  </h3>
+                  <p className="text-[11px] text-zinc-400 mt-0.5">
+                    Paste this snippet directly into any HTML page to embed this exact test transaction.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={downloadHtmlDemo}
+                    className="px-3 py-1 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] text-xs font-mono font-bold text-white transition-all cursor-pointer"
+                  >
+                    💾 Download HTML
+                  </button>
+                  <button
+                    onClick={() => copyToClipboard(dropInHtmlSnippet, 'html')}
+                    className="px-3 py-1 rounded-lg bg-[#d4ff00] hover:bg-[#bce600] text-xs font-mono font-extrabold text-[#05070B] transition-all cursor-pointer"
+                  >
+                    {copiedText === 'html' ? '✓ Copied' : '📋 Copy HTML'}
+                  </button>
+                </div>
+              </div>
+              <div className="bg-[#05070B] p-4 rounded-2xl font-mono text-xs text-zinc-300 overflow-x-auto border border-white/10">
+                <pre>{dropInHtmlSnippet}</pre>
               </div>
             </div>
           </div>

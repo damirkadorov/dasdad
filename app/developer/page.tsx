@@ -32,6 +32,166 @@ export default function DeveloperPage() {
   const [domain, setDomain] = useState('');
   const [error, setError] = useState('');
 
+  // Ready HTML Integration States
+  const [activeHtmlTab, setActiveHtmlTab] = useState<'sdk' | 'standalone' | 'iframe' | 'react'>('sdk');
+  const [copiedSnippet, setCopiedSnippet] = useState(false);
+  const [testTesting, setTestTesting] = useState(false);
+  const [testResult, setTestResult] = useState<string | null>(null);
+
+  const activeApiKey = apiKeys.find(k => k.status === 'active')?.key || 'pk_f5b9c5381e00084a9e00ee970c6ef79c39c506ee1fc5e6785f8e63e707db46cf';
+
+  const handleCopySnippet = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedSnippet(true);
+    setTimeout(() => setCopiedSnippet(false), 2000);
+  };
+
+  const handleDownloadDemoHtml = () => {
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://lingoung-bank.vercel.app';
+    const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lingoung Bank Payment Checkout Demo</title>
+  <!-- Lingoung Bank Drop-in SDK -->
+  <script src="${origin}/lingoung-pay.js"></script>
+  <style>
+    body {
+      background: #05070B;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .card {
+      background: #090d16;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      background: rgba(212, 255, 0, 0.1);
+      color: #d4ff00;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .price {
+      font-size: 40px;
+      font-weight: 900;
+      margin: 12px 0 24px;
+      color: #fff;
+    }
+    .btn {
+      background: #d4ff00;
+      color: #05070B;
+      font-weight: 800;
+      font-size: 15px;
+      padding: 16px 28px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+    }
+    .btn:hover {
+      background: #bce600;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 25px rgba(212,255,0,0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">Official Storefront Checkout</div>
+    <h2 style="margin:0 0 8px;">Order #4092</h2>
+    <p style="color:#94a3b8;font-size:14px;margin:0 0 16px;">Cyberpunk High-Top Sneakers</p>
+    <div class="price">$100.00 <span style="font-size:16px;color:#94a3b8;font-weight:400;">USD</span></div>
+    
+    <!-- Lingoung Drop-in Checkout Button -->
+    <button 
+      class="btn"
+      data-lingoung-pay
+      data-key="${activeApiKey}"
+      data-amount="100.00"
+      data-currency="USD"
+      data-description="Order #4092 - Cyberpunk Sneakers">
+      ⚡ Pay with Lingoung Bank
+    </button>
+  </div>
+
+  <script>
+    document.querySelector('[data-lingoung-pay]').addEventListener('lingoung:success', function(e) {
+      alert('Payment successful! Transaction ID: ' + e.detail.paymentId);
+    });
+  </script>
+</body>
+</html>`;
+
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'lingoung-checkout-demo.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleTestDropInWidget = () => {
+    if (typeof window === 'undefined') return;
+    setTestTesting(true);
+    setTestResult(null);
+
+    const runCheckout = () => {
+      if ((window as any).LingoungPay) {
+        (window as any).LingoungPay.checkout({
+          apiKey: activeApiKey,
+          amount: 100,
+          currency: 'USD',
+          description: 'Developer Sandbox Test Order #4092',
+          mode: 'modal',
+          onSuccess: (data: any) => {
+            setTestResult(`Payment Completed! Payment ID: ${data.paymentId || 'completed'}`);
+            setTestTesting(false);
+          },
+          onCancel: () => {
+            setTestResult('Modal was closed without payment.');
+            setTestTesting(false);
+          },
+          onError: (err: any) => {
+            setTestResult('Error: ' + err.message);
+            setTestTesting(false);
+          }
+        });
+      }
+    };
+
+    if (!(window as any).LingoungPay) {
+      const script = document.createElement('script');
+      script.src = '/lingoung-pay.js';
+      script.onload = () => runCheckout();
+      document.body.appendChild(script);
+    } else {
+      runCheckout();
+    }
+  };
+
   useEffect(() => {
     loadApiKeys();
   }, []);
@@ -346,6 +506,335 @@ export default function DeveloperPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Ready-to-Use HTML Integration Section */}
+        <div className="mb-12 p-6 sm:p-8 rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-xl shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#d4ff00]/5 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6 relative z-10">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#d4ff00]/10 border border-[#d4ff00]/30 text-xs font-bold text-[#d4ff00] mb-2">
+                <span>⚡</span>
+                <span>Zero-Config Drop-in Integration</span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-extrabold text-white">Ready-to-Use HTML Integration</h2>
+              <p className="text-xs text-zinc-400 mt-1 max-w-xl">
+                Copy and paste this ready-to-run snippet into any website, static HTML, WordPress, Shopify, or Webflow page to start accepting instant payments.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                onClick={handleDownloadDemoHtml}
+                className="px-4 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-white text-xs font-bold transition-all flex items-center gap-2 cursor-pointer active:scale-95"
+                title="Download self-contained ready-to-run HTML demo file"
+              >
+                <span>💾</span>
+                <span>Download checkout.html</span>
+              </button>
+
+              <button
+                onClick={handleTestDropInWidget}
+                disabled={testTesting}
+                className="px-4 py-2.5 rounded-xl bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] text-xs font-extrabold shadow-lg shadow-[#d4ff00]/20 transition-all flex items-center gap-2 cursor-pointer active:scale-95 disabled:opacity-50"
+              >
+                <span>{testTesting ? '⏳' : '⚡'}</span>
+                <span>{testTesting ? 'Launching...' : 'Test Drop-in Widget Live'}</span>
+              </button>
+            </div>
+          </div>
+
+          {testResult && (
+            <div className="mb-6 p-4 rounded-2xl bg-[#d4ff00]/10 border border-[#d4ff00]/30 text-xs text-[#d4ff00] flex items-center justify-between animate-fadeIn">
+              <div className="flex items-center gap-2">
+                <span>⚡</span>
+                <span className="font-semibold">{testResult}</span>
+              </div>
+              <button onClick={() => setTestResult(null)} className="text-zinc-400 hover:text-white text-sm">✕</button>
+            </div>
+          )}
+
+          {/* Integration Tabs */}
+          <div className="flex items-center gap-2 border-b border-white/10 pb-3 mb-5 overflow-x-auto relative z-10">
+            <button
+              onClick={() => setActiveHtmlTab('sdk')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
+                activeHtmlTab === 'sdk'
+                  ? 'bg-[#d4ff00] text-black shadow-md shadow-[#d4ff00]/20'
+                  : 'bg-white/[0.04] text-zinc-400 hover:text-white hover:bg-white/[0.08]'
+              }`}
+            >
+              ⚡ Drop-in SDK (1 Line + Button)
+            </button>
+            <button
+              onClick={() => setActiveHtmlTab('standalone')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
+                activeHtmlTab === 'standalone'
+                  ? 'bg-[#d4ff00] text-black shadow-md shadow-[#d4ff00]/20'
+                  : 'bg-white/[0.04] text-zinc-400 hover:text-white hover:bg-white/[0.08]'
+              }`}
+            >
+              📦 Standalone HTML & JS (Zero Dependencies)
+            </button>
+            <button
+              onClick={() => setActiveHtmlTab('iframe')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
+                activeHtmlTab === 'iframe'
+                  ? 'bg-[#d4ff00] text-black shadow-md shadow-[#d4ff00]/20'
+                  : 'bg-white/[0.04] text-zinc-400 hover:text-white hover:bg-white/[0.08]'
+              }`}
+            >
+              🖼️ Embedded iFrame Widget
+            </button>
+            <button
+              onClick={() => setActiveHtmlTab('react')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
+                activeHtmlTab === 'react'
+                  ? 'bg-[#d4ff00] text-black shadow-md shadow-[#d4ff00]/20'
+                  : 'bg-white/[0.04] text-zinc-400 hover:text-white hover:bg-white/[0.08]'
+              }`}
+            >
+              ⚛️ React / Next.js Component
+            </button>
+          </div>
+
+          {/* Tab 1: SDK Drop-in */}
+          {activeHtmlTab === 'sdk' && (
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-zinc-400 font-mono">index.html (Drop-in Modal)</span>
+                <button
+                  onClick={() => handleCopySnippet(`<!-- 1. Include Lingoung Pay SDK -->
+<script src="${typeof window !== 'undefined' ? window.location.origin : 'https://lingoung-bank.vercel.app'}/lingoung-pay.js"></script>
+
+<!-- 2. Drop-in Checkout Button -->
+<button 
+  data-lingoung-pay
+  data-key="${activeApiKey}"
+  data-amount="100.00"
+  data-currency="USD"
+  data-description="Order #4092 - Cyberpunk Sneakers"
+  style="background:#d4ff00;color:#05070B;font-weight:800;padding:14px 28px;border-radius:12px;border:none;cursor:pointer;font-family:sans-serif;box-shadow:0 10px 20px rgba(212,255,0,0.25);">
+  ⚡ Pay $100.00 with Lingoung Bank
+</button>
+
+<script>
+  // Listen for payment completion
+  document.querySelector('[data-lingoung-pay]').addEventListener('lingoung:success', function(e) {
+    alert('Payment successful! Transaction ID: ' + e.detail.paymentId);
+  });
+</script>`)}
+                  className="px-3 py-1.5 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-xs font-mono font-bold text-white transition-all cursor-pointer"
+                >
+                  {copiedSnippet ? '✓ Copied' : '📋 Copy Code'}
+                </button>
+              </div>
+
+              <div className="bg-[#05070B] border border-white/10 p-4 rounded-2xl text-[12px] font-mono text-zinc-300 overflow-x-auto leading-relaxed shadow-inner">
+                <p className="text-zinc-500">{`<!-- 1. Include Lingoung Pay SDK in your <head> or before </body> -->`}</p>
+                <p className="text-blue-400">&lt;<span className="text-rose-400">script</span> <span className="text-amber-300">src</span>=<span className="text-emerald-300">&quot;{typeof window !== 'undefined' ? window.location.origin : 'https://lingoung-bank.vercel.app'}/lingoung-pay.js&quot;</span>&gt;&lt;/<span className="text-rose-400">script</span>&gt;</p>
+                <br />
+                <p className="text-zinc-500">{`<!-- 2. Drop-in Checkout Button (pre-configured with your active API key) -->`}</p>
+                <p className="text-blue-400">&lt;<span className="text-rose-400">button</span></p>
+                <p className="text-amber-300 pl-4">data-lingoung-pay</p>
+                <p className="text-amber-300 pl-4">data-key=<span className="text-emerald-300">&quot;{activeApiKey}&quot;</span></p>
+                <p className="text-amber-300 pl-4">data-amount=<span className="text-emerald-300">&quot;100.00&quot;</span></p>
+                <p className="text-amber-300 pl-4">data-currency=<span className="text-emerald-300">&quot;USD&quot;</span></p>
+                <p className="text-amber-300 pl-4">data-description=<span className="text-emerald-300">&quot;Order #4092 - Cyberpunk Sneakers&quot;</span></p>
+                <p className="text-amber-300 pl-4">style=<span className="text-emerald-300">&quot;background:#d4ff00;color:#05070B;font-weight:800;padding:14px 28px;border-radius:12px;border:none;cursor:pointer;&quot;</span>&gt;</p>
+                <p className="pl-4 text-white">⚡ Pay $100.00 with Lingoung Bank</p>
+                <p className="text-blue-400">&lt;/<span className="text-rose-400">button</span>&gt;</p>
+                <br />
+                <p className="text-zinc-500">{`<!-- 3. Optional event listener -->`}</p>
+                <p className="text-blue-400">&lt;<span className="text-rose-400">script</span>&gt;</p>
+                <p className="pl-4 text-zinc-300">document.querySelector(<span className="text-emerald-300">&apos;[data-lingoung-pay]&apos;</span>).addEventListener(<span className="text-emerald-300">&apos;lingoung:success&apos;</span>, <span className="text-blue-400">function</span>(e) &#123;</p>
+                <p className="pl-8 text-zinc-300">alert(<span className="text-emerald-300">&apos;Payment successful! Transaction ID: &apos;</span> + e.detail.paymentId);</p>
+                <p className="pl-4 text-zinc-300">&#125;);</p>
+                <p className="text-blue-400">&lt;/<span className="text-rose-400">script</span>&gt;</p>
+              </div>
+            </div>
+          )}
+
+          {/* Tab 2: Standalone Pure HTML/JS */}
+          {activeHtmlTab === 'standalone' && (
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-zinc-400 font-mono">checkout.html (Zero external dependencies)</span>
+                <button
+                  onClick={() => handleCopySnippet(`<button id="lingoung-checkout-btn" style="background:#d4ff00;color:#05070B;font-weight:800;padding:14px 28px;border-radius:12px;border:none;cursor:pointer;font-family:sans-serif;box-shadow:0 10px 20px rgba(212,255,0,0.25);">
+  ⚡ Pay $100.00 with Lingoung
+</button>
+
+<script>
+  document.getElementById('lingoung-checkout-btn').addEventListener('click', async function() {
+    const btn = this;
+    const originalText = btn.innerText;
+    btn.disabled = true;
+    btn.innerText = 'Creating Payment...';
+
+    try {
+      const response = await fetch('${typeof window !== 'undefined' ? window.location.origin : 'https://lingoung-bank.vercel.app'}/api/payment-gateway/payments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': '${activeApiKey}'
+        },
+        body: JSON.stringify({
+          amount: 100.00,
+          currency: 'USD',
+          description: 'Order #4092'
+        })
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Payment failed');
+      
+      // Redirect customer to secure Lingoung Bank checkout
+      window.location.href = data.paymentUrl;
+    } catch (err) {
+      alert('Payment initialization error: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.innerText = originalText;
+    }
+  });
+</script>`)}
+                  className="px-3 py-1.5 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-xs font-mono font-bold text-white transition-all cursor-pointer"
+                >
+                  {copiedSnippet ? '✓ Copied' : '📋 Copy Code'}
+                </button>
+              </div>
+
+              <div className="bg-[#05070B] border border-white/10 p-4 rounded-2xl text-[12px] font-mono text-zinc-300 overflow-x-auto leading-relaxed shadow-inner">
+                <p className="text-zinc-500">{`<!-- Fully self-contained drop-in button and handler -->`}</p>
+                <p className="text-blue-400">&lt;<span className="text-rose-400">button</span> <span className="text-amber-300">id</span>=<span className="text-emerald-300">&quot;lingoung-checkout-btn&quot;</span> <span className="text-amber-300">style</span>=<span className="text-emerald-300">&quot;background:#d4ff00;color:#05070B;font-weight:800;padding:14px 28px;border-radius:12px;border:none;cursor:pointer;&quot;</span>&gt;</p>
+                <p className="pl-4 text-white">⚡ Pay $100.00 with Lingoung</p>
+                <p className="text-blue-400">&lt;/<span className="text-rose-400">button</span>&gt;</p>
+                <br />
+                <p className="text-blue-400">&lt;<span className="text-rose-400">script</span>&gt;</p>
+                <p className="pl-4 text-zinc-300">document.getElementById(<span className="text-emerald-300">&apos;lingoung-checkout-btn&apos;</span>).addEventListener(<span className="text-emerald-300">&apos;click&apos;</span>, <span className="text-blue-400">async function</span>() &#123;</p>
+                <p className="pl-8 text-zinc-300"><span className="text-blue-400">const</span> res = <span className="text-blue-400">await</span> fetch(<span className="text-emerald-300">&apos;{typeof window !== 'undefined' ? window.location.origin : 'https://lingoung-bank.vercel.app'}/api/payment-gateway/payments&apos;</span>, &#123;</p>
+                <p className="pl-12 text-zinc-300">method: <span className="text-emerald-300">&apos;POST&apos;</span>,</p>
+                <p className="pl-12 text-zinc-300">headers: &#123; <span className="text-emerald-300">&apos;Content-Type&apos;</span>: <span className="text-emerald-300">&apos;application/json&apos;</span>, <span className="text-emerald-300">&apos;X-API-Key&apos;</span>: <span className="text-emerald-300">&apos;{activeApiKey}&apos;</span> &#125;,</p>
+                <p className="pl-12 text-zinc-300">body: JSON.stringify(&#123; amount: 100, currency: <span className="text-emerald-300">&apos;USD&apos;</span>, description: <span className="text-emerald-300">&apos;Order #4092&apos;</span> &#125;)</p>
+                <p className="pl-8 text-zinc-300">&#125;);</p>
+                <p className="pl-8 text-zinc-300"><span className="text-blue-400">const</span> data = <span className="text-blue-400">await</span> res.json();</p>
+                <p className="pl-8 text-emerald-400">window.location.href = data.paymentUrl;</p>
+                <p className="pl-4 text-zinc-300">&#125;);</p>
+                <p className="text-blue-400">&lt;/<span className="text-rose-400">script</span>&gt;</p>
+              </div>
+            </div>
+          )}
+
+          {/* Tab 3: iFrame Widget */}
+          {activeHtmlTab === 'iframe' && (
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-zinc-400 font-mono">Storefront iFrame Container</span>
+                <button
+                  onClick={() => handleCopySnippet(`<div style="width:100%;max-width:480px;height:650px;border-radius:24px;overflow:hidden;border:1px solid rgba(255,255,255,0.15);box-shadow:0 20px 50px rgba(0,0,0,0.6);margin:0 auto;">
+  <iframe 
+    src="${typeof window !== 'undefined' ? window.location.origin : 'https://lingoung-bank.vercel.app'}/payment/YOUR_PAYMENT_ID?embedded=true" 
+    width="100%" 
+    height="100%" 
+    frameborder="0" 
+    allow="payment">
+  </iframe>
+</div>`)}
+                  className="px-3 py-1.5 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-xs font-mono font-bold text-white transition-all cursor-pointer"
+                >
+                  {copiedSnippet ? '✓ Copied' : '📋 Copy Code'}
+                </button>
+              </div>
+
+              <div className="bg-[#05070B] border border-white/10 p-4 rounded-2xl text-[12px] font-mono text-zinc-300 overflow-x-auto leading-relaxed shadow-inner">
+                <p className="text-zinc-500">{`<!-- Embed Lingoung Bank checkout directly inside your checkout page -->`}</p>
+                <p className="text-blue-400">&lt;<span className="text-rose-400">div</span> <span className="text-amber-300">style</span>=<span className="text-emerald-300">&quot;max-width:480px;height:650px;border-radius:24px;overflow:hidden;border:1px solid rgba(255,255,255,0.15);&quot;</span>&gt;</p>
+                <p className="pl-4 text-blue-400">&lt;<span className="text-rose-400">iframe</span></p>
+                <p className="pl-8 text-amber-300">src=<span className="text-emerald-300">&quot;{typeof window !== 'undefined' ? window.location.origin : 'https://lingoung-bank.vercel.app'}/payment/PAYMENT_ID?embedded=true&quot;</span></p>
+                <p className="pl-8 text-amber-300">width=<span className="text-emerald-300">&quot;100%&quot;</span> height=<span className="text-emerald-300">&quot;100%&quot;</span> frameborder=<span className="text-emerald-300">&quot;0&quot;</span> allow=<span className="text-emerald-300">&quot;payment&quot;</span>&gt;</p>
+                <p className="pl-4 text-blue-400">&lt;/<span className="text-rose-400">iframe</span>&gt;</p>
+                <p className="text-blue-400">&lt;/<span className="text-rose-400">div</span>&gt;</p>
+              </div>
+            </div>
+          )}
+
+          {/* Tab 4: React / Next.js */}
+          {activeHtmlTab === 'react' && (
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-zinc-400 font-mono">LingoungPayButton.tsx</span>
+                <button
+                  onClick={() => handleCopySnippet(`import { useState } from 'react';
+
+export function LingoungPayButton({ amount = 100, currency = 'USD', description = 'Order #4092' }) {
+  const [loading, setLoading] = useState(false);
+
+  const handleCheckout = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('${typeof window !== 'undefined' ? window.location.origin : 'https://lingoung-bank.vercel.app'}/api/payment-gateway/payments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': '${activeApiKey}',
+        },
+        body: JSON.stringify({ amount, currency, description }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Payment failed');
+      window.location.href = data.paymentUrl;
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleCheckout}
+      disabled={loading}
+      className="px-6 py-3.5 bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold text-sm rounded-xl shadow-lg transition-all"
+    >
+      {loading ? 'Processing...' : \`Pay \${amount} \${currency} with Lingoung\`}
+    </button>
+  );
+}`)}
+                  className="px-3 py-1.5 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-xs font-mono font-bold text-white transition-all cursor-pointer"
+                >
+                  {copiedSnippet ? '✓ Copied' : '📋 Copy Code'}
+                </button>
+              </div>
+
+              <div className="bg-[#05070B] border border-white/10 p-4 rounded-2xl text-[12px] font-mono text-zinc-300 overflow-x-auto leading-relaxed shadow-inner">
+                <p className="text-zinc-500">{`// Ready React / Next.js button component`}</p>
+                <p className="text-blue-400">import <span className="text-white">&#123; useState &#125;</span> from <span className="text-emerald-300">&apos;react&apos;</span>;</p>
+                <br />
+                <p className="text-blue-400">export function <span className="text-amber-300">LingoungPayButton</span>() &#123;</p>
+                <p className="pl-4 text-blue-400">const <span className="text-white">[loading, setLoading] = useState(false);</span></p>
+                <br />
+                <p className="pl-4 text-blue-400">const <span className="text-amber-300">handleCheckout</span> = async () =&gt; &#123;</p>
+                <p className="pl-8 text-zinc-300">setLoading(true);</p>
+                <p className="pl-8 text-blue-400">const <span className="text-zinc-300">res = await fetch(</span><span className="text-emerald-300">&apos;{typeof window !== 'undefined' ? window.location.origin : 'https://lingoung-bank.vercel.app'}/api/payment-gateway/payments&apos;</span>, &#123;</p>
+                <p className="pl-12 text-zinc-300">method: <span className="text-emerald-300">&apos;POST&apos;</span>,</p>
+                <p className="pl-12 text-zinc-300">headers: &#123; <span className="text-emerald-300">&apos;Content-Type&apos;</span>: <span className="text-emerald-300">&apos;application/json&apos;</span>, <span className="text-emerald-300">&apos;X-API-Key&apos;</span>: <span className="text-emerald-300">&apos;{activeApiKey}&apos;</span> &#125;,</p>
+                <p className="pl-12 text-zinc-300">body: JSON.stringify(&#123; amount: 100, currency: <span className="text-emerald-300">&apos;USD&apos;</span>, description: <span className="text-emerald-300">&apos;Order #4092&apos;</span> &#125;)</p>
+                <p className="pl-8 text-zinc-300">&#125;);</p>
+                <p className="pl-8 text-blue-400">const <span className="text-zinc-300">data = await res.json();</span></p>
+                <p className="pl-8 text-emerald-400">window.location.href = data.paymentUrl;</p>
+                <p className="pl-4 text-zinc-300">&#125;;</p>
+                <br />
+                <p className="pl-4 text-blue-400">return (</p>
+                <p className="pl-8 text-blue-400">&lt;<span className="text-rose-400">button</span> <span className="text-amber-300">onClick</span>=&#123;handleCheckout&#125; <span className="text-amber-300">className</span>=<span className="text-emerald-300">&quot;px-6 py-3 bg-[#d4ff00] text-black font-extrabold rounded-xl&quot;</span>&gt;</p>
+                <p className="pl-12 text-white">&#123;loading ? &apos;Processing...&apos; : &apos;Pay with Lingoung&apos;&#125;</p>
+                <p className="pl-8 text-blue-400">&lt;/<span className="text-rose-400">button</span>&gt;</p>
+                <p className="pl-4 text-blue-400">);</p>
+                <p className="text-blue-400">&#125;</p>
+              </div>
+            </div>
+          )}
         </div>
       </main>
 
