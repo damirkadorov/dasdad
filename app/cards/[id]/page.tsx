@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import Link from 'next/link';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
-import Button from '@/components/ui/Button';
 import Skeleton from '@/components/ui/Skeleton';
 import { Card } from '@/lib/db/types';
 import { formatCardNumber } from '@/lib/utils/helpers';
@@ -18,7 +18,7 @@ export default function CardDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [actionLoading, setActionLoading] = useState<'freeze' | 'delete' | null>(null);
-  const [showDetails, setShowDetails] = useState(false);
+  const [showDetails, setShowDetails] = useState(true);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -98,6 +98,7 @@ export default function CardDetailPage() {
       router.push('/cards');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete card');
+    } finally {
       setActionLoading(null);
     }
   };
@@ -111,14 +112,14 @@ export default function CardDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
+      <div className="min-h-screen flex flex-col bg-[#ede9fe]/30 dark:bg-[#06090e]">
         <Navigation />
-        <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl space-y-6">
-          <Skeleton variant="text" width={120} height={36} />
-          <div className="flex justify-center">
-            <Skeleton variant="card" width={420} height={240} />
-          </div>
-          <Skeleton variant="card" height={200} />
+        <main className="flex-1 container mx-auto px-4 py-8 max-w-md space-y-6">
+          <Skeleton variant="text" width={100} height={24} />
+          <Skeleton variant="text" width={220} height={36} />
+          <Skeleton variant="card" height={220} />
+          <Skeleton variant="card" height={80} />
+          <Skeleton variant="card" height={120} />
         </main>
         <Footer />
       </div>
@@ -127,18 +128,19 @@ export default function CardDetailPage() {
 
   if (error && !card) {
     return (
-      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
+      <div className="min-h-screen flex flex-col bg-[#ede9fe]/30 dark:bg-[#06090e]">
         <Navigation />
-        <main className="flex-1 container mx-auto px-4 py-16 max-w-xl text-center">
-          <div className="bezel-card">
-            <div className="bezel-card-inner p-8">
-              <div className="text-4xl mb-3">⚠️</div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{error}</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">The requested card could not be retrieved.</p>
-              <Button onClick={() => router.push('/cards')}>
-                ← Return to Cards
-              </Button>
-            </div>
+        <main className="flex-1 container mx-auto px-4 py-16 max-w-sm text-center">
+          <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 border border-gray-200 dark:border-gray-800 shadow-xl">
+            <div className="text-3xl mb-3">⚠️</div>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{error}</h2>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-6">The requested card could not be retrieved.</p>
+            <Link
+              href="/cards"
+              className="inline-block px-5 py-2.5 bg-purple-600 text-white font-semibold text-xs rounded-xl"
+            >
+              ← Back to Cards
+            </Link>
           </div>
         </main>
         <Footer />
@@ -148,203 +150,160 @@ export default function CardDetailPage() {
 
   if (!card) return null;
 
-  // NovaPay network card gradients
-  const cardGradients: Record<string, string> = {
-    'nova': 'from-emerald-500 via-teal-600 to-cyan-700',
-    'nova-plus': 'from-purple-500 via-violet-600 to-indigo-700'
-  };
-  
-  const gradient = cardGradients[card.cardType] || 'from-emerald-500 via-teal-600 to-cyan-700';
-
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
+    <div className="min-h-screen flex flex-col bg-[#EDE9FE]/40 dark:bg-[#06080E] text-gray-900 dark:text-white">
       <Navigation />
       
-      <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl animate-fadeIn">
-        {/* Back Button */}
-        <button 
-          onClick={() => router.push('/cards')}
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 mb-6 transition-colors cursor-pointer"
-        >
-          <span>←</span>
-          <span>Back to All Cards</span>
-        </button>
+      <main className="flex-1 container mx-auto px-4 py-8 max-w-[440px] animate-fadeIn">
+        {/* Close / Return link (Reference: Image 1 Zip Card) */}
+        <div className="mb-4">
+          <button 
+            onClick={() => router.push('/cards')}
+            className="text-xs font-bold text-purple-700 dark:text-purple-400 hover:underline cursor-pointer"
+          >
+            Close
+          </button>
+        </div>
 
-        {/* Card Display Container */}
-        <div className="mb-10 flex flex-col items-center">
-          <div className={`card-shine relative w-full max-w-md p-8 rounded-2xl bg-gradient-to-br ${gradient} text-white shadow-2xl transition-all duration-300 ${card.status === 'frozen' ? 'opacity-60 saturate-50' : ''}`}>
-            {/* Status badge */}
-            <div className="absolute top-4 right-4 flex gap-2">
-              {card.cardFormat && (
-                <div className="bg-white/20 backdrop-blur px-3 py-1 rounded-full text-xs font-semibold">
-                  {card.cardFormat === 'physical' ? '💳 Physical' : '✨ Virtual'}
-                </div>
-              )}
-              {card.status === 'frozen' && (
-                <div className="bg-white/20 backdrop-blur px-3 py-1 rounded-full text-xs font-semibold">
-                  ❄️ Frozen
-                </div>
-              )}
-            </div>
+        {/* Title Header (Reference: Image 1) */}
+        <div className="mb-6 space-y-1">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-950 dark:text-white">
+            Online virtual card
+          </h1>
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            Use this card as your payment method when shopping online.
+          </p>
+        </div>
 
-            {/* Logo */}
-            <div className="flex justify-between items-start mb-8">
-              <div className="text-2xl font-bold tracking-tight">
-                {card.cardType === 'nova' ? 'NovaPay' : card.cardType === 'nova-plus' ? 'NovaPay+' : 'NovaPay'}
+        {/* Diagonal Split Plum-to-Violet Card (Reference: Image 1 Zip Card) */}
+        <div className="mb-6">
+          <div className={`card-zip-split card-shine p-6 text-white relative transition-all duration-300 ${card.status === 'frozen' ? 'opacity-60 saturate-50' : ''}`}>
+            {/* Top row: Brand & Balance Pill */}
+            <div className="flex justify-between items-start mb-10">
+              <div className="flex items-center gap-1.5">
+                <span className="text-2xl font-black tracking-tight font-sans">ZIP</span>
+                <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-white/20 text-white">PAY</span>
               </div>
-              <div className="w-14 h-9 bg-white/20 rounded-lg backdrop-blur flex items-center justify-center font-bold text-lg">
-                N
+              
+              {/* White Balance Pill (Reference: Image 1) */}
+              <div className="bg-white text-gray-950 font-bold px-3.5 py-1 rounded-xl text-sm font-mono shadow-md">
+                ${card.currency === 'USD' ? '1,000.00' : '850.00'}
               </div>
-            </div>
-
-            {/* Chip SVG */}
-            <div className="mb-5">
-              <svg width="40" height="30" viewBox="0 0 36 28" fill="none" className="opacity-80">
-                <rect x="0.5" y="0.5" width="35" height="27" rx="3.5" stroke="rgba(255,255,255,0.6)" />
-                <rect x="4" y="4" width="12" height="8" rx="1" fill="rgba(255,255,255,0.35)" />
-                <rect x="4" y="16" width="12" height="8" rx="1" fill="rgba(255,255,255,0.35)" />
-                <rect x="20" y="4" width="12" height="8" rx="1" fill="rgba(255,255,255,0.35)" />
-                <rect x="20" y="16" width="12" height="8" rx="1" fill="rgba(255,255,255,0.35)" />
-                <line x1="18" y1="4" x2="18" y2="24" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" />
-                <line x1="4" y1="14" x2="32" y2="14" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" />
-              </svg>
             </div>
 
             {/* Card Number */}
-            <div className="mb-8 text-2xl font-mono tracking-widest flex items-center justify-between">
-              <span>{showDetails ? formatCardNumber(card.cardNumber) : '•••• •••• •••• ' + card.cardNumber.replace(/\s/g, '').slice(-4)}</span>
-              <button
-                onClick={handleCopyNumber}
-                className="text-xs bg-white/20 hover:bg-white/30 px-2.5 py-1 rounded backdrop-blur transition-colors"
-                title="Copy card number"
-              >
-                {copied ? '✓ Copied' : 'Copy'}
-              </button>
+            <div className="mb-8">
+              <p className="text-lg sm:text-xl font-mono font-bold tracking-widest text-white select-all">
+                {showDetails ? formatCardNumber(card.cardNumber) : '•••• •••• •••• ' + card.cardNumber.replace(/\s/g, '').slice(-4)}
+              </p>
             </div>
 
-            {/* Expiry & CVV */}
+            {/* Expiry, CVC & Visa Mark (Reference: Image 1) */}
             <div className="flex justify-between items-end">
-              <div>
-                <div className="text-[10px] opacity-70 mb-0.5 uppercase tracking-wider font-semibold">VALID THRU</div>
-                <div className="text-base font-semibold">{card.expiryDate}</div>
-              </div>
-              <div>
-                <div className="text-[10px] opacity-70 mb-0.5 uppercase tracking-wider font-semibold">CVV</div>
-                <div className="text-base font-semibold">
-                  {showDetails ? card.cvv : '•••'}
+              <div className="flex items-center gap-6">
+                <div>
+                  <p className="text-[9px] font-mono text-purple-200 uppercase tracking-widest">MM &nbsp; YY</p>
+                  <p className="font-mono text-sm font-bold text-white">{card.expiryDate}</p>
+                </div>
+                <div>
+                  <p className="text-[9px] font-mono text-purple-200 uppercase tracking-widest">CVC</p>
+                  <p className="font-mono text-sm font-bold text-white">{showDetails ? card.cvv : '•••'}</p>
                 </div>
               </div>
-              <div>
-                <div className="text-[10px] opacity-70 mb-0.5 uppercase tracking-wider font-semibold">CURRENCY</div>
-                <div className="text-base font-semibold">{card.currency || 'USD'}</div>
+
+              <div className="font-bold italic text-2xl tracking-tighter font-sans text-white/95">
+                VISA
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="mt-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowDetails(!showDetails)}
+        {/* Date & Balance Card (Reference: Image 1) */}
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 border border-gray-200/80 dark:border-gray-800 shadow-sm flex items-center justify-between mb-4">
+          <div>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              {new Date(card.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+            </p>
+            <p className="text-base font-bold font-mono text-gray-900 dark:text-white mt-0.5">
+              ${card.currency === 'USD' ? '1,000.00' : '850.00'}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleToggleFreeze}
+              disabled={actionLoading === 'freeze'}
+              className="p-2 rounded-xl text-xs font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+              title={card.status === 'active' ? 'Freeze Card' : 'Unfreeze Card'}
             >
-              {showDetails ? '🔒 Conceal Sensitive Info' : '👁️ Reveal Card Details'}
-            </Button>
+              {card.status === 'active' ? '❄️' : '🔥'}
+            </button>
+            <button
+              onClick={handleDelete}
+              disabled={actionLoading === 'delete'}
+              className="p-2 rounded-xl text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer"
+              title="Delete Card"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-          {/* Card Info Box */}
-          <div className="bezel-card">
-            <div className="bezel-card-inner p-6">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Card Specifications</h2>
-              
-              <div className="space-y-3.5 text-sm">
-                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-800">
-                  <span className="text-gray-500 dark:text-gray-400">Card Tier</span>
-                  <span className="font-semibold text-gray-900 dark:text-white capitalize">
-                    {card.cardType === 'nova-plus' ? 'NovaPay+ Premium' : 'NovaPay Standard'}
-                  </span>
-                </div>
-
-                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-800">
-                  <span className="text-gray-500 dark:text-gray-400">Card Format</span>
-                  <span className="font-semibold text-gray-900 dark:text-white capitalize">
-                    {card.cardFormat || 'Virtual'}
-                  </span>
-                </div>
-                
-                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-800">
-                  <span className="text-gray-500 dark:text-gray-400">Status</span>
-                  <span className={`font-semibold ${card.status === 'active' ? 'text-emerald-600 dark:text-emerald-400' : 'text-blue-500'}`}>
-                    {card.status === 'active' ? '● Active & Ready' : '❄ Frozen'}
-                  </span>
-                </div>
-                
-                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-800">
-                  <span className="text-gray-500 dark:text-gray-400">Issued On</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">
-                    {new Date(card.createdAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric'
-                    })}
-                  </span>
-                </div>
-                
-                <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-500 dark:text-gray-400">Unique ID</span>
-                  <span className="font-mono text-xs text-gray-600 dark:text-gray-400">
-                    {card.id}
-                  </span>
-                </div>
-              </div>
+        {/* Action List Group (Reference: Image 1) */}
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200/80 dark:border-gray-800 shadow-sm overflow-hidden mb-8">
+          {/* Action 1: Copy Card Number */}
+          <button
+            onClick={handleCopyNumber}
+            className="w-full p-4 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors cursor-pointer"
+          >
+            <div className="flex items-center gap-3">
+              <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <span className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white">
+                {copied ? '✓ Card number copied!' : 'Copy card number'}
+              </span>
             </div>
-          </div>
+            <span className="text-xs text-purple-600 dark:text-purple-400 font-semibold">
+              {copied ? 'Done' : 'Copy'}
+            </span>
+          </button>
 
-          {/* Actions Box */}
-          <div className="bezel-card">
-            <div className="bezel-card-inner p-6 flex flex-col justify-between">
-              <div>
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Card Management</h2>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-6">
-                  Control security states or decommission this card.
-                </p>
-                
-                <div className="space-y-3">
-                  <Button
-                    onClick={handleToggleFreeze}
-                    isLoading={actionLoading === 'freeze'}
-                    variant={card.status === 'active' ? 'secondary' : 'primary'}
-                    className="w-full"
-                  >
-                    {card.status === 'active' ? '❄️ Freeze Card' : '🔓 Unfreeze Card'}
-                  </Button>
-                  
-                  <Button
-                    onClick={handleDelete}
-                    isLoading={actionLoading === 'delete'}
-                    variant="danger"
-                    className="w-full"
-                  >
-                    🗑️ Delete Card Permanently
-                  </Button>
-                </div>
-              </div>
+          <div className="border-t border-gray-100 dark:border-gray-800"></div>
 
-              <div className="mt-6 p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50 border border-gray-200/60 dark:border-gray-700/60 text-xs text-gray-500 dark:text-gray-400">
-                {card.status === 'active' 
-                  ? '🛡️ Card is protected by 24/7 fraud monitoring and contactless tokenization.'
-                  : '🔒 While frozen, all new debit charges and POS authorizations are declined immediately.'}
-              </div>
+          {/* Action 2: Shop Online */}
+          <Link
+            href="/developer/tester"
+            className="w-full p-4 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors cursor-pointer"
+          >
+            <div className="flex items-center gap-3">
+              <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+              <span className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white">Shop online / Sandbox</span>
             </div>
-          </div>
+            <span className="text-gray-400 text-xs">↗</span>
+          </Link>
+
+          <div className="border-t border-gray-100 dark:border-gray-800"></div>
+
+          {/* Action 3: Toggle Details */}
+          <button
+            onClick={() => setShowDetails(!showDetails)}
+            className="w-full p-4 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors cursor-pointer"
+          >
+            <div className="flex items-center gap-3">
+              <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d={showDetails ? "M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" : "M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"} />
+              </svg>
+              <span className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white">
+                {showDetails ? 'Hide card numbers & CVV' : 'Reveal card numbers & CVV'}
+              </span>
+            </div>
+            <span className="text-xs text-gray-400">{showDetails ? 'Hide' : 'Show'}</span>
+          </button>
         </div>
-
-        {error && (
-          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 p-4 rounded-xl mb-6 text-sm">
-            {error}
-          </div>
-        )}
       </main>
 
       <Footer />

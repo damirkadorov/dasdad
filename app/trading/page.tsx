@@ -109,7 +109,7 @@ export default function TradingPage() {
   const supportedCurrencies = getSupportedCurrencies();
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e] bg-cyber-grid">
       <Navigation />
       
       <main className="flex-1 container mx-auto px-4 py-8 max-w-6xl animate-fadeIn">
@@ -275,20 +275,20 @@ export default function TradingPage() {
 
           {/* Right Column: Market Ticker & Balances */}
           <div className="lg:col-span-5 space-y-6">
-            {/* Real-time Rate Card */}
-            <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-700 text-white shadow-xl">
+            {/* Real-time Rate Card (Reference: Image 4 CRYPTO Neon Lime Style) */}
+            <div className="card-neon-lime p-6 text-black shadow-xl">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center space-x-2">
-                  <TrendingUpIcon size={20} className="text-white/80" />
-                  <span className="text-xs uppercase tracking-wider font-semibold text-white/80">Live Spot Rate</span>
+                  <TrendingUpIcon size={20} className="text-black/80" />
+                  <span className="text-xs uppercase tracking-wider font-extrabold text-black/80">Live Spot Rate</span>
                 </div>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-white/20 font-mono font-semibold">1 {selectedCrypto}</span>
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-black text-[#d4ff00] font-mono font-bold">1 {selectedCrypto}</span>
               </div>
-              <h3 className="text-3xl font-extrabold tracking-tight font-mono mb-1">
+              <h3 className="text-3xl sm:text-4xl font-black tracking-tight font-mono mb-1 text-black">
                 {formatCurrencyAmount(currentPrice, selectedCurrency)}
               </h3>
-              <p className="text-xs text-white/70">
-                Calculated against {selectedCurrency} with 0% slippage guarantee
+              <p className="text-xs text-black/80 font-medium">
+                Calculated against {selectedCurrency} &bull; 0% slippage &bull; Instant settlement
               </p>
             </div>
 

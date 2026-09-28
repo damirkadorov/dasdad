@@ -209,3 +209,101 @@ body {
 .tab-panel {
   animation: fadeIn 0.3s cubic-bezier(0.32, 0.72, 0, 1);
 }
+
+/* Reference-Derived Aesthetics (DigiPay, CRYPTO, Affirm, Zip) */
+
+/* 1. Cyber Grid Overlay (Image 4 CRYPTO) */
+.bg-cyber-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* 2. Frosted Sunset Glow Card (Image 3 DigiPay) */
+.card-sunset-glow {
+  position: relative;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    0 20px 50px -10px rgba(0, 0, 0, 0.6);
+  border-radius: 1.5rem;
+}
+
+/* 3. Affirm Royal Cobalt Wave Card (Image 2 Affirm) */
+.card-affirm-wave {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(145deg, #10143a 0%, #1e256b 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 40px -12px rgba(15, 23, 42, 0.45);
+}
+
+.card-affirm-wave::before {
+  content: '';
+  position: absolute;
+  right: -20%;
+  bottom: -40%;
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle at center, #3b82f6 0%, #2563eb 50%, transparent 75%);
+  border-radius: 50%;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* 4. Zip Diagonal Split Plum-to-Violet Card (Image 1 Zip) */
+.card-zip-split {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(110deg, #140d1e 0%, #1b1228 48%, #7c3aed 52%, #8b5cf6 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 40px -12px rgba(124, 58, 237, 0.35);
+}
+
+/* 5. Electric Neon Lime Card & Tokens (Image 4 CRYPTO) */
+.card-neon-lime {
+  background: #d4ff00;
+  color: #000000;
+  border-radius: 1.5rem;
+  box-shadow: 0 0 45px -8px rgba(212, 255, 0, 0.35);
+  transition: all 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.card-neon-lime:hover {
+  box-shadow: 0 0 60px -5px rgba(212, 255, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+.text-neon-lime {
+  color: #d4ff00;
+}
+
+.bg-neon-lime {
+  background-color: #d4ff00;
+}
+
+/* 6. Live Activity Ticker Pills (Image 3 DigiPay) */
+.ticker-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 1.125rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.3);
+  transition: all 0.25s ease;
+}
+
+.ticker-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
