@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
@@ -286,12 +287,21 @@ export default function DeveloperPage() {
         {/* Documentation Section */}
         <div className="bezel-card mb-12">
           <div className="bezel-card-inner p-6 sm:p-8">
-            <div className="flex items-center space-x-2 mb-6">
-              <span className="text-2xl">⚡</span>
-              <div>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">API Quickstart Guide</h2>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Follow these 3 simple steps to accept payments in under 5 minutes.</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div className="flex items-center space-x-2">
+                <span className="text-2xl">⚡</span>
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">API Quickstart Guide</h2>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Follow these 3 simple steps to accept payments in under 5 minutes.</p>
+                </div>
               </div>
+              <Link
+                href="/developer/tester"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-xs font-semibold rounded-xl shadow-md transition-all active:scale-[0.98]"
+              >
+                <span>🧪 Launch Live API Tester</span>
+                <span>→</span>
+              </Link>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

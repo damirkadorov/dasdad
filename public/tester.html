@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Gateway API Tester | NovaPay Sandbox</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif; }
+    code, pre, .font-mono { font-family: 'Geist Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen py-10 px-4">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800 mb-8">
+      <div>
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-purple-500/10 text-purple-400 text-xs font-semibold mb-2 border border-purple-500/20">
+          <span>⚡ API Quickstart Sandbox</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center gap-2">
+          <span>NovaPay Payment Gateway Tester</span>
+        </h1>
+        <p class="text-sm text-slate-400 mt-1">Lightweight external client for testing the 3-step payment flow.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-950/60 text-emerald-400 border border-emerald-800">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          Ready
+        </span>
+      </div>
+    </div>
+
+    <!-- API Config Card -->
+    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 mb-8 backdrop-blur">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+            🔑 X-API-Key
+          </label>
+          <input
+            id="apiKey"
+            type="text"
+            value="pk_f5b9c5381e00084a9e00ee970c6ef79c39c506ee1fc5e6785f8e63e707db46cf"
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 font-mono text-xs text-purple-400 focus:outline-none focus:border-purple-500"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+            🌐 API Base URL
+          </label>
+          <input
+            id="baseUrl"
+            type="text"
+            value=""
+            placeholder="http://localhost:3000"
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 font-mono text-xs text-slate-300 focus:outline-none focus:border-purple-500"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 Steps Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <!-- Step 1 -->
+      <div class="p-4 rounded-xl border border-purple-500/30 bg-purple-950/20">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-7 h-7 rounded-lg bg-purple-600 text-white font-bold flex items-center justify-center text-xs">1</div>
+          <div>
+            <p class="text-xs font-bold text-white">Create Payment Session</p>
+            <p class="text-[11px] text-slate-400">POST /api/payment-gateway/payments</p>
+          </div>
+        </div>
+      </div>
+      <!-- Step 2 -->
+      <div class="p-4 rounded-xl border border-slate-800 bg-slate-900/60" id="step2Indicator">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-7 h-7 rounded-lg bg-blue-600 text-white font-bold flex items-center justify-center text-xs">2</div>
+          <div>
+            <p class="text-xs font-bold text-white">Redirect Customer</p>
+            <p class="text-[11px] text-slate-400">Hosted Checkout URL</p>
+          </div>
+        </div>
+      </div>
+      <!-- Step 3 -->
+      <div class="p-4 rounded-xl border border-slate-800 bg-slate-900/60" id="step3Indicator">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-7 h-7 rounded-lg bg-emerald-600 text-white font-bold flex items-center justify-center text-xs">3</div>
+          <div>
+            <p class="text-xs font-bold text-white">Webhook / Status</p>
+            <p class="text-[11px] text-slate-400" id="step3Subtext">Awaiting payment...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+      <!-- Form (5 cols) -->
+      <div class="lg:col-span-5 space-y-4">
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2">
+            <span>🛒 Order Information</span>
+          </h2>
+
+          <div class="space-y-3">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">Amount</label>
+                <input id="orderAmount" type="number" value="100" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs font-mono text-white" />
+              </div>
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">Currency</label>
+                <select id="orderCurrency" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs font-mono text-white">
+                  <option value="USD">USD ($)</option>
+                  <option value="EUR">EUR (€)</option>
+                  <option value="GBP">GBP (£)</option>
+                  <option value="CHF">CHF (₣)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">Description</label>
+              <input id="orderDesc" type="text" value="Order #4092" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white" />
+            </div>
+
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">Customer Email</label>
+              <input id="custEmail" type="email" value="dkadorov@gmail.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white" />
+            </div>
+
+            <button
+              id="btnCreate"
+              onclick="createPaymentSession()"
+              class="w-full mt-4 py-2.5 px-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold text-xs rounded-xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
+            >
+              <span>⚡ Execute Step 1: Create Session</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Demo Card Helper -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+          <p class="text-[11px] font-bold uppercase tracking-wider text-purple-400 mb-2 flex items-center justify-between">
+            <span>💳 Active Test Card</span>
+            <span class="text-[10px] text-slate-400 font-normal">Pre-funded</span>
+          </p>
+          <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 font-mono text-xs space-y-1 text-slate-300">
+            <div class="flex justify-between"><span>Number:</span> <span class="text-white font-bold select-all">7003 2114 8051 1885</span></div>
+            <div class="flex justify-between"><span>Exp / CVV:</span> <span class="text-white font-bold select-all">07/31 &bull; 481</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Execution Logs & Actions (7 cols) -->
+      <div class="lg:col-span-7 space-y-4">
+        <!-- Step 2 Box -->
+        <div id="step2Box" class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 hidden">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-blue-400">Step 2: Hosted Checkout Link</h3>
+            <span class="text-[10px] bg-blue-900/40 text-blue-300 border border-blue-800 px-2 py-0.5 rounded font-mono">201 Created</span>
+          </div>
+          <div class="flex items-center gap-2 mb-3">
+            <input id="paymentUrlInput" readonly class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 font-mono text-xs text-blue-400 select-all" />
+          </div>
+          <a
+            id="openCheckoutBtn"
+            href="#"
+            target="_blank"
+            class="block w-full text-center py-2.5 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold text-xs rounded-xl shadow-lg transition-all"
+          >
+            👉 Open Checkout Page to Complete Payment ↗
+          </a>
+        </div>
+
+        <!-- Step 3 Box -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Step 3: Webhook & Polling Monitor</h3>
+            <div id="statusBadge" class="text-xs font-mono text-slate-500">IDLE</div>
+          </div>
+          <div id="jsonViewer" class="bg-slate-950 p-4 rounded-xl font-mono text-xs text-slate-300 overflow-x-auto border border-slate-800 min-h-[140px]">
+            // Click "Create Session" to trigger the API request...
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Auto-detect base URL
+    document.getElementById('baseUrl').value = window.location.origin;
+
+    let pollTimer = null;
+    let activePaymentId = null;
+
+    async function createPaymentSession() {
+      const apiKey = document.getElementById('apiKey').value.trim();
+      const baseUrl = document.getElementById('baseUrl').value.trim() || window.location.origin;
+      const amount = Number(document.getElementById('orderAmount').value);
+      const currency = document.getElementById('orderCurrency').value;
+      const description = document.getElementById('orderDesc').value;
+      const customerEmail = document.getElementById('custEmail').value;
+
+      const viewer = document.getElementById('jsonViewer');
+      const badge = document.getElementById('statusBadge');
+      const btn = document.getElementById('btnCreate');
+
+      btn.disabled = true;
+      btn.innerText = 'Creating session...';
+      badge.innerHTML = '<span class="text-amber-400">CALLING API...</span>';
+
+      try {
+        const res = await fetch(`${baseUrl}/api/payment-gateway/payments`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': apiKey,
+          },
+          body: JSON.stringify({
+            amount,
+            currency,
+            description,
+            customerEmail,
+            orderId: 'ORDER-' + Date.now().toString().slice(-6),
+          }),
+        });
+
+        const data = await res.json();
+        viewer.innerHTML = `<span class="text-purple-400">// Response from POST /api/payment-gateway/payments:</span>\n` + JSON.stringify(data, null, 2);
+
+        if (!res.ok) {
+          throw new Error(data.error || 'Failed to create payment session');
+        }
+
+        activePaymentId = data.paymentId;
+
+        // Step 2 reveal
+        document.getElementById('step2Box').classList.remove('hidden');
+        document.getElementById('paymentUrlInput').value = data.paymentUrl;
+        document.getElementById('openCheckoutBtn').href = data.paymentUrl;
+
+        // Step 3 polling
+        badge.innerHTML = '<span class="text-amber-400 animate-pulse">⏳ WAITING FOR PAYMENT...</span>';
+        startPolling(baseUrl, apiKey, activePaymentId);
+      } catch (err) {
+        viewer.innerHTML = `<span class="text-red-400">// Error: ${err.message}</span>`;
+        badge.innerHTML = '<span class="text-red-400">ERROR</span>';
+      } finally {
+        btn.disabled = false;
+        btn.innerText = '⚡ Execute Step 1: Create Session';
+      }
+    }
+
+    function startPolling(baseUrl, apiKey, paymentId) {
+      if (pollTimer) clearInterval(pollTimer);
+
+      pollTimer = setInterval(async () => {
+        try {
+          const res = await fetch(`${baseUrl}/api/payment-gateway/payments?paymentId=${paymentId}`, {
+            headers: { 'X-API-Key': apiKey },
+          });
+
+          if (res.ok) {
+            const data = await res.json();
+            if (data.status === 'completed') {
+              clearInterval(pollTimer);
+              document.getElementById('statusBadge').innerHTML = '<span class="text-emerald-400 font-bold">✅ SETTLED</span>';
+              document.getElementById('step3Subtext').innerText = 'payment.completed';
+              document.getElementById('jsonViewer').innerHTML =
+                `<span class="text-emerald-400">// Webhook Event: payment.completed Dispatched!</span>\n` +
+                JSON.stringify({
+                  event: 'payment.completed',
+                  paymentId: data.paymentId,
+                  orderId: data.orderId,
+                  amount: data.amount,
+                  currency: data.currency,
+                  status: 'completed',
+                  completedAt: data.completedAt || new Date().toISOString()
+                }, null, 2);
+            }
+          }
+        } catch (e) {
+          // ignore network glitch
+        }
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
