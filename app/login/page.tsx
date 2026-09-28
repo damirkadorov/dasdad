@@ -45,63 +45,79 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 via-blue-600 to-blue-800 p-4">
-      <div className="w-full max-w-md animate-scaleIn">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8">
-          <div className="text-center mb-8">
-            <div className="flex justify-center mb-4">
-              <Logo size={48} showText={false} />
-            </div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2">
-              Welcome Back
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              Sign in to your account
-            </p>
-          </div>
+    <div className="min-h-screen flex items-center justify-center bg-[#05070B] text-slate-100 bg-cyber-grid p-4 relative overflow-hidden selection:bg-[#d4ff00] selection:text-black">
+      {/* Radiant Glow Orbs */}
+      <div className="absolute top-1/4 -right-20 w-80 h-80 bg-gradient-to-br from-orange-500/20 via-amber-400/10 to-transparent rounded-full blur-[100px] pointer-events-none"></div>
+      <div className="absolute bottom-1/4 -left-20 w-80 h-80 bg-gradient-to-tr from-[#d4ff00]/15 via-emerald-600/5 to-transparent rounded-full blur-[100px] pointer-events-none"></div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              label="Email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              placeholder="your@email.com"
-              required
-            />
-
-            <Input
-              label="Password"
-              type="password"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              placeholder="••••••••"
-              required
-            />
-
-            {error && (
-              <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+      <div className="w-full max-w-md animate-scaleIn relative z-10">
+        <div className="bezel-card">
+          <div className="bezel-card-inner p-8 bg-[#080B12]/95 border border-white/10 shadow-2xl">
+            <div className="text-center mb-8">
+              <div className="flex justify-center mb-4">
+                <Link href="/">
+                  <Logo size={42} showText={false} textWhite={true} />
+                </Link>
               </div>
-            )}
+              <h1 className="text-2xl font-extrabold text-white tracking-tight mb-1">
+                Welcome to NovaPay
+              </h1>
+              <p className="text-xs text-slate-400">
+                Sign in to manage your multi-currency accounts and cards
+              </p>
+            </div>
 
-            <Button type="submit" className="w-full" isLoading={isLoading}>
-              Sign In
-            </Button>
-          </form>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {error && (
+                <div className="p-3 bg-red-950/40 border border-red-800 text-red-400 rounded-xl text-xs">
+                  {error}
+                </div>
+              )}
 
-          <div className="mt-6 text-center">
-            <p className="text-gray-600 dark:text-gray-400">
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="name@example.com"
+                  className="w-full px-3.5 py-2.5 bg-white/[0.04] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-[#d4ff00] focus:border-transparent transition-all"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  placeholder="••••••••"
+                  className="w-full px-3.5 py-2.5 bg-white/[0.04] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-[#d4ff00] focus:border-transparent transition-all"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-3 px-6 rounded-full bg-[#d4ff00] hover:bg-[#bce400] text-black font-extrabold text-xs transition-all active:scale-95 shadow-lg shadow-[#d4ff00]/15 cursor-pointer disabled:opacity-50 mt-2"
+              >
+                {isLoading ? 'Signing In...' : 'Sign In →'}
+              </button>
+            </form>
+
+            <div className="mt-6 text-center text-xs text-slate-400">
               Don&apos;t have an account?{' '}
-              <Link href="/register" className="text-purple-600 hover:text-purple-700 font-semibold">
-                Create one
+              <Link href="/register" className="text-[#d4ff00] hover:underline font-semibold">
+                Sign up free
               </Link>
-            </p>
+            </div>
           </div>
-        </div>
-
-        <div className="mt-6 text-center text-white/80 text-sm">
-          ⚠️ This is a DEMO app with fake money only
         </div>
       </div>
     </div>

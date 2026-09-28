@@ -194,22 +194,28 @@ export default function PaymentsContent() {
 
   // Helper function for tab button styling
   const getTabClassName = (tab: typeof activeTab) => {
-    return `flex-1 py-3 px-4 rounded-lg font-semibold transition-all whitespace-nowrap ${
+    return `flex-1 py-2.5 px-4 rounded-full font-bold text-xs transition-all whitespace-nowrap cursor-pointer ${
       activeTab === tab
-        ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
-        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+        ? 'bg-[#d4ff00] text-black shadow-lg shadow-[#d4ff00]/20'
+        : 'bg-white/[0.05] hover:bg-white/[0.08] text-slate-300 border border-white/10'
     }`;
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
+    <div className="min-h-screen flex flex-col bg-[#05070B] text-slate-100 bg-cyber-grid selection:bg-[#d4ff00] selection:text-black">
       <Navigation />
       
-      <main className="flex-1 max-w-2xl w-full mx-auto p-4 pt-12 pb-20 animate-fadeIn">
-        <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Payments</h1>
+      <main className="flex-1 max-w-2xl w-full mx-auto p-4 pt-10 pb-20 animate-fadeIn relative z-10">
+        <div className="mb-6">
+          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/[0.05] border border-white/10 text-[11px] font-semibold text-slate-400 mb-1 uppercase tracking-wider">
+            <span>Transfers &amp; Settlement</span>
+          </div>
+          <h1 className="text-3xl font-extrabold text-white tracking-tight">Payments &amp; Transfers</h1>
+          <p className="text-xs text-slate-400 mt-0.5">Instant zero-fee multi-currency transfers, top-ups, and NFC contactless checkout.</p>
+        </div>
 
         {/* Tabs */}
-        <div className="flex space-x-2 mb-6 overflow-x-auto">
+        <div className="flex space-x-2 mb-6 overflow-x-auto p-1 bg-white/[0.03] rounded-full border border-white/[0.08]">
           <button
             onClick={() => setActiveTab('topup')}
             className={getTabClassName('topup')}
@@ -226,13 +232,13 @@ export default function PaymentsContent() {
             onClick={() => setActiveTab('iban')}
             className={getTabClassName('iban')}
           >
-            IBAN Transfer
+            IBAN Wire
           </button>
           <button
             onClick={() => setActiveTab('nfc')}
             className={getTabClassName('nfc')}
           >
-            NFC Payment
+            NFC Terminal
           </button>
         </div>
 

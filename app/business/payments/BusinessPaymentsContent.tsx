@@ -107,78 +107,84 @@ export default function BusinessPaymentsContent() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+    <div className="min-h-screen flex flex-col bg-[#05070B] text-zinc-100 bg-cyber-grid">
       <BusinessNavigation />
       
       <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl animate-fadeIn">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Business Payments 💼
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#d4ff00]/10 border border-[#d4ff00]/30 text-xs font-bold text-[#d4ff00] mb-2">
+            <span className="w-2 h-2 rounded-full bg-[#d4ff00] animate-pulse"></span>
+            <span>ENTERPRISE TREASURY</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+            Commercial Disbursements &amp; Liquidity
           </h1>
-          <p className="text-slate-400">
-            Manage your business transactions
+          <p className="text-zinc-400 text-sm mt-1">
+            Initiate counterparty wire transfers or credit corporate balance instantly
           </p>
         </div>
 
         {/* Tabs */}
-        <div className="flex space-x-2 mb-8 bg-slate-800 p-2 rounded-xl border border-slate-700">
+        <div className="flex space-x-2 mb-8 bg-white/[0.03] p-1.5 rounded-2xl border border-white/10 backdrop-blur-xl">
           <button
             onClick={() => setActiveTab('send')}
-            className={`flex-1 py-3 px-6 rounded-lg font-semibold transition-all ${
+            className={`flex-1 py-3 px-6 rounded-xl font-bold text-sm transition-all cursor-pointer ${
               activeTab === 'send'
-                ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg'
-                : 'text-slate-400 hover:text-white hover:bg-slate-700'
+                ? 'bg-[#d4ff00] text-[#05070B] shadow-lg shadow-[#d4ff00]/20'
+                : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
             }`}
           >
-            Send Money
+            Direct Payout
           </button>
           <button
             onClick={() => setActiveTab('topup')}
-            className={`flex-1 py-3 px-6 rounded-lg font-semibold transition-all ${
+            className={`flex-1 py-3 px-6 rounded-xl font-bold text-sm transition-all cursor-pointer ${
               activeTab === 'topup'
-                ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg'
-                : 'text-slate-400 hover:text-white hover:bg-slate-700'
+                ? 'bg-[#d4ff00] text-[#05070B] shadow-lg shadow-[#d4ff00]/20'
+                : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
             }`}
           >
-            Top Up
+            Deposit Capital
           </button>
         </div>
 
         {/* Content */}
-        <div className="bg-slate-800 rounded-xl p-8 shadow-lg border border-slate-700">
+        <div className="bg-white/[0.03] rounded-3xl p-8 shadow-2xl border border-white/10 backdrop-blur-xl">
           {/* Send Money Tab */}
           {activeTab === 'send' && (
             <div>
-              <h2 className="text-2xl font-bold text-white mb-6">Send Money</h2>
+              <h2 className="text-xl font-extrabold text-white mb-2">Send Corporate Payment</h2>
+              <p className="text-xs text-zinc-400 mb-6">Dispatch funds across the internal clearing network instantly.</p>
+              
               <form onSubmit={handleSendMoney} className="space-y-6">
                 <Input
                   label="Recipient (username or email)"
                   type="text"
                   value={recipient}
                   onChange={(e) => setRecipient(e.target.value)}
-                  placeholder="john@example.com"
+                  placeholder="vendor@company.com"
                   required
                 />
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Amount
+                  <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">
+                    Settlement Amount &amp; Currency
                   </label>
-                  <div className="flex space-x-2">
+                  <div className="flex space-x-3">
                     <input
                       type="number"
                       step="0.01"
                       value={sendAmount}
                       onChange={(e) => setSendAmount(e.target.value)}
                       placeholder="0.00"
-                      className="flex-1 px-4 py-3 bg-slate-900/50 border-2 border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-white"
+                      className="flex-1 px-4 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white font-mono text-base placeholder-zinc-600"
                       required
                     />
                     <select
                       value={sendCurrency}
                       onChange={(e) => setSendCurrency(e.target.value as Currency)}
-                      className="px-4 py-3 bg-slate-900/50 border-2 border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-white"
+                      className="px-4 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white font-mono text-sm"
                     >
                       {getSupportedCurrencies().map((curr) => (
                         <option key={curr} value={curr}>
@@ -190,13 +196,13 @@ export default function BusinessPaymentsContent() {
                 </div>
 
                 {sendError && (
-                  <div className="bg-red-900/30 border border-red-700 text-red-400 p-4 rounded-lg">
+                  <div className="bg-red-950/40 border border-red-500/30 text-red-400 p-4 rounded-xl text-sm">
                     {sendError}
                   </div>
                 )}
 
                 {sendSuccess && (
-                  <div className="bg-green-900/30 border border-green-700 text-green-400 p-4 rounded-lg">
+                  <div className="bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 p-4 rounded-xl text-sm">
                     {sendSuccess}
                   </div>
                 )}
@@ -204,9 +210,9 @@ export default function BusinessPaymentsContent() {
                 <Button
                   type="submit"
                   isLoading={sendLoading}
-                  className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700"
+                  className="w-full py-3.5 bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold text-sm shadow-xl shadow-[#d4ff00]/20"
                 >
-                  {sendLoading ? 'Sending...' : 'Send Money'}
+                  {sendLoading ? 'Executing Transfer...' : 'Authorize Disbursement'}
                 </Button>
               </form>
             </div>
@@ -215,30 +221,30 @@ export default function BusinessPaymentsContent() {
           {/* Top Up Tab */}
           {activeTab === 'topup' && (
             <div>
-              <h2 className="text-2xl font-bold text-white mb-6">Top Up Balance</h2>
-              <p className="text-slate-400 mb-6">
-                Add funds to your business account (Demo: Fake Money)
+              <h2 className="text-xl font-extrabold text-white mb-2">Deposit Capital to Treasury</h2>
+              <p className="text-xs text-zinc-400 mb-6">
+                Direct liquidity injection to company operational balances (Simulation: Instant Settlement).
               </p>
               
               <form onSubmit={handleTopUp} className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Amount
+                  <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">
+                    Amount &amp; Currency
                   </label>
-                  <div className="flex space-x-2">
+                  <div className="flex space-x-3">
                     <input
                       type="number"
                       step="0.01"
                       value={topupAmount}
                       onChange={(e) => setTopupAmount(e.target.value)}
                       placeholder="0.00"
-                      className="flex-1 px-4 py-3 bg-slate-900/50 border-2 border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-white"
+                      className="flex-1 px-4 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white font-mono text-base placeholder-zinc-600"
                       required
                     />
                     <select
                       value={topupCurrency}
                       onChange={(e) => setTopupCurrency(e.target.value as Currency)}
-                      className="px-4 py-3 bg-slate-900/50 border-2 border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-white"
+                      className="px-4 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white font-mono text-sm"
                     >
                       {getSupportedCurrencies().map((curr) => (
                         <option key={curr} value={curr}>
@@ -250,13 +256,13 @@ export default function BusinessPaymentsContent() {
                 </div>
 
                 {topupError && (
-                  <div className="bg-red-900/30 border border-red-700 text-red-400 p-4 rounded-lg">
+                  <div className="bg-red-950/40 border border-red-500/30 text-red-400 p-4 rounded-xl text-sm">
                     {topupError}
                   </div>
                 )}
 
                 {topupSuccess && (
-                  <div className="bg-green-900/30 border border-green-700 text-green-400 p-4 rounded-lg">
+                  <div className="bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 p-4 rounded-xl text-sm">
                     {topupSuccess}
                   </div>
                 )}
@@ -264,9 +270,9 @@ export default function BusinessPaymentsContent() {
                 <Button
                   type="submit"
                   isLoading={topupLoading}
-                  className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700"
+                  className="w-full py-3.5 bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold text-sm shadow-xl shadow-[#d4ff00]/20"
                 >
-                  {topupLoading ? 'Processing...' : 'Add Funds'}
+                  {topupLoading ? 'Crediting Treasury...' : 'Credit Liquidity Now'}
                 </Button>
               </form>
             </div>

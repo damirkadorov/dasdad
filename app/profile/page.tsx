@@ -137,30 +137,35 @@ export default function ProfilePage() {
   const initial = profile?.username?.slice(0, 1)?.toUpperCase() || 'U';
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
+    <div className="min-h-screen flex flex-col bg-[#05070B] text-slate-100 bg-cyber-grid selection:bg-[#d4ff00] selection:text-black">
       <Navigation />
       
-      <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl animate-fadeIn">
+      <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl animate-fadeIn relative z-10">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight mb-1">
-            Account Profile 👤
+          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/[0.05] border border-white/10 text-[11px] font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">
+            <span>Identity &amp; Security</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-1">
+            Account Profile
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-sm">
+          <p className="text-slate-400 text-xs sm:text-sm">
             Manage your credentials, view operational metrics, and review account security.
           </p>
         </div>
 
-        {/* Profile Card Banner */}
-        <div className="p-8 rounded-2xl bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-700 text-white shadow-xl mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-          <div className="flex items-center space-x-5">
-            <div className="w-18 h-18 rounded-2xl bg-white/20 backdrop-blur-lg flex items-center justify-center text-3xl font-extrabold shadow-inner border border-white/30">
+        {/* Profile Card Banner (Sunset Radiant Glow from Image 3 DigiPay) */}
+        <div className="card-sunset-glow p-8 text-white shadow-2xl mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative overflow-hidden">
+          <div className="absolute right-0 bottom-0 w-48 h-48 bg-gradient-to-tl from-orange-500/30 via-amber-400/20 to-transparent rounded-full blur-2xl pointer-events-none"></div>
+
+          <div className="flex items-center space-x-5 relative z-10">
+            <div className="w-18 h-18 rounded-2xl bg-white/15 backdrop-blur-lg flex items-center justify-center text-3xl font-extrabold shadow-inner border border-white/20 text-white">
               {initial}
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-2xl font-bold">{profile?.username}</h2>
-                <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-emerald-400/20 text-emerald-200 border border-emerald-400/30">
+                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-[#d4ff00]/15 text-[#d4ff00] border border-[#d4ff00]/30 font-bold">
                   Verified Tier 1
                 </span>
               </div>
@@ -171,9 +176,9 @@ export default function ProfilePage() {
             </div>
           </div>
           
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl p-4 sm:text-right border border-white/15">
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 sm:text-right border border-white/15 relative z-10">
             <p className="text-white/80 text-xs uppercase tracking-wider mb-0.5">Primary Cash Balance</p>
-            <p className="text-3xl font-extrabold font-mono tracking-tight">{formatCurrency(profile?.balance || 0)}</p>
+            <p className="text-3xl font-extrabold font-mono tracking-tight text-[#d4ff00]">{formatCurrency(profile?.balance || 0)}</p>
           </div>
         </div>
 

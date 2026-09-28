@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
@@ -12,15 +11,7 @@ import { DashboardSkeleton } from '@/components/ui/Skeleton';
 import { formatCurrencyAmount } from '@/lib/utils/currency';
 import { formatCryptoAmount, calculatePortfolioValue, cryptoToFiat } from '@/lib/utils/crypto';
 import { Transaction, CurrencyBalance, CryptoWallet, Currency } from '@/lib/db/types';
-import { WalletIcon, TopUpIcon, SendIcon, CryptoIcon, CardIcon } from '@/components/icons/Icons';
-
-// Dynamically import Recharts to avoid SSR issues
-const PieChart = dynamic(() => import('recharts').then((mod) => mod.PieChart), { ssr: false });
-const Pie = dynamic(() => import('recharts').then((mod) => mod.Pie), { ssr: false });
-const Cell = dynamic(() => import('recharts').then((mod) => mod.Cell), { ssr: false });
-const ResponsiveContainer = dynamic(() => import('recharts').then((mod) => mod.ResponsiveContainer), { ssr: false });
-const Tooltip = dynamic(() => import('recharts').then((mod) => mod.Tooltip), { ssr: false });
-const Legend = dynamic(() => import('recharts').then((mod) => mod.Legend), { ssr: false });
+import { WalletIcon, TopUpIcon, SendIcon, CryptoIcon, CardIcon, TrendingUpIcon } from '@/components/icons/Icons';
 
 interface UserProfile {
   id: string;
@@ -75,7 +66,7 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
+      <div className="min-h-screen flex flex-col bg-[#05070B] text-white">
         <Navigation />
         <main className="flex-1">
           <DashboardSkeleton />
@@ -87,10 +78,10 @@ export default function Dashboard() {
 
   if (error && !profile) {
     return (
-      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
+      <div className="min-h-screen flex flex-col bg-[#05070B] text-white">
         <Navigation />
         <main className="flex-1 container mx-auto px-4 py-8">
-          <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-lg">
+          <div className="bg-red-950/40 border border-red-800 text-red-400 p-4 rounded-xl">
             {error}
           </div>
         </main>
@@ -105,238 +96,233 @@ export default function Dashboard() {
     : 0;
   const totalBalance = totalFiatBalance + cryptoPortfolioValue;
 
-  const portfolioData = [
-    { name: 'Fiat', value: totalFiatBalance, color: '#8b5cf6' },
-    { name: 'Crypto', value: cryptoPortfolioValue, color: '#3b82f6' }
-  ];
-
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
+    <div className="min-h-screen flex flex-col bg-[#05070B] text-slate-100 overflow-x-hidden selection:bg-[#d4ff00] selection:text-black">
+      {/* Background Cyber Grid & Sunset Glow Orbs (References: Image 3 & 4) */}
+      <div className="fixed inset-0 bg-cyber-grid pointer-events-none opacity-40 z-0"></div>
+      <div className="fixed -top-40 right-1/4 w-[600px] h-[600px] bg-gradient-to-br from-amber-500/10 via-orange-600/5 to-transparent rounded-full blur-[140px] pointer-events-none z-0"></div>
+      <div className="fixed top-1/2 -left-40 w-[500px] h-[500px] bg-gradient-to-tr from-[#d4ff00]/10 via-emerald-600/5 to-transparent rounded-full blur-[160px] pointer-events-none z-0"></div>
+
       <Navigation />
       
-      <main className="flex-1 container mx-auto px-4 py-8 max-w-7xl animate-fadeIn">
+      <main className="relative z-10 flex-1 container mx-auto px-4 py-8 max-w-7xl animate-fadeIn">
         {/* Welcome Section */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Welcome back, {profile?.username}! 👋
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Here&apos;s what&apos;s happening with your account today.
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-white/[0.08]">
+          <div>
+            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/[0.05] border border-white/10 text-[11px] font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">
+              <span>Overview</span>
+              <span>&bull;</span>
+              <span className="text-[#d4ff00]">Live Session</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
+              <span>Welcome back, {profile?.username || 'Trader'}!</span>
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
+              Multi-currency financial hub & real-time transaction engine.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            <Link href="/cards">
+              <button className="px-4 py-2 rounded-xl bg-white hover:bg-slate-200 text-black font-bold text-xs transition-all active:scale-95 shadow cursor-pointer">
+                + New Card
+              </button>
+            </Link>
+            <Link href="/payments?action=topup">
+              <button className="px-4 py-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] text-white font-semibold text-xs border border-white/15 transition-all cursor-pointer">
+                Top Up
+              </button>
+            </Link>
+          </div>
         </div>
 
-        {/* Balance Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Total Balance */}
-          <div className="bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 rounded-2xl p-8 text-white shadow-2xl">
-            <div className="flex justify-between items-start mb-6">
-              <div>
-                <p className="text-white/80 text-sm mb-2">Total Portfolio Value</p>
-                <h2 className="text-5xl font-bold">{formatCurrencyAmount(totalBalance, profile?.preferredCurrency || 'USD')}</h2>
-              </div>
-              <div className="bg-white/20 backdrop-blur-lg rounded-full p-3">
-                <WalletIcon className="text-white" size={28} />
+        {/* Balance Cards (Dual-Grid) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+          {/* Main Portfolio Hero Card (Sunset Glow from Reference Image 3 DigiPay) */}
+          <div className="lg:col-span-7 card-sunset-glow p-8 relative overflow-hidden text-white flex flex-col justify-between min-h-[260px]">
+            {/* Ambient Radiant Glow Orb */}
+            <div className="absolute right-0 bottom-0 w-64 h-64 bg-gradient-to-tl from-orange-500/30 via-amber-400/20 to-transparent rounded-full blur-2xl pointer-events-none"></div>
+
+            <div>
+              <div className="flex justify-between items-start mb-6 relative z-10">
+                <div>
+                  <span className="text-xs font-mono uppercase tracking-widest text-white/70">Total Portfolio Value</span>
+                  <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight font-mono text-white mt-1">
+                    {formatCurrencyAmount(totalBalance, profile?.preferredCurrency || 'USD')}
+                  </h2>
+                </div>
+                <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-lg">
+                  <WalletIcon className="text-amber-300" size={24} />
+                </div>
               </div>
             </div>
 
-            {/* Portfolio Distribution */}
-            <div className="flex justify-between text-sm">
+            {/* Split Breakdown */}
+            <div className="grid grid-cols-2 gap-4 pt-6 border-t border-white/10 relative z-10">
               <div>
-                <p className="text-white/70">Fiat</p>
-                <p className="font-semibold">{formatCurrencyAmount(totalFiatBalance, profile?.preferredCurrency || 'USD')}</p>
+                <span className="text-[11px] font-mono uppercase tracking-wider text-white/70">Cash & IBAN Balance</span>
+                <p className="text-lg font-bold font-mono text-white mt-0.5">
+                  {formatCurrencyAmount(totalFiatBalance, profile?.preferredCurrency || 'USD')}
+                </p>
               </div>
               <div>
-                <p className="text-white/70">Crypto</p>
-                <p className="font-semibold">{formatCurrencyAmount(cryptoPortfolioValue, profile?.preferredCurrency || 'USD')}</p>
+                <span className="text-[11px] font-mono uppercase tracking-wider text-[#d4ff00]">Crypto Holdings</span>
+                <p className="text-lg font-bold font-mono text-white mt-0.5">
+                  {formatCurrencyAmount(cryptoPortfolioValue, profile?.preferredCurrency || 'USD')}
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Multi-Currency Balances */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Currency Balances</h3>
-            <div className="space-y-3 max-h-48 overflow-y-auto">
-              {profile?.balances && profile.balances.length > 0 ? (
-                profile.balances.map((balance) => (
-                  <div key={balance.currency} className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-pink-500 flex items-center justify-center text-white font-bold">
-                        {balance.currency.substring(0, 2)}
+          {/* Multi-Currency Cash Balances (Reference Image 4 Bento) */}
+          <div className="lg:col-span-5 bezel-card">
+            <div className="bezel-card-inner p-6 bg-[#080B12]/90 border border-white/10 flex flex-col justify-between h-full">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-bold text-sm text-white uppercase tracking-wider">Currency Wallets</h3>
+                <span className="text-[11px] font-mono text-slate-400">7 Active Currencies</span>
+              </div>
+              
+              <div className="space-y-2.5 overflow-y-auto max-h-[170px] pr-1">
+                {profile?.balances && profile.balances.length > 0 ? (
+                  profile.balances.map((balance) => (
+                    <div key={balance.currency} className="flex justify-between items-center p-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] transition-colors">
+                      <div className="flex items-center space-x-2.5">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-black font-bold text-xs">
+                          {balance.currency.substring(0, 2)}
+                        </div>
+                        <div>
+                          <p className="font-bold text-xs text-white leading-none">{balance.currency}</p>
+                          <p className="text-[10px] text-slate-400 mt-0.5">Primary Ledger</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-semibold text-gray-900 dark:text-white">{balance.currency}</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Available</p>
+                      <p className="font-mono text-xs font-bold text-white">
+                        {formatCurrencyAmount(balance.amount, balance.currency)}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-slate-400 text-xs text-center py-4">No currency balances yet</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Action Navigation Pills */}
+        <div className="mb-8">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <Link href="/payments?action=topup" className="bezel-card">
+              <div className="bezel-card-inner p-4 bg-[#080B12]/80 hover:bg-white/[0.06] border border-white/10 transition-all text-center group cursor-pointer">
+                <div className="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+                  <TopUpIcon size={20} />
+                </div>
+                <p className="font-bold text-xs text-white">Top Up Balance</p>
+                <p className="text-[10px] text-slate-400 mt-0.5">Card or Bank Transfer</p>
+              </div>
+            </Link>
+
+            <Link href="/payments" className="bezel-card">
+              <div className="bezel-card-inner p-4 bg-[#080B12]/80 hover:bg-white/[0.06] border border-white/10 transition-all text-center group cursor-pointer">
+                <div className="w-10 h-10 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+                  <SendIcon size={20} />
+                </div>
+                <p className="font-bold text-xs text-white">Send Money</p>
+                <p className="text-[10px] text-slate-400 mt-0.5">Instant Zero-Fee P2P</p>
+              </div>
+            </Link>
+
+            <Link href="/trading" className="bezel-card">
+              <div className="bezel-card-inner p-4 bg-[#080B12]/80 hover:bg-white/[0.06] border border-white/10 transition-all text-center group cursor-pointer">
+                <div className="w-10 h-10 rounded-full bg-[#d4ff00]/10 text-[#d4ff00] border border-[#d4ff00]/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+                  <CryptoIcon size={20} />
+                </div>
+                <p className="font-bold text-xs text-white">Trade Crypto</p>
+                <p className="text-[10px] text-slate-400 mt-0.5">Spot & Exchange</p>
+              </div>
+            </Link>
+
+            <Link href="/cards" className="bezel-card">
+              <div className="bezel-card-inner p-4 bg-[#080B12]/80 hover:bg-white/[0.06] border border-white/10 transition-all text-center group cursor-pointer">
+                <div className="w-10 h-10 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+                  <CardIcon size={20} />
+                </div>
+                <p className="font-bold text-xs text-white">Virtual Cards</p>
+                <p className="text-[10px] text-slate-400 mt-0.5">Manage & Create</p>
+              </div>
+            </Link>
+          </div>
+        </div>
+
+        {/* Lower Grid: Crypto Holdings & Recent Activity */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+          {/* Crypto Holdings Preview */}
+          <div className="lg:col-span-6 bezel-card">
+            <div className="bezel-card-inner p-6 bg-[#080B12]/90 border border-white/10">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="font-bold text-sm text-white uppercase tracking-wider flex items-center gap-2">
+                  <TrendingUpIcon size={16} className="text-[#d4ff00]" />
+                  <span>Crypto Holdings</span>
+                </h3>
+                <Link href="/trading" className="text-xs text-[#d4ff00] hover:underline font-semibold">
+                  Trade Market →
+                </Link>
+              </div>
+
+              {profile?.cryptoWallets && profile.cryptoWallets.length > 0 ? (
+                <div className="space-y-3">
+                  {profile.cryptoWallets.map((wallet) => (
+                    <div key={wallet.cryptoType} className="flex justify-between items-center p-3 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-purple-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xs">
+                          {wallet.cryptoType.substring(0, 1)}
+                        </div>
+                        <div>
+                          <p className="font-bold text-xs text-white">{wallet.cryptoType}</p>
+                          <p className="text-[10px] text-slate-400 font-mono">{formatCryptoAmount(wallet.balance, wallet.cryptoType)}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-mono text-xs font-bold text-white">
+                          {formatCurrencyAmount(cryptoToFiat(wallet.balance, wallet.cryptoType, profile?.preferredCurrency || 'USD'), profile?.preferredCurrency || 'USD')}
+                        </p>
+                        <p className="text-[10px] text-[#d4ff00] font-mono">Secured Vault</p>
                       </div>
                     </div>
-                    <p className="font-bold text-gray-900 dark:text-white">{formatCurrencyAmount(balance.amount, balance.currency)}</p>
-                  </div>
-                ))
+                  ))}
+                </div>
               ) : (
-                <p className="text-gray-500 dark:text-gray-400 text-center py-4">No balances yet</p>
+                <div className="text-center py-8 text-slate-400 text-xs">
+                  <p>You don&apos;t have any cryptocurrencies yet.</p>
+                  <Link href="/trading" className="inline-block mt-3 px-4 py-2 rounded-full bg-[#d4ff00] text-black font-bold text-xs">
+                    Start Trading
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Recent Activity */}
+          <div className="lg:col-span-6 bezel-card">
+            <div className="bezel-card-inner p-6 bg-[#080B12]/90 border border-white/10">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="font-bold text-sm text-white uppercase tracking-wider">Recent Activity</h3>
+                <Link href="/transactions" className="text-xs text-slate-400 hover:text-white transition-colors">
+                  View All Activity →
+                </Link>
+              </div>
+
+              {transactions.length > 0 ? (
+                <div className="space-y-2.5">
+                  {transactions.map((tx) => (
+                    <TransactionItem key={tx.id} transaction={tx} />
+                  ))}
+                </div>
+              ) : (
+                <p className="text-slate-400 text-xs text-center py-8">No recent transactions recorded</p>
               )}
             </div>
           </div>
         </div>
-
-        {/* Quick Actions */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Quick Actions</h2>
-            <Link href="/services">
-              <Button variant="ghost" size="sm">View All Services →</Button>
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Link href="/payments?action=topup">
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 hover:shadow-lg transition-all cursor-pointer border-2 border-transparent hover:border-purple-600 text-center">
-                <div className="flex justify-center mb-3">
-                  <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-full">
-                    <TopUpIcon className="text-purple-600 dark:text-purple-400" size={24} />
-                  </div>
-                </div>
-                <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Top Up</h3>
-              </div>
-            </Link>
-
-            <Link href="/payments">
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 hover:shadow-lg transition-all cursor-pointer border-2 border-transparent hover:border-blue-600 text-center">
-                <div className="flex justify-center mb-3">
-                  <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full">
-                    <SendIcon className="text-blue-600 dark:text-blue-400" size={24} />
-                  </div>
-                </div>
-                <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Send Money</h3>
-              </div>
-            </Link>
-
-            <Link href="/trading">
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 hover:shadow-lg transition-all cursor-pointer border-2 border-transparent hover:border-orange-600 text-center">
-                <div className="flex justify-center mb-3">
-                  <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-full">
-                    <CryptoIcon className="text-orange-600 dark:text-orange-400" size={24} />
-                  </div>
-                </div>
-                <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Buy Crypto</h3>
-              </div>
-            </Link>
-
-            <Link href="/cards">
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 hover:shadow-lg transition-all cursor-pointer border-2 border-transparent hover:border-pink-600 text-center">
-                <div className="flex justify-center mb-3">
-                  <div className="p-3 bg-pink-100 dark:bg-pink-900/30 rounded-full">
-                    <CardIcon className="text-pink-600 dark:text-pink-400" size={24} />
-                  </div>
-                </div>
-                <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Create Card</h3>
-              </div>
-            </Link>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Crypto Holdings */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Crypto Portfolio</h2>
-              <Link href="/portfolio">
-                <Button variant="ghost" size="sm">View All</Button>
-              </Link>
-            </div>
-            
-            {profile?.cryptoWallets && profile.cryptoWallets.length > 0 ? (
-              <div className="space-y-3">
-                {profile.cryptoWallets.slice(0, 3).map((wallet) => (
-                  <div key={wallet.cryptoType} className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                    <div>
-                      <p className="font-semibold text-gray-900 dark:text-white">{wallet.cryptoType}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{formatCryptoAmount(wallet.balance, wallet.cryptoType)}</p>
-                    </div>
-                    <p className="font-bold text-gray-900 dark:text-white text-sm">
-                      {formatCurrencyAmount(
-                        cryptoToFiat(wallet.balance, wallet.cryptoType, profile.preferredCurrency),
-                        profile.preferredCurrency
-                      )}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <div className="flex justify-center mb-3">
-                  <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-full">
-                    <CryptoIcon className="text-gray-400" size={32} />
-                  </div>
-                </div>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">No crypto yet</p>
-                <Link href="/trading">
-                  <Button size="sm" className="mt-4">Buy Crypto</Button>
-                </Link>
-              </div>
-            )}
-          </div>
-
-          {/* Portfolio Chart */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Portfolio Distribution</h2>
-            {totalBalance > 0 ? (
-              <ResponsiveContainer width="100%" height={200}>
-                <PieChart>
-                  <Pie
-                    data={portfolioData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
-                    {portfolioData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => formatCurrencyAmount(value as number, profile?.preferredCurrency || 'USD')} />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-gray-500 dark:text-gray-400">No portfolio data</p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Recent Transactions */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Recent Transactions</h2>
-            <Link href="/transactions">
-              <Button variant="ghost" size="sm">View All</Button>
-            </Link>
-          </div>
-          
-          {transactions.length > 0 ? (
-            <div className="space-y-3">
-              {transactions.map((transaction) => (
-                <TransactionItem key={transaction.id} transaction={transaction} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">📭</div>
-              <p className="text-gray-600 dark:text-gray-400">No transactions yet</p>
-              <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-                Start by topping up your balance or creating a card
-              </p>
-            </div>
-          )}
-        </div>
-
-        {error && (
-          <div className="mt-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-lg">
-            {error}
-          </div>
-        )}
       </main>
 
       <Footer />

@@ -139,62 +139,67 @@ export default function POSTerminal() {
 
   if (showSuccess) {
     return (
-      <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+      <div className="min-h-screen flex flex-col bg-[#05070B] text-zinc-100 bg-cyber-grid">
         <BusinessNavigation />
         
-        <main className="flex-1 container mx-auto px-4 py-12 max-w-2xl animate-scaleIn">
-          <div className="bg-slate-800 rounded-2xl p-8 shadow-2xl border border-slate-700">
-            <div className="text-center">
-              {/* Success Animation */}
-              <div className="mb-6">
-                <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto animate-pulse shadow-xl shadow-green-500/20">
-                  <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                  </svg>
+        <main className="flex-1 container mx-auto px-4 py-12 max-w-xl animate-scaleIn">
+          <div className="bg-white/[0.03] rounded-3xl p-8 shadow-2xl border border-white/10 backdrop-blur-xl text-center">
+            {/* Success Animation */}
+            <div className="mb-6">
+              <div className="w-20 h-20 bg-gradient-to-br from-[#d4ff00] to-emerald-400 rounded-full flex items-center justify-center mx-auto shadow-xl shadow-[#d4ff00]/20 text-[#05070B]">
+                <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            </div>
+
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#d4ff00]/10 border border-[#d4ff00]/30 text-xs font-bold text-[#d4ff00] mb-3">
+              <span>✓ TRANSACTION CLEARED</span>
+            </div>
+
+            <h2 className="text-3xl font-extrabold text-white mb-2">Payment Settled!</h2>
+            <p className="text-zinc-400 text-sm mb-6">Customer funds captured and credited to corporate treasury</p>
+
+            {/* Transaction Receipt Card */}
+            <div className="bg-[#05070B] border border-white/10 rounded-2xl p-6 mb-6 text-left font-mono">
+              <div className="space-y-3.5 text-xs">
+                <div className="flex justify-between items-center pb-3 border-b border-white/10">
+                  <span className="text-zinc-400 uppercase">Amount Captured:</span>
+                  <span className="text-[#d4ff00] font-extrabold text-xl">
+                    {transactionDetails && formatCurrencyAmount(transactionDetails.amount, transactionDetails.currency)}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">Card Mask:</span>
+                  <span className="text-white font-bold">•••• •••• •••• {transactionDetails?.cardLast4}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">Clearance Ref:</span>
+                  <span className="text-zinc-300 select-all">{transactionDetails?.transactionId?.substring(0, 14)}...</span>
+                </div>
+                {transactionDetails?.description && (
+                  <div className="flex justify-between">
+                    <span className="text-zinc-400">Memo:</span>
+                    <span className="text-white">{transactionDetails.description}</span>
+                  </div>
+                )}
+                <div className="flex justify-between items-center pt-2 border-t border-white/5">
+                  <span className="text-zinc-400">Status:</span>
+                  <span className="text-emerald-400 font-bold flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    SETTLED (INSTANT)
+                  </span>
                 </div>
               </div>
+            </div>
 
-              <h2 className="text-3xl font-bold text-white mb-2">Payment Successful!</h2>
-              <p className="text-slate-400 mb-6">Transaction completed successfully</p>
-
-              {/* Transaction Details */}
-              <div className="bg-slate-700/50 rounded-xl p-6 mb-6 text-left">
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Amount Charged:</span>
-                    <span className="text-white font-bold text-lg">
-                      {transactionDetails && formatCurrencyAmount(transactionDetails.amount, transactionDetails.currency)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Card:</span>
-                    <span className="text-white">**** {transactionDetails?.cardLast4}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Transaction ID:</span>
-                    <span className="text-white font-mono text-sm">{transactionDetails?.transactionId?.substring(0, 8)}</span>
-                  </div>
-                  {transactionDetails?.description && (
-                    <div className="flex justify-between">
-                      <span className="text-slate-400">Description:</span>
-                      <span className="text-white">{transactionDetails.description}</span>
-                    </div>
-                  )}
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Status:</span>
-                    <span className="text-green-400 font-semibold">✓ Completed</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex space-x-4">
-                <Button onClick={handleNewTransaction} className="flex-1">
-                  New Transaction
-                </Button>
-                <Button onClick={() => router.push('/business/dashboard')} variant="secondary" className="flex-1">
-                  Back to Dashboard
-                </Button>
-              </div>
+            <div className="flex gap-3">
+              <Button onClick={handleNewTransaction} className="flex-1 bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold">
+                + New Terminal Charge
+              </Button>
+              <Button onClick={() => router.push('/business/dashboard')} variant="secondary" className="flex-1 border border-white/10 text-white">
+                Treasury Dashboard
+              </Button>
             </div>
           </div>
         </main>
@@ -205,36 +210,33 @@ export default function POSTerminal() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+    <div className="min-h-screen flex flex-col bg-[#05070B] text-zinc-100 bg-cyber-grid">
       <BusinessNavigation />
       
-      <main className="flex-1 container mx-auto px-4 py-8 max-w-2xl animate-fadeIn">
+      <main className="flex-1 container mx-auto px-4 py-8 max-w-xl animate-fadeIn">
         {/* Header */}
         <div className="mb-8 text-center">
-          <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-2xl">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-              </svg>
-            </div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#d4ff00]/10 border border-[#d4ff00]/30 text-xs font-bold text-[#d4ff00] mb-3">
+            <span className="w-2 h-2 rounded-full bg-[#d4ff00] animate-pulse"></span>
+            <span>VIRTUAL POINT-OF-SALE</span>
           </div>
-          <h1 className="text-4xl font-bold text-white mb-2">
-            POS Terminal
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-2">
+            POS Terminal Terminal
           </h1>
-          <p className="text-slate-400 text-lg">
-            Accept card payments from customers
+          <p className="text-zinc-400 text-sm">
+            Instant customer card debit and real-time merchant settlement
           </p>
         </div>
 
         {/* POS Terminal Card */}
-        <div className="bg-gradient-to-br from-slate-800 via-slate-700 to-slate-800 rounded-2xl p-8 shadow-2xl border border-slate-600">
+        <div className="bg-white/[0.03] rounded-3xl p-8 shadow-2xl border border-white/10 backdrop-blur-xl">
           <form onSubmit={handleCharge}>
             {/* Amount Section */}
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-slate-300 mb-2 uppercase tracking-wide">
-                Amount to Charge
+              <label className="block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider">
+                Charge Amount
               </label>
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-3">
                 <div className="flex-1">
                   <input
                     type="number"
@@ -242,14 +244,14 @@ export default function POSTerminal() {
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     placeholder="0.00"
-                    className="w-full px-6 py-4 text-4xl font-bold bg-slate-900/50 border-2 border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 text-white placeholder-slate-600"
+                    className="w-full px-5 py-3.5 text-3xl font-extrabold bg-[#05070B] border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white font-mono placeholder-zinc-700"
                     required
                   />
                 </div>
                 <select
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value as Currency)}
-                  className="px-4 py-4 text-xl font-bold bg-slate-900/50 border-2 border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 text-white"
+                  className="px-4 py-3.5 text-lg font-bold bg-[#05070B] border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white font-mono"
                 >
                   <option value="USD">USD</option>
                   <option value="EUR">EUR</option>
@@ -264,39 +266,39 @@ export default function POSTerminal() {
 
             {/* Card Number */}
             <div className="mb-4">
-              <label className="block text-sm font-semibold text-slate-300 mb-2 uppercase tracking-wide">
-                Card Number
+              <label className="block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider">
+                Customer Card Number (16 Digits)
               </label>
               <input
                 type="text"
                 value={formatCardNumber(cardNumber)}
                 onChange={handleCardNumberChange}
-                placeholder="1234 5678 9012 3456"
+                placeholder="7000 0000 0000 0000"
                 maxLength={19}
-                className="w-full px-4 py-3 bg-slate-900/50 border-2 border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 text-white text-lg font-mono placeholder-slate-600"
+                className="w-full px-4 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white text-base font-mono tracking-wider placeholder-zinc-700"
                 required
               />
             </div>
 
             {/* Expiry and CVV */}
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-2 gap-3 mb-4">
               <div>
-                <label className="block text-sm font-semibold text-slate-300 mb-2 uppercase tracking-wide">
+                <label className="block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider">
                   Expiry (MM/YY)
                 </label>
                 <input
                   type="text"
                   value={formatExpiry(expiryDate)}
                   onChange={handleExpiryChange}
-                  placeholder="12/25"
+                  placeholder="12/28"
                   maxLength={5}
-                  className="w-full px-4 py-3 bg-slate-900/50 border-2 border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 text-white text-lg font-mono placeholder-slate-600"
+                  className="w-full px-4 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white text-base font-mono placeholder-zinc-700"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-300 mb-2 uppercase tracking-wide">
-                  CVV
+                <label className="block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider">
+                  CVV Code
                 </label>
                 <input
                   type="text"
@@ -304,7 +306,7 @@ export default function POSTerminal() {
                   onChange={handleCvvChange}
                   placeholder="123"
                   maxLength={3}
-                  className="w-full px-4 py-3 bg-slate-900/50 border-2 border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 text-white text-lg font-mono placeholder-slate-600"
+                  className="w-full px-4 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white text-base font-mono placeholder-zinc-700"
                   required
                 />
               </div>
@@ -312,21 +314,21 @@ export default function POSTerminal() {
 
             {/* Description */}
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-slate-300 mb-2 uppercase tracking-wide">
-                Description (Optional)
+              <label className="block text-xs font-bold text-zinc-400 mb-2 uppercase tracking-wider">
+                Transaction Description (Optional)
               </label>
               <input
                 type="text"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Payment for..."
-                className="w-full px-4 py-3 bg-slate-900/50 border-2 border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 text-white placeholder-slate-600"
+                placeholder="e.g. Retail Order #892"
+                className="w-full px-4 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white text-sm placeholder-zinc-700"
               />
             </div>
 
             {/* Error Message */}
             {error && (
-              <div className="mb-4 bg-red-900/30 border border-red-700 text-red-400 p-4 rounded-xl text-center">
+              <div className="mb-4 bg-red-950/40 border border-red-500/30 text-red-400 p-4 rounded-xl text-center text-sm">
                 {error}
               </div>
             )}
@@ -335,25 +337,25 @@ export default function POSTerminal() {
             <Button
               type="submit"
               isLoading={loading}
-              className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold text-xl py-4 rounded-xl shadow-lg"
+              className="w-full bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold text-base py-4 rounded-2xl shadow-xl shadow-[#d4ff00]/20"
             >
-              {loading ? 'Processing...' : `Charge ${amount ? formatCurrencyAmount(parseFloat(amount), currency) : '—'}`}
+              {loading ? 'Processing Authorization...' : `Charge ${amount ? formatCurrencyAmount(parseFloat(amount), currency) : 'Now'}`}
             </Button>
           </form>
 
           {/* Security Notice */}
-          <div className="mt-6 pt-6 border-t border-slate-600">
-            <p className="text-xs text-slate-400 text-center">
-              🔒 Secure payment processing within the ecosystem
-            </p>
+          <div className="mt-6 pt-5 border-t border-white/10 flex items-center justify-center gap-2 text-xs text-zinc-500">
+            <span>🔒</span>
+            <span>256-bit encrypted clearance channel</span>
           </div>
         </div>
 
-        {/* Info Box */}
-        <div className="mt-6 bg-blue-900/20 border border-blue-700 rounded-xl p-4">
-          <p className="text-blue-400 text-sm">
-            💡 <strong>Tip:</strong> Enter <strong>personal card</strong> details from customers. Business POS terminals can only charge personal customer cards, not business cards.
-          </p>
+        {/* Tip Box */}
+        <div className="mt-4 bg-white/[0.02] border border-white/10 rounded-2xl p-4 text-xs text-zinc-400 flex items-center gap-2.5">
+          <span className="text-base text-[#d4ff00]">💡</span>
+          <span>
+            <strong>Note:</strong> POS Terminal accepts customer personal NovaPay cards for instant clearing directly into this corporate balance.
+          </span>
         </div>
       </main>
 

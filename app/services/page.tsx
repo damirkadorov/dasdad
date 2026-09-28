@@ -170,33 +170,33 @@ export default function ServicesPage() {
     : services.filter(s => s.category === selectedCategory);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
+    <div className="min-h-screen flex flex-col bg-[#05070B] text-slate-100 bg-cyber-grid selection:bg-[#d4ff00] selection:text-black">
       <Navigation />
       
-      <main className="flex-1 container mx-auto px-4 py-8 max-w-7xl animate-fadeIn">
+      <main className="flex-1 container mx-auto px-4 py-8 max-w-7xl animate-fadeIn relative z-10">
         {/* Header */}
         <div className="mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800 text-xs font-semibold text-purple-700 dark:text-purple-300 mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.05] border border-white/10 text-xs font-semibold text-[#d4ff00] mb-3">
             <span>✨ Ecosystem Directory</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight mb-2">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">
             Banking Services &amp; Products
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base max-w-2xl">
+          <p className="text-slate-400 text-xs sm:text-sm max-w-2xl">
             Explore our integrated suite of personal, commercial, and decentralized financial tools.
           </p>
         </div>
 
         {/* Filter Pills */}
-        <div className="flex flex-wrap gap-2 mb-8 p-1.5 bg-gray-100 dark:bg-gray-800/80 rounded-xl w-max">
+        <div className="flex flex-wrap gap-2 mb-8 p-1.5 bg-white/[0.03] border border-white/10 rounded-full w-max">
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                 selectedCategory === cat.id
-                  ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-sm'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                  ? 'bg-[#d4ff00] text-black shadow-md shadow-[#d4ff00]/20'
+                  : 'text-slate-300 hover:text-white hover:bg-white/[0.06]'
               }`}
             >
               {cat.label}

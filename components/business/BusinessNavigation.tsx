@@ -19,32 +19,32 @@ export default function BusinessNavigation() {
 
   return (
     <>
-      <nav className="bg-slate-950/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 shadow-xl transition-all duration-300">
+      <nav className="bg-[#05070B]/80 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50 transition-all duration-300">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="flex items-center justify-between h-16">
             <Link href="/business/dashboard" className="transition-transform hover:scale-[1.02] active:scale-[0.98]">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20">
-                  <span className="text-white font-bold text-xl">B</span>
+                <div className="w-10 h-10 bg-gradient-to-br from-[#d4ff00] to-emerald-400 rounded-xl flex items-center justify-center shadow-lg shadow-[#d4ff00]/20">
+                  <span className="text-[#05070B] font-extrabold text-xl">B</span>
                 </div>
                 <div>
-                  <div className="text-white font-bold text-base tracking-tight leading-tight">LINGOUNG</div>
-                  <div className="text-amber-400 text-[10px] font-semibold tracking-widest uppercase">Business Banking</div>
+                  <div className="text-white font-extrabold text-base tracking-tight leading-tight">LINGOUNG</div>
+                  <div className="text-[#d4ff00] text-[10px] font-bold tracking-widest uppercase">Business Banking</div>
                 </div>
               </div>
             </Link>
             
-            <div className="hidden md:flex items-center space-x-1 p-1 bg-slate-900/80 rounded-xl border border-slate-800">
+            <div className="hidden md:flex items-center space-x-1 p-1 bg-white/[0.04] rounded-xl border border-white/10 backdrop-blur-md">
               {links.map((link) => {
                 const isActive = pathname === link.href;
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`flex items-center px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ease-spring ${
+                    className={`flex items-center px-3.5 py-1.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
                       isActive
-                        ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-md shadow-amber-500/20'
-                        : 'text-slate-300 hover:text-white hover:bg-slate-800'
+                        ? 'bg-[#d4ff00] text-[#05070B] shadow-md shadow-[#d4ff00]/20'
+                        : 'text-zinc-400 hover:text-white hover:bg-white/[0.06]'
                     }`}
                   >
                     <link.Icon className="mr-1.5" size={16} />
@@ -56,8 +56,15 @@ export default function BusinessNavigation() {
 
             <div className="hidden md:flex items-center space-x-3">
               <Link
+                href="/developer"
+                className="text-xs font-bold px-3 py-1.5 rounded-lg border border-[#d4ff00]/30 text-[#d4ff00] bg-[#d4ff00]/10 hover:bg-[#d4ff00]/20 transition-colors flex items-center gap-1.5"
+              >
+                <span>⚡</span>
+                <span>API Gateway</span>
+              </Link>
+              <Link
                 href="/dashboard"
-                className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-purple-500/40 text-purple-300 bg-purple-950/30 hover:bg-purple-900/40 transition-colors flex items-center gap-1.5"
+                className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/15 text-zinc-300 bg-white/[0.04] hover:bg-white/[0.08] transition-colors flex items-center gap-1.5"
               >
                 <span>👤</span>
                 <span>Personal Banking</span>
@@ -67,7 +74,7 @@ export default function BusinessNavigation() {
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition-colors"
+              className="md:hidden p-2 rounded-xl bg-white/[0.06] border border-white/10 text-zinc-300 hover:text-white transition-colors"
               aria-label="Toggle menu"
             >
               {mobileOpen ? (
@@ -87,7 +94,7 @@ export default function BusinessNavigation() {
               mobileOpen ? 'max-h-96 pb-4 opacity-100' : 'max-h-0 pb-0 opacity-0'
             }`}
           >
-            <div className="pt-2 grid grid-cols-2 gap-2 animate-slideDown">
+            <div className="pt-2 grid grid-cols-2 gap-2">
               {links.map((link) => {
                 const isActive = pathname === link.href;
                 return (
@@ -95,10 +102,10 @@ export default function BusinessNavigation() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className={`flex items-center space-x-2.5 p-3 rounded-xl text-sm font-medium transition-all ${
+                    className={`flex items-center space-x-2.5 p-3 rounded-xl text-sm font-semibold transition-all ${
                       isActive
-                        ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-md'
-                        : 'bg-slate-900 text-slate-300 border border-slate-800'
+                        ? 'bg-[#d4ff00] text-[#05070B] shadow-md'
+                        : 'bg-white/[0.04] text-zinc-300 border border-white/10'
                     }`}
                   >
                     <link.Icon size={18} />
@@ -107,9 +114,16 @@ export default function BusinessNavigation() {
                 );
               })}
               <Link
+                href="/developer"
+                onClick={() => setMobileOpen(false)}
+                className="col-span-2 flex items-center justify-center space-x-2 p-3 rounded-xl text-sm font-bold bg-[#d4ff00]/10 text-[#d4ff00] border border-[#d4ff00]/30"
+              >
+                <span>⚡ Payment Gateway API</span>
+              </Link>
+              <Link
                 href="/dashboard"
                 onClick={() => setMobileOpen(false)}
-                className="col-span-2 flex items-center justify-center space-x-2 p-3 rounded-xl text-sm font-semibold bg-purple-500/10 text-purple-300 border border-purple-500/30"
+                className="col-span-2 flex items-center justify-center space-x-2 p-3 rounded-xl text-sm font-semibold bg-white/[0.04] text-zinc-300 border border-white/10"
               >
                 <span>👤 Switch to Personal Banking</span>
               </Link>
@@ -120,7 +134,7 @@ export default function BusinessNavigation() {
 
       {mobileOpen && (
         <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 md:hidden animate-fadeIn"
+          className="fixed inset-0 bg-black/70 backdrop-blur-xs z-40 md:hidden animate-fadeIn"
           onClick={() => setMobileOpen(false)}
         />
       )}

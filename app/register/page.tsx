@@ -10,33 +10,57 @@ import Logo from '@/components/layout/Logo';
 export default function RegisterPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    email: '',
     username: '',
+    email: '',
     password: '',
     confirmPassword: ''
   });
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isLoading, setIsLoading] = useState(false);
+
+  const validate = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (!formData.username) {
+      newErrors.username = 'Username is required';
+    } else if (formData.username.length < 3) {
+      newErrors.username = 'Username must be at least 3 characters';
+    }
+
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email is invalid';
+    }
+
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setErrors({});
-
-    // Validate passwords match
-    if (formData.password !== formData.confirmPassword) {
-      setErrors({ confirmPassword: 'Passwords do not match' });
-      return;
-    }
+    if (!validate()) return;
 
     setIsLoading(true);
+    setErrors({});
 
     try {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: formData.email,
           username: formData.username,
+          email: formData.email,
           password: formData.password
         })
       });
@@ -58,85 +82,111 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 via-blue-600 to-blue-800 p-4">
-      <div className="w-full max-w-md animate-scaleIn">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8">
-          <div className="text-center mb-8">
-            <div className="flex justify-center mb-4">
-              <Logo size={48} showText={false} />
-            </div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2">
-              Create Account
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              Join our demo payment platform
-            </p>
-          </div>
+    <div className="min-h-screen flex items-center justify-center bg-[#05070B] text-slate-100 bg-cyber-grid p-4 relative overflow-hidden selection:bg-[#d4ff00] selection:text-black">
+      {/* Radiant Glow Orbs */}
+      <div className="absolute top-1/4 -right-20 w-80 h-80 bg-gradient-to-br from-orange-500/20 via-amber-400/10 to-transparent rounded-full blur-[100px] pointer-events-none"></div>
+      <div className="absolute bottom-1/4 -left-20 w-80 h-80 bg-gradient-to-tr from-[#d4ff00]/15 via-emerald-600/5 to-transparent rounded-full blur-[100px] pointer-events-none"></div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              label="Email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              placeholder="your@email.com"
-              required
-              error={errors.email}
-            />
-
-            <Input
-              label="Username"
-              type="text"
-              value={formData.username}
-              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-              placeholder="@username"
-              required
-              error={errors.username}
-            />
-
-            <Input
-              label="Password"
-              type="password"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              placeholder="••••••••"
-              required
-              error={errors.password}
-            />
-
-            <Input
-              label="Confirm Password"
-              type="password"
-              value={formData.confirmPassword}
-              onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-              placeholder="••••••••"
-              required
-              error={errors.confirmPassword}
-            />
-
-            {errors.general && (
-              <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                <p className="text-sm text-red-600 dark:text-red-400">{errors.general}</p>
+      <div className="w-full max-w-md animate-scaleIn relative z-10">
+        <div className="bezel-card">
+          <div className="bezel-card-inner p-8 bg-[#080B12]/95 border border-white/10 shadow-2xl">
+            <div className="text-center mb-8">
+              <div className="flex justify-center mb-4">
+                <Link href="/">
+                  <Logo size={42} showText={false} textWhite={true} />
+                </Link>
               </div>
-            )}
+              <h1 className="text-2xl font-extrabold text-white tracking-tight mb-1">
+                Create Account
+              </h1>
+              <p className="text-xs text-slate-400">
+                Get your instant virtual card and multi-currency IBAN
+              </p>
+            </div>
 
-            <Button type="submit" className="w-full" isLoading={isLoading}>
-              Create Account
-            </Button>
-          </form>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {errors.general && (
+                <div className="p-3 bg-red-950/40 border border-red-800 text-red-400 rounded-xl text-xs">
+                  {errors.general}
+                </div>
+              )}
 
-          <div className="mt-6 text-center">
-            <p className="text-gray-600 dark:text-gray-400">
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.username}
+                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                  placeholder="johndoe"
+                  className="w-full px-3.5 py-2.5 bg-white/[0.04] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-[#d4ff00] focus:border-transparent transition-all"
+                />
+                {errors.username && <p className="text-[11px] text-red-400 mt-1">{errors.username}</p>}
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="name@example.com"
+                  className="w-full px-3.5 py-2.5 bg-white/[0.04] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-[#d4ff00] focus:border-transparent transition-all"
+                />
+                {errors.email && <p className="text-[11px] text-red-400 mt-1">{errors.email}</p>}
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  placeholder="••••••••"
+                  className="w-full px-3.5 py-2.5 bg-white/[0.04] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-[#d4ff00] focus:border-transparent transition-all"
+                />
+                {errors.password && <p className="text-[11px] text-red-400 mt-1">{errors.password}</p>}
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={formData.confirmPassword}
+                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                  placeholder="••••••••"
+                  className="w-full px-3.5 py-2.5 bg-white/[0.04] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-[#d4ff00] focus:border-transparent transition-all"
+                />
+                {errors.confirmPassword && <p className="text-[11px] text-red-400 mt-1">{errors.confirmPassword}</p>}
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-3 px-6 rounded-full bg-[#d4ff00] hover:bg-[#bce400] text-black font-extrabold text-xs transition-all active:scale-95 shadow-lg shadow-[#d4ff00]/15 cursor-pointer disabled:opacity-50 mt-2"
+              >
+                {isLoading ? 'Creating Account...' : 'Get Started Free →'}
+              </button>
+            </form>
+
+            <div className="mt-6 text-center text-xs text-slate-400">
               Already have an account?{' '}
-              <Link href="/login" className="text-purple-600 hover:text-purple-700 font-semibold">
+              <Link href="/login" className="text-[#d4ff00] hover:underline font-semibold">
                 Sign in
               </Link>
-            </p>
+            </div>
           </div>
-        </div>
-
-        <div className="mt-6 text-center text-white/80 text-sm">
-          ⚠️ This is a DEMO app with fake money only
         </div>
       </div>
     </div>

@@ -157,10 +157,10 @@ export default function TransactionsPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
+    <div className="min-h-screen flex flex-col bg-[#05070B] text-slate-100 bg-cyber-grid selection:bg-[#d4ff00] selection:text-black">
       <Navigation />
       
-      <main className="flex-1 container mx-auto px-4 py-8 max-w-6xl animate-fadeIn">
+      <main className="flex-1 container mx-auto px-4 py-8 max-w-6xl animate-fadeIn relative z-10">
         {/* Header */}
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -350,19 +350,19 @@ export default function TransactionsPage() {
         )}
 
         {/* Filters */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg mb-8">
+        <div className="bg-[#080B12]/80 border border-white/10 rounded-2xl p-3 shadow-lg mb-8">
           <div className="flex flex-wrap gap-2">
             {filterOptions.map((option) => (
               <button
                 key={option.value}
                 onClick={() => setFilter(option.value)}
-                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   filter === option.value
-                    ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                    ? 'bg-[#d4ff00] text-black shadow-md shadow-[#d4ff00]/20'
+                    : 'bg-white/[0.04] text-slate-300 hover:bg-white/[0.08] hover:text-white border border-white/[0.06]'
                 }`}
               >
-                <span className="mr-2">{option.icon}</span>
+                <span className="mr-1.5">{option.icon}</span>
                 {option.label}
               </button>
             ))}
