@@ -67,11 +67,6 @@ export function formatCurrencyAmount(amount: number, currency: Currency): string
   const decimals = currency === 'JPY' ? 0 : 2;
   const formatted = amount.toFixed(decimals);
   
-  // Add symbol before or after based on currency
-  if (currency === 'CHF') {
-    return `${symbol}${formatted}`;
-  }
-  
   return `${symbol}${formatted}`;
 }
 

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import BusinessNavigation from '@/components/business/BusinessNavigation';
+import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { Currency } from '@/lib/db/types';
@@ -106,10 +107,10 @@ export default function BusinessPaymentsContent() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
       <BusinessNavigation />
       
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl animate-fadeIn">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">
@@ -271,7 +272,9 @@ export default function BusinessPaymentsContent() {
             </div>
           )}
         </div>
-      </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }

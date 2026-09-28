@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import BusinessNavigation from '@/components/business/BusinessNavigation';
+import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
+import Skeleton, { DashboardSkeleton } from '@/components/ui/Skeleton';
 import TransactionItem from '@/components/transactions/TransactionItem';
 import { formatCurrencyAmount } from '@/lib/utils/currency';
 import { Transaction, CurrencyBalance, Currency } from '@/lib/db/types';
@@ -62,27 +64,26 @@ export default function BusinessDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-900">
+      <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
         <BusinessNavigation />
-        <div className="flex items-center justify-center h-[calc(100vh-64px)]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-amber-500 mx-auto"></div>
-            <p className="mt-4 text-slate-400">Loading...</p>
-          </div>
-        </div>
+        <main className="flex-1">
+          <DashboardSkeleton />
+        </main>
+        <Footer />
       </div>
     );
   }
 
   if (error && !profile) {
     return (
-      <div className="min-h-screen bg-slate-900">
+      <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
         <BusinessNavigation />
-        <div className="container mx-auto px-4 py-8">
-          <div className="bg-red-900/20 text-red-400 p-4 rounded-lg">
+        <main className="flex-1 container mx-auto px-4 py-16 text-center">
+          <div className="bg-red-950/40 border border-red-900 text-red-400 p-6 rounded-2xl max-w-md mx-auto">
             {error}
           </div>
-        </div>
+        </main>
+        <Footer />
       </div>
     );
   }
@@ -90,10 +91,10 @@ export default function BusinessDashboard() {
   const totalBalance = profile?.balances?.reduce((sum, b) => sum + b.amount, 0) || 0;
 
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
       <BusinessNavigation />
       
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <main className="flex-1 container mx-auto px-4 py-8 max-w-7xl animate-fadeIn">
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">
@@ -282,7 +283,9 @@ export default function BusinessDashboard() {
             {error}
           </div>
         )}
-      </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }

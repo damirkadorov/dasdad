@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
+import Skeleton from '@/components/ui/Skeleton';
 import CurrencyConverter from '@/components/converter/CurrencyConverter';
 import { formatCurrencyAmount } from '@/lib/utils/currency';
-import { formatCryptoAmount, calculatePortfolioValue, getCryptoName, cryptoToFiat, CRYPTO_PRICES } from '@/lib/utils/crypto';
+import { formatCryptoAmount, calculatePortfolioValue, getCryptoName, cryptoToFiat, getCryptoPrice } from '@/lib/utils/crypto';
 import { CryptoWallet, Currency, Trade } from '@/lib/db/types';
 
 // Dynamically import Recharts to avoid SSR issues
@@ -66,261 +68,301 @@ export default function PortfolioPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
         <Navigation />
-        <div className="flex items-center justify-center h-[calc(100vh-64px)]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">Loading portfolio...</p>
+        <main className="flex-1 container mx-auto px-4 py-8 max-w-7xl space-y-6">
+          <Skeleton variant="text" width={220} height={36} />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Skeleton variant="card" height={220} />
+            <div className="lg:col-span-2">
+              <Skeleton variant="card" height={220} />
+            </div>
           </div>
-        </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Skeleton variant="card" height={300} />
+            <Skeleton variant="card" height={300} />
+          </div>
+        </main>
+        <Footer />
       </div>
     );
   }
 
   if (error && !profile) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
         <Navigation />
-        <div className="container mx-auto px-4 py-8">
-          <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-lg">
-            {error}
+        <main className="flex-1 container mx-auto px-4 py-16 max-w-xl text-center">
+          <div className="bezel-card">
+            <div className="bezel-card-inner p-8">
+              <div className="text-4xl mb-3">⚠️</div>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{error}</h2>
+              <Button onClick={() => router.push('/dashboard')}>
+                ← Return to Dashboard
+              </Button>
+            </div>
           </div>
-        </div>
+        </main>
+        <Footer />
       </div>
     );
   }
 
+  const preferredCurrency = profile?.preferredCurrency || 'USD';
   const totalPortfolioValue = profile?.cryptoWallets
-    ? calculatePortfolioValue(profile.cryptoWallets, profile.preferredCurrency)
+    ? calculatePortfolioValue(profile.cryptoWallets, preferredCurrency)
     : 0;
 
   // Deterministic color mapping for crypto types
   const getCryptoColor = (cryptoType: string): string => {
     const colorMap: Record<string, string> = {
-      'BTC': '#f7931a', // Bitcoin orange
-      'ETH': '#627eea', // Ethereum blue
-      'USDT': '#26a17b', // Tether green
-      'BNB': '#f3ba2f', // Binance yellow
-      'XRP': '#23292f', // Ripple dark
-      'ADA': '#0033ad', // Cardano blue
-      'SOL': '#14f195', // Solana green
-      'DOGE': '#c2a633', // Doge gold
+      'BTC': '#f7931a',
+      'ETH': '#627eea',
+      'USDT': '#26a17b',
+      'BNB': '#f3ba2f',
+      'XRP': '#23292f',
+      'ADA': '#0033ad',
+      'SOL': '#14f195',
+      'DOGE': '#c2a633',
     };
-    return colorMap[cryptoType] || '#8b5cf6'; // Default purple
+    return colorMap[cryptoType] || '#8b5cf6';
   };
 
   const portfolioData = profile?.cryptoWallets.map(wallet => ({
     name: wallet.cryptoType,
-    value: cryptoToFiat(wallet.balance, wallet.cryptoType, profile.preferredCurrency),
+    value: cryptoToFiat(wallet.balance, wallet.cryptoType, preferredCurrency),
     color: getCryptoColor(wallet.cryptoType)
   })) || [];
 
-  const COLORS = ['#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4', '#84cc16'];
-
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
       <Navigation />
       
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <main className="flex-1 container mx-auto px-4 py-8 max-w-7xl animate-fadeIn">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight mb-1">
             Crypto Portfolio ₿
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Manage and track your cryptocurrency investments
+          <p className="text-gray-600 dark:text-gray-400 text-sm">
+            Live valuation, asset allocation, and non-custodial wallet balances
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 rounded-2xl p-8 text-white shadow-2xl">
-            <div className="flex justify-between items-start mb-6">
-              <div>
-                <p className="text-white/80 text-sm mb-2">Total Portfolio Value</p>
-                <h2 className="text-5xl font-bold">
-                  {formatCurrencyAmount(totalPortfolioValue, profile?.preferredCurrency || 'USD')}
-                </h2>
+          {/* Total Value Banner */}
+          <div className="p-8 rounded-2xl bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-700 text-white shadow-2xl flex flex-col justify-between">
+            <div>
+              <div className="flex justify-between items-start mb-4">
+                <span className="text-xs uppercase tracking-wider font-semibold text-white/80">Total Portfolio Value</span>
+                <span className="w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center font-bold text-xl">₿</span>
               </div>
-              <div className="bg-white/20 backdrop-blur-lg rounded-full p-3">
-                <span className="text-2xl">₿</span>
-              </div>
+              <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight font-mono mb-2">
+                {formatCurrencyAmount(totalPortfolioValue, preferredCurrency)}
+              </h2>
+              <p className="text-xs text-white/70">
+                Aggregated across {profile?.cryptoWallets?.length || 0} active asset holdings
+              </p>
             </div>
-            <Link href="/trading">
-              <Button className="bg-white text-purple-600 hover:bg-gray-100 w-full">
-                Trade Crypto
-              </Button>
-            </Link>
+            
+            <div className="mt-8">
+              <Link href="/trading">
+                <Button className="w-full bg-white text-purple-700 hover:bg-gray-100 font-semibold py-3 shadow-lg">
+                  + Trade Cryptocurrencies
+                </Button>
+              </Link>
+            </div>
           </div>
 
+          {/* Asset Allocation Chart */}
           <div className="lg:col-span-2">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg h-full">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Portfolio Distribution</h3>
-              {portfolioData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={250}>
-                  <PieChart>
-                    <Pie
-                      data={portfolioData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {portfolioData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip formatter={(value) => formatCurrencyAmount(value as number, profile?.preferredCurrency || 'USD')} />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
+            <div className="bezel-card h-full">
+              <div className="bezel-card-inner p-6 h-full flex flex-col justify-between">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Asset Allocation</h3>
+                {portfolioData.length > 0 && totalPortfolioValue > 0 ? (
+                  <ResponsiveContainer width="100%" height={240}>
+                    <PieChart>
+                      <Pie
+                        data={portfolioData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={55}
+                        outerRadius={85}
+                        paddingAngle={4}
+                        dataKey="value"
+                      >
+                        {portfolioData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip formatter={(value) => formatCurrencyAmount(value as number, preferredCurrency)} />
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="text-center py-12">
+                    <p className="text-gray-500 dark:text-gray-400 text-sm mb-3">No cryptocurrency assets currently held</p>
+                    <Link href="/trading">
+                      <Button size="sm">Explore Market</Button>
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 items-start">
+          {/* Crypto Wallets */}
+          <div className="bezel-card">
+            <div className="bezel-card-inner p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Active Asset Wallets</h2>
+                <Link href="/trading">
+                  <Button variant="ghost" size="sm">Deposit / Buy →</Button>
+                </Link>
+              </div>
+
+              {profile?.cryptoWallets && profile.cryptoWallets.length > 0 ? (
+                <div className="space-y-4">
+                  {profile.cryptoWallets.map((wallet) => {
+                    const value = cryptoToFiat(wallet.balance, wallet.cryptoType, preferredCurrency);
+                    const currentPrice = getCryptoPrice(wallet.cryptoType, preferredCurrency);
+                    return (
+                      <div key={wallet.cryptoType} className="p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/40">
+                        <div className="flex justify-between items-start mb-2">
+                          <div className="flex items-center space-x-2.5">
+                            <div 
+                              className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-sm"
+                              style={{ backgroundColor: getCryptoColor(wallet.cryptoType) }}
+                            >
+                              {wallet.cryptoType.slice(0, 1)}
+                            </div>
+                            <div>
+                              <h3 className="font-bold text-gray-900 dark:text-white text-sm">
+                                {wallet.cryptoType}
+                              </h3>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                                {getCryptoName(wallet.cryptoType)}
+                              </p>
+                            </div>
+                          </div>
+                          
+                          <div className="text-right">
+                            <p className="font-bold text-gray-900 dark:text-white text-base font-mono">
+                              {formatCurrencyAmount(value, preferredCurrency)}
+                            </p>
+                            <p className="text-xs text-purple-600 dark:text-purple-400 font-mono font-medium">
+                              {formatCryptoAmount(wallet.balance, wallet.cryptoType)}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                          <span className="truncate max-w-[240px] font-mono select-all">
+                            {wallet.address}
+                          </span>
+                          <span className="font-mono">
+                            Spot: {formatCurrencyAmount(currentPrice, preferredCurrency)}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               ) : (
                 <div className="text-center py-12">
-                  <p className="text-gray-500 dark:text-gray-400">No crypto holdings yet</p>
+                  <div className="text-5xl mb-3">🪙</div>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">No cryptocurrency balances found</p>
                   <Link href="/trading">
-                    <Button className="mt-4">Start Trading</Button>
+                    <Button size="sm">Acquire Crypto</Button>
                   </Link>
                 </div>
               )}
             </div>
           </div>
+
+          {/* Currency Converter */}
+          <div className="bezel-card">
+            <div className="bezel-card-inner p-2 sm:p-4">
+              <CurrencyConverter />
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Crypto Wallets</h2>
-            {profile?.cryptoWallets && profile.cryptoWallets.length > 0 ? (
-              <div className="space-y-4">
-                {profile.cryptoWallets.map((wallet) => {
-                  const value = cryptoToFiat(wallet.balance, wallet.cryptoType, profile.preferredCurrency);
-                  return (
-                    <div key={wallet.cryptoType} className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                            {wallet.cryptoType}
-                          </h3>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {getCryptoName(wallet.cryptoType)}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-lg font-bold text-gray-900 dark:text-white">
-                            {formatCurrencyAmount(value, profile.preferredCurrency)}
-                          </p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {formatCryptoAmount(wallet.balance, wallet.cryptoType)}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="pt-3 border-t border-gray-200 dark:border-gray-600">
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Wallet Address</p>
-                        <p className="text-xs font-mono bg-white dark:bg-gray-800 p-2 rounded border border-gray-200 dark:border-gray-600 truncate">
-                          {wallet.address}
-                        </p>
-                      </div>
-                      <div className="mt-2 text-xs text-gray-400 dark:text-gray-500">
-                        Current Price: {formatCurrencyAmount(CRYPTO_PRICES[wallet.cryptoType], 'USD')}
-                      </div>
-                    </div>
-                  );
-                })}
+        {/* Recent Trades Table */}
+        <div className="bezel-card mb-10">
+          <div className="bezel-card-inner p-6 sm:p-8">
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recent Trade Executions</h2>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Historical orders matched with instant liquidity</p>
+              </div>
+              <Link href="/transactions">
+                <Button variant="ghost" size="sm">All Transactions →</Button>
+              </Link>
+            </div>
+
+            {trades.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-200 dark:border-gray-800 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      <th className="py-3 px-4">Side</th>
+                      <th className="py-3 px-4">Asset</th>
+                      <th className="py-3 px-4">Crypto Amount</th>
+                      <th className="py-3 px-4">Fill Price</th>
+                      <th className="py-3 px-4">Total Value</th>
+                      <th className="py-3 px-4 text-right">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                    {trades.slice(0, 10).map((trade) => (
+                      <tr key={trade.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors">
+                        <td className="py-3.5 px-4">
+                          <span className={`inline-flex px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider ${
+                            trade.type === 'buy'
+                              ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400'
+                              : 'bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400'
+                          }`}>
+                            {trade.type}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4 font-bold text-gray-900 dark:text-white">{trade.cryptoType}</td>
+                        <td className="py-3.5 px-4 font-mono text-xs text-gray-700 dark:text-gray-300">
+                          {formatCryptoAmount(trade.cryptoAmount, trade.cryptoType)}
+                        </td>
+                        <td className="py-3.5 px-4 font-mono text-xs text-gray-700 dark:text-gray-300">
+                          {formatCurrencyAmount(trade.price, trade.fiatCurrency)}
+                        </td>
+                        <td className="py-3.5 px-4 font-bold font-mono text-gray-900 dark:text-white">
+                          {formatCurrencyAmount(trade.fiatAmount, trade.fiatCurrency)}
+                        </td>
+                        <td className="py-3.5 px-4 text-right">
+                          <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                            ✓ {trade.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             ) : (
-              <div className="text-center py-12">
-                <div className="text-6xl mb-4">₿</div>
-                <p className="text-gray-600 dark:text-gray-400 mb-2">No crypto wallets yet</p>
-                <p className="text-sm text-gray-500 dark:text-gray-500 mb-6">
-                  Start by buying your first cryptocurrency
-                </p>
-                <Link href="/trading">
-                  <Button>Buy Crypto</Button>
-                </Link>
+              <div className="text-center py-10 text-gray-500 dark:text-gray-400 text-sm">
+                No orders executed yet. Completed trades will appear in this ledger.
               </div>
             )}
           </div>
-
-          <CurrencyConverter />
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Recent Trades</h2>
-            <Link href="/transactions">
-              <Button variant="ghost" size="sm">View All</Button>
-            </Link>
-          </div>
-
-          {trades.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-gray-200 dark:border-gray-700">
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Type</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Crypto</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Amount</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Price</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Total</th>
-                    <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {trades.slice(0, 10).map((trade) => (
-                    <tr key={trade.id} className="border-b border-gray-100 dark:border-gray-700/50">
-                      <td className="py-3 px-4">
-                        <span className={`inline-flex px-2 py-1 rounded text-xs font-semibold ${
-                          trade.type === 'buy'
-                            ? 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400'
-                            : 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400'
-                        }`}>
-                          {trade.type.toUpperCase()}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 font-semibold text-gray-900 dark:text-white">{trade.cryptoType}</td>
-                      <td className="py-3 px-4 text-gray-600 dark:text-gray-400">
-                        {formatCryptoAmount(trade.cryptoAmount, trade.cryptoType)}
-                      </td>
-                      <td className="py-3 px-4 text-gray-600 dark:text-gray-400">
-                        {formatCurrencyAmount(trade.price, trade.fiatCurrency)}
-                      </td>
-                      <td className="py-3 px-4 font-semibold text-gray-900 dark:text-white">
-                        {formatCurrencyAmount(trade.fiatAmount, trade.fiatCurrency)}
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className={`inline-flex px-2 py-1 rounded text-xs font-semibold ${
-                          trade.status === 'completed'
-                            ? 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400'
-                            : trade.status === 'pending'
-                            ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400'
-                            : 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400'
-                        }`}>
-                          {trade.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">📊</div>
-              <p className="text-gray-600 dark:text-gray-400">No trades yet</p>
-              <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-                Your trading history will appear here
-              </p>
-            </div>
-          )}
         </div>
 
         {error && (
-          <div className="mt-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-lg">
+          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm mb-6">
             {error}
           </div>
         )}
-      </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }

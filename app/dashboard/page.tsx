@@ -5,16 +5,16 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
 import TransactionItem from '@/components/transactions/TransactionItem';
+import { DashboardSkeleton } from '@/components/ui/Skeleton';
 import { formatCurrencyAmount } from '@/lib/utils/currency';
 import { formatCryptoAmount, calculatePortfolioValue, cryptoToFiat } from '@/lib/utils/crypto';
 import { Transaction, CurrencyBalance, CryptoWallet, Currency } from '@/lib/db/types';
 import { WalletIcon, TopUpIcon, SendIcon, CryptoIcon, CardIcon } from '@/components/icons/Icons';
 
 // Dynamically import Recharts to avoid SSR issues
-const LineChart = dynamic(() => import('recharts').then((mod) => mod.LineChart), { ssr: false });
-const Line = dynamic(() => import('recharts').then((mod) => mod.Line), { ssr: false });
 const PieChart = dynamic(() => import('recharts').then((mod) => mod.PieChart), { ssr: false });
 const Pie = dynamic(() => import('recharts').then((mod) => mod.Pie), { ssr: false });
 const Cell = dynamic(() => import('recharts').then((mod) => mod.Cell), { ssr: false });
@@ -75,27 +75,26 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
         <Navigation />
-        <div className="flex items-center justify-center h-[calc(100vh-64px)]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
-          </div>
-        </div>
+        <main className="flex-1">
+          <DashboardSkeleton />
+        </main>
+        <Footer />
       </div>
     );
   }
 
   if (error && !profile) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
         <Navigation />
-        <div className="container mx-auto px-4 py-8">
+        <main className="flex-1 container mx-auto px-4 py-8">
           <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-lg">
             {error}
           </div>
-        </div>
+        </main>
+        <Footer />
       </div>
     );
   }
@@ -112,10 +111,10 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
       <Navigation />
       
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <main className="flex-1 container mx-auto px-4 py-8 max-w-7xl animate-fadeIn">
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
@@ -338,7 +337,9 @@ export default function Dashboard() {
             {error}
           </div>
         )}
-      </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }

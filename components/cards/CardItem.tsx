@@ -21,7 +21,7 @@ export default function Card({ card, onClick }: CardProps) {
   return (
     <div
       onClick={onClick}
-      className={`relative p-6 rounded-2xl bg-gradient-to-br ${gradient} text-white cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl ${card.status === 'frozen' ? 'opacity-60' : ''}`}
+      className={`card-shine relative p-6 rounded-2xl bg-gradient-to-br ${gradient} text-white cursor-pointer transform transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl ${card.status === 'frozen' ? 'opacity-60 saturate-50' : ''}`}
     >
       {/* Card badges */}
       <div className="absolute top-3 right-3 flex gap-2">
@@ -56,24 +56,37 @@ export default function Card({ card, onClick }: CardProps) {
         </div>
       </div>
 
+      {/* Chip icon */}
+      <div className="mb-4">
+        <svg width="36" height="28" viewBox="0 0 36 28" fill="none" className="opacity-80">
+          <rect x="0.5" y="0.5" width="35" height="27" rx="3.5" stroke="rgba(255,255,255,0.5)" />
+          <rect x="4" y="4" width="12" height="8" rx="1" fill="rgba(255,255,255,0.3)" />
+          <rect x="4" y="16" width="12" height="8" rx="1" fill="rgba(255,255,255,0.3)" />
+          <rect x="20" y="4" width="12" height="8" rx="1" fill="rgba(255,255,255,0.3)" />
+          <rect x="20" y="16" width="12" height="8" rx="1" fill="rgba(255,255,255,0.3)" />
+          <line x1="18" y1="4" x2="18" y2="24" stroke="rgba(255,255,255,0.3)" strokeWidth="2" />
+          <line x1="4" y1="14" x2="32" y2="14" stroke="rgba(255,255,255,0.3)" strokeWidth="2" />
+        </svg>
+      </div>
+
       {/* Card number */}
-      <div className="mb-6 text-lg font-mono tracking-wider">
+      <div className="mb-6 text-lg font-mono tracking-widest">
         {maskCardNumber(card.cardNumber)}
       </div>
 
       {/* Card details */}
       <div className="flex justify-between items-end">
         <div>
-          <div className="text-xs opacity-70 mb-1">VALID THRU</div>
+          <div className="text-xs opacity-60 mb-1 uppercase tracking-wider">Valid Thru</div>
           <div className="text-sm font-semibold">{card.expiryDate}</div>
         </div>
         <div>
-          <div className="text-xs opacity-70 mb-1">CVV</div>
+          <div className="text-xs opacity-60 mb-1 uppercase tracking-wider">CVV</div>
           <div className="text-sm font-semibold">•••</div>
         </div>
         {card.currency && (
           <div>
-            <div className="text-xs opacity-70 mb-1">CURRENCY</div>
+            <div className="text-xs opacity-60 mb-1 uppercase tracking-wider">Currency</div>
             <div className="text-sm font-semibold">{card.currency}</div>
           </div>
         )}

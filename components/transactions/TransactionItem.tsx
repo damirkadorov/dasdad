@@ -1,7 +1,7 @@
 'use client';
 
 import { Transaction } from '@/lib/db/types';
-import { formatCurrency, formatDate } from '@/lib/utils/helpers';
+import { formatDate } from '@/lib/utils/helpers';
 import { formatCurrencyAmount } from '@/lib/utils/currency';
 import { formatCryptoAmount } from '@/lib/utils/crypto';
 
@@ -29,9 +29,36 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
       case 'currency_exchange':
         return '💱';
       case 'iban_transfer':
+      case 'IBAN_TRANSFER':
+      case 'IBAN_RECEIVE':
         return '🏦';
       default:
         return '💳';
+    }
+  };
+
+  const getIconGradient = (type: string) => {
+    switch (type) {
+      case 'top_up':
+        return 'from-green-500 to-emerald-500';
+      case 'send':
+        return 'from-red-400 to-pink-500';
+      case 'receive':
+        return 'from-green-400 to-teal-500';
+      case 'nfc_payment':
+        return 'from-purple-500 to-indigo-500';
+      case 'crypto_buy':
+      case 'crypto_sell':
+      case 'crypto_transfer':
+        return 'from-orange-500 to-amber-500';
+      case 'currency_exchange':
+        return 'from-cyan-500 to-blue-500';
+      case 'iban_transfer':
+      case 'IBAN_TRANSFER':
+      case 'IBAN_RECEIVE':
+        return 'from-blue-500 to-indigo-500';
+      default:
+        return 'from-gray-400 to-gray-500';
     }
   };
 
@@ -54,7 +81,10 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
       case 'currency_exchange':
         return 'Currency Exchange';
       case 'iban_transfer':
+      case 'IBAN_TRANSFER':
         return 'IBAN Transfer';
+      case 'IBAN_RECEIVE':
+        return 'IBAN Received';
       default:
         return 'Transaction';
     }
@@ -63,26 +93,26 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
   const isPositive = transaction.amount > 0;
 
   return (
-    <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-lg hover:shadow-md transition-shadow duration-200">
+    <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-xl hover:shadow-md transition-all duration-200 hover:translate-x-1 group">
       <div className="flex items-center space-x-4">
-        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-2xl">
+        <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${getIconGradient(transaction.type)} flex items-center justify-center text-xl shadow-sm group-hover:scale-105 transition-transform duration-200`}>
           {getIcon(transaction.type)}
         </div>
         <div>
-          <div className="font-semibold text-gray-900 dark:text-white">
+          <div className="font-semibold text-gray-900 dark:text-white text-sm">
             {transaction.description}
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">
+          <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
             {getTypeLabel(transaction.type)} • {formatDate(transaction.createdAt || transaction.timestamp || '')}
             {transaction.cryptoType && transaction.cryptoAmount && (
-              <span className="ml-2 text-purple-600 dark:text-purple-400">
+              <span className="ml-2 text-purple-600 dark:text-purple-400 font-medium">
                 {formatCryptoAmount(transaction.cryptoAmount, transaction.cryptoType)}
               </span>
             )}
           </div>
         </div>
       </div>
-      <div className={`text-lg font-bold ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+      <div className={`text-base font-bold ${isPositive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
         {isPositive ? '+' : ''}{formatCurrencyAmount(transaction.amount, transaction.currency)}
       </div>
     </div>

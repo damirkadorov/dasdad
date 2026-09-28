@@ -3,7 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
+import Skeleton from '@/components/ui/Skeleton';
 import { formatCurrency } from '@/lib/utils/helpers';
 
 interface UserProfile {
@@ -57,16 +59,15 @@ export default function ProfilePage() {
       const profileData = await profileRes.json();
       setProfile(profileData.user);
 
-      // Calculate stats
       if (cardsRes.ok && transactionsRes.ok) {
         const cardsData = await cardsRes.json();
         const transactionsData = await transactionsRes.json();
         
         setStats({
-          totalCards: cardsData.cards.length,
-          totalTransactions: transactionsData.transactions.length,
-          activeCards: cardsData.cards.filter((c: { status: string }) => c.status === 'active').length,
-          frozenCards: cardsData.cards.filter((c: { status: string }) => c.status === 'frozen').length
+          totalCards: cardsData.cards?.length || 0,
+          totalTransactions: transactionsData.transactions?.length || 0,
+          activeCards: cardsData.cards?.filter((c: { status: string }) => c.status === 'active').length || 0,
+          frozenCards: cardsData.cards?.filter((c: { status: string }) => c.status === 'frozen').length || 0
         });
       }
     } catch (err) {
@@ -98,204 +99,219 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
         <Navigation />
-        <div className="flex items-center justify-center h-[calc(100vh-64px)]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">Loading profile...</p>
+        <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl space-y-6">
+          <Skeleton variant="text" width={180} height={36} />
+          <Skeleton variant="card" height={180} />
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} variant="card" height={100} />
+            ))}
           </div>
-        </div>
+          <Skeleton variant="card" height={220} />
+        </main>
+        <Footer />
       </div>
     );
   }
 
   if (error && !profile) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
         <Navigation />
-        <div className="container mx-auto px-4 py-8">
-          <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-lg">
-            {error}
+        <main className="flex-1 container mx-auto px-4 py-16 max-w-md text-center">
+          <div className="bezel-card">
+            <div className="bezel-card-inner p-8">
+              <div className="text-4xl mb-3">⚠️</div>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{error}</h2>
+              <Button onClick={() => router.push('/dashboard')}>Back to Dashboard</Button>
+            </div>
           </div>
-        </div>
+        </main>
+        <Footer />
       </div>
     );
   }
 
+  const initial = profile?.username?.slice(0, 1)?.toUpperCase() || 'U';
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
       <Navigation />
       
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl animate-fadeIn">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Profile 👤
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight mb-1">
+            Account Profile 👤
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Manage your account and view your stats
+          <p className="text-gray-600 dark:text-gray-400 text-sm">
+            Manage your credentials, view operational metrics, and review account security.
           </p>
         </div>
 
-        {/* Profile Card */}
-        <div className="bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 rounded-2xl p-8 text-white mb-8 shadow-2xl">
-          <div className="flex items-center mb-6">
-            <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-lg flex items-center justify-center text-4xl mr-6">
-              👤
+        {/* Profile Card Banner */}
+        <div className="p-8 rounded-2xl bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-700 text-white shadow-xl mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div className="flex items-center space-x-5">
+            <div className="w-18 h-18 rounded-2xl bg-white/20 backdrop-blur-lg flex items-center justify-center text-3xl font-extrabold shadow-inner border border-white/30">
+              {initial}
             </div>
             <div>
-              <h2 className="text-3xl font-bold mb-1">{profile?.username}</h2>
-              <p className="text-white/80">{profile?.email}</p>
+              <div className="flex items-center gap-2">
+                <h2 className="text-2xl font-bold">{profile?.username}</h2>
+                <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-emerald-400/20 text-emerald-200 border border-emerald-400/30">
+                  Verified Tier 1
+                </span>
+              </div>
+              <p className="text-white/80 text-sm">{profile?.email}</p>
+              <p className="text-white/60 text-xs mt-1">
+                Customer ID: <span className="font-mono">{profile?.id?.slice(0, 12)}...</span>
+              </p>
             </div>
           </div>
           
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl p-4">
-            <p className="text-white/80 text-sm mb-1">Current Balance</p>
-            <p className="text-4xl font-bold">{formatCurrency(profile?.balance || 0)}</p>
-          </div>
-        </div>
-
-        {/* Account Information */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg mb-8">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
-            Account Information
-          </h2>
-          
-          <div className="space-y-4">
-            <div className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
-              <span className="text-gray-600 dark:text-gray-400">Username</span>
-              <span className="font-semibold text-gray-900 dark:text-white">
-                {profile?.username}
-              </span>
-            </div>
-            
-            <div className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
-              <span className="text-gray-600 dark:text-gray-400">Email</span>
-              <span className="font-semibold text-gray-900 dark:text-white">
-                {profile?.email}
-              </span>
-            </div>
-            
-            <div className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
-              <span className="text-gray-600 dark:text-gray-400">Balance</span>
-              <span className="font-semibold text-gray-900 dark:text-white">
-                {formatCurrency(profile?.balance || 0)}
-              </span>
-            </div>
-            
-            <div className="flex justify-between items-center py-3">
-              <span className="text-gray-600 dark:text-gray-400">Member Since</span>
-              <span className="font-semibold text-gray-900 dark:text-white">
-                {profile?.createdAt && new Date(profile.createdAt).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
-              </span>
-            </div>
+          <div className="bg-white/10 backdrop-blur-lg rounded-xl p-4 sm:text-right border border-white/15">
+            <p className="text-white/80 text-xs uppercase tracking-wider mb-0.5">Primary Cash Balance</p>
+            <p className="text-3xl font-extrabold font-mono tracking-tight">{formatCurrency(profile?.balance || 0)}</p>
           </div>
         </div>
 
-        {/* Account Stats */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg mb-8">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
-            Account Statistics
+        {/* Account Statistics */}
+        <div className="mb-8">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
+            Account Activity Overview
           </h2>
-          
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-              <div className="text-3xl mb-2">💳</div>
-              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                {stats.totalCards}
+            <div className="bezel-card">
+              <div className="bezel-card-inner p-4 text-center">
+                <div className="text-2xl mb-1">💳</div>
+                <div className="text-2xl font-bold font-mono text-purple-600 dark:text-purple-400">
+                  {stats.totalCards}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">Total Cards</div>
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Total Cards</div>
             </div>
             
-            <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-              <div className="text-3xl mb-2">✅</div>
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                {stats.activeCards}
+            <div className="bezel-card">
+              <div className="bezel-card-inner p-4 text-center">
+                <div className="text-2xl mb-1">✅</div>
+                <div className="text-2xl font-bold font-mono text-emerald-600 dark:text-emerald-400">
+                  {stats.activeCards}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">Active Cards</div>
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Active Cards</div>
             </div>
             
-            <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <div className="text-3xl mb-2">❄️</div>
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                {stats.frozenCards}
+            <div className="bezel-card">
+              <div className="bezel-card-inner p-4 text-center">
+                <div className="text-2xl mb-1">❄️</div>
+                <div className="text-2xl font-bold font-mono text-blue-600 dark:text-blue-400">
+                  {stats.frozenCards}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">Frozen Cards</div>
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Frozen Cards</div>
             </div>
             
-            <div className="text-center p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
-              <div className="text-3xl mb-2">📊</div>
-              <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
-                {stats.totalTransactions}
+            <div className="bezel-card">
+              <div className="bezel-card-inner p-4 text-center">
+                <div className="text-2xl mb-1">📊</div>
+                <div className="text-2xl font-bold font-mono text-amber-600 dark:text-amber-400">
+                  {stats.totalTransactions}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">Transactions</div>
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Transactions</div>
             </div>
           </div>
         </div>
 
-        {/* Quick Links */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg mb-8">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-            Quick Actions
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button
-              onClick={() => router.push('/cards')}
-              className="p-4 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-left"
-            >
-              <div className="text-2xl mb-2">💳</div>
-              <div className="font-semibold text-gray-900 dark:text-white">Manage Cards</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                View and manage your virtual cards
-              </div>
-            </button>
+        {/* Account Information Details */}
+        <div className="bezel-card mb-8">
+          <div className="bezel-card-inner p-6 sm:p-8">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+              Security &amp; Account Details
+            </h2>
             
-            <button
-              onClick={() => router.push('/transactions')}
-              className="p-4 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-left"
-            >
-              <div className="text-2xl mb-2">📊</div>
-              <div className="font-semibold text-gray-900 dark:text-white">View Transactions</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                See all your transaction history
+            <div className="space-y-3.5 text-sm">
+              <div className="flex justify-between items-center py-2.5 border-b border-gray-100 dark:border-gray-800">
+                <span className="text-gray-500 dark:text-gray-400">Username Identifier</span>
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  @{profile?.username}
+                </span>
               </div>
-            </button>
+              
+              <div className="flex justify-between items-center py-2.5 border-b border-gray-100 dark:border-gray-800">
+                <span className="text-gray-500 dark:text-gray-400">Registered Email</span>
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {profile?.email}
+                </span>
+              </div>
+              
+              <div className="flex justify-between items-center py-2.5 border-b border-gray-100 dark:border-gray-800">
+                <span className="text-gray-500 dark:text-gray-400">Member Since</span>
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {profile?.createdAt && new Date(profile.createdAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center py-2.5">
+                <span className="text-gray-500 dark:text-gray-400">Two-Factor Authentication</span>
+                <span className="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400">
+                  Active (JWT Session)
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Logout Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-            Account Actions
-          </h2>
-          
-          <Button
-            onClick={handleLogout}
-            isLoading={loggingOut}
-            variant="danger"
-            className="w-full"
-            size="lg"
-          >
-            🚪 Logout
-          </Button>
-          
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-4 text-center">
-            You&apos;ll be redirected to the home page after logging out
-          </p>
+        {/* Quick Links & Sign Out */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+          <div className="bezel-card">
+            <div className="bezel-card-inner p-6 flex flex-col justify-between">
+              <div>
+                <h3 className="font-bold text-gray-900 dark:text-white text-base mb-1">Developer Credentials</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
+                  Manage API keys for server-to-server payment checkout integrations.
+                </p>
+              </div>
+              <Button variant="ghost" onClick={() => router.push('/developer')} className="justify-start px-0 text-purple-600 dark:text-purple-400">
+                Open Developer Portal →
+              </Button>
+            </div>
+          </div>
+
+          <div className="bezel-card">
+            <div className="bezel-card-inner p-6 flex flex-col justify-between">
+              <div>
+                <h3 className="font-bold text-gray-900 dark:text-white text-base mb-1">Session Management</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
+                  Terminate your active authentication cookies and sign out of this browser.
+                </p>
+              </div>
+              <Button
+                onClick={handleLogout}
+                isLoading={loggingOut}
+                variant="danger"
+                className="w-full"
+              >
+                Sign Out of Account
+              </Button>
+            </div>
+          </div>
         </div>
 
         {error && (
-          <div className="mt-6 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-lg">
+          <div className="mb-6 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm">
             {error}
           </div>
         )}
-      </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { Currency } from '@/lib/db/types';
@@ -78,7 +79,7 @@ export default function PaymentsContent() {
         return;
       }
 
-      setSendSuccess(`Successfully sent $${sendAmount} to ${recipient}`);
+      setSendSuccess(`Successfully sent ${formatCurrencyAmount(parseFloat(sendAmount), sendCurrency)} to ${recipient}`);
       setRecipient('');
       setSendAmount('');
     } catch (error) {
@@ -115,7 +116,7 @@ export default function PaymentsContent() {
         return;
       }
 
-      setNfcSuccess(`Payment of $${nfcAmount} completed!`);
+      setNfcSuccess(`Payment of ${formatCurrencyAmount(parseFloat(nfcAmount), 'USD')} completed!`);
       setNfcAmount('');
     } catch (error) {
       setNfcError('An error occurred. Please try again.');
@@ -201,11 +202,11 @@ export default function PaymentsContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
       <Navigation />
       
-      <div className="max-w-2xl mx-auto p-4 pt-20 pb-24">
-        <h1 className="text-3xl font-bold mb-6">Payments</h1>
+      <main className="flex-1 max-w-2xl w-full mx-auto p-4 pt-12 pb-20 animate-fadeIn">
+        <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Payments</h1>
 
         {/* Tabs */}
         <div className="flex space-x-2 mb-6 overflow-x-auto">
@@ -237,7 +238,7 @@ export default function PaymentsContent() {
 
         {/* Top Up Tab */}
         {activeTab === 'topup' && (
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg tab-panel">
             <h2 className="text-xl font-bold mb-4">Add Money to Your Account</h2>
             
             <form onSubmit={handleTopUp} className="space-y-4">
@@ -294,7 +295,7 @@ export default function PaymentsContent() {
 
         {/* Send Money Tab */}
         {activeTab === 'send' && (
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg tab-panel">
             <h2 className="text-xl font-bold mb-4">Send Money to Another User</h2>
             
             <form onSubmit={handleSendMoney} className="space-y-4">
@@ -345,7 +346,7 @@ export default function PaymentsContent() {
 
         {/* IBAN Transfer Tab */}
         {activeTab === 'iban' && (
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg tab-panel">
             <h2 className="text-xl font-bold mb-4">International Bank Transfer (IBAN)</h2>
             
             <form onSubmit={handleIbanTransfer} className="space-y-4">
@@ -413,7 +414,7 @@ export default function PaymentsContent() {
 
         {/* NFC Payment Tab */}
         {activeTab === 'nfc' && (
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg tab-panel">
             <h2 className="text-xl font-bold mb-4">NFC / Tap to Pay</h2>
             
             <form onSubmit={handleNfcPayment} className="space-y-4">
@@ -476,7 +477,9 @@ export default function PaymentsContent() {
             </div>
           </div>
         )}
-      </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }

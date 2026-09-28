@@ -3,8 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
 import CardItem from '@/components/cards/CardItem';
+import { CardsSkeleton } from '@/components/ui/Skeleton';
 import { Card, Currency, NovapayCardType } from '@/lib/db/types';
 import { getSupportedCurrencies } from '@/lib/utils/currency';
 
@@ -87,150 +89,211 @@ export default function CardsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
         <Navigation />
-        <div className="flex items-center justify-center h-[calc(100vh-64px)]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">Loading cards...</p>
-          </div>
-        </div>
+        <main className="flex-1">
+          <CardsSkeleton />
+        </main>
+        <Footer />
       </div>
     );
   }
 
+  // Mock preview card for live interactive preview
+  const previewCard: Card = {
+    id: 'preview',
+    userId: 'user',
+    cardNumber: cardType === 'nova' ? '7012345678901234' : '7112345678901234',
+    expiryDate: '12/29',
+    cvv: '888',
+    cardType,
+    cardFormat,
+    currency: cardCurrency,
+    accountType: 'personal',
+    status: 'active',
+    createdAt: new Date().toISOString()
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
       <Navigation />
       
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <main className="flex-1 container mx-auto px-4 py-8 max-w-6xl animate-fadeIn">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
               My Cards 💳
             </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              {cards.length} of 5 cards created
+            <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+              Manage your NovaPay virtual and physical payment cards ({cards.length} / 5 created)
             </p>
           </div>
           
-          {cards.length < 5 && (
-            <Button onClick={() => setShowCreateForm(!showCreateForm)}>
-              {showCreateForm ? 'Cancel' : '+ Create Card'}
+          {cards.length < 5 ? (
+            <Button
+              onClick={() => setShowCreateForm(!showCreateForm)}
+              className="self-start sm:self-auto"
+            >
+              {showCreateForm ? '✕ Cancel' : '+ Create Card'}
             </Button>
+          ) : (
+            <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+              Card Limit Reached (5/5)
+            </span>
           )}
         </div>
 
-        {/* Warning */}
+        {/* Warning notification */}
         {cards.length >= 5 && (
-          <div className="bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 p-4 rounded-lg mb-6">
-            ⚠️ You&apos;ve reached the maximum limit of 5 cards
+          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 p-4 rounded-xl mb-6 text-sm flex items-center gap-3">
+            <span>ℹ️</span>
+            <span>You have reached the maximum limit of 5 cards per account. To issue a new card, delete an existing one.</span>
           </div>
         )}
 
-        {/* Create Card Form */}
+        {/* Create Card Form with Live Interactive Preview */}
         {showCreateForm && (
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg mb-8">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              Create New Card
-            </h2>
-            
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Card Format
-              </label>
-              <div className="grid grid-cols-2 gap-4">
-                <button
-                  onClick={() => setCardFormat('virtual')}
-                  className={`p-4 rounded-lg border-2 transition-all ${
-                    cardFormat === 'virtual'
-                      ? 'border-purple-600 bg-purple-50 dark:bg-purple-900/20'
-                      : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
-                  }`}
-                >
-                  <div className="text-2xl mb-2">💳</div>
-                  <div className="font-semibold text-gray-900 dark:text-white">Virtual</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Instant, online use</div>
-                </button>
-                
-                <button
-                  onClick={() => setCardFormat('physical')}
-                  className={`p-4 rounded-lg border-2 transition-all ${
-                    cardFormat === 'physical'
-                      ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/20'
-                      : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
-                  }`}
-                >
-                  <div className="text-2xl mb-2">💳</div>
-                  <div className="font-semibold text-gray-900 dark:text-white">Physical</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Delivered by mail</div>
-                </button>
+          <div className="bezel-card mb-10 animate-slideDown">
+            <div className="bezel-card-inner p-6 sm:p-8">
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100 dark:border-gray-800">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                    Issue New NovaPay Card
+                  </h2>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    Customize your card format, network tier, and billing currency in real-time.
+                  </p>
+                </div>
+                <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300">
+                  Instant Activation
+                </span>
+              </div>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Form Controls */}
+                <div className="lg:col-span-7 space-y-6">
+                  {/* Card Format Selector */}
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2.5">
+                      Card Format
+                    </label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setCardFormat('virtual')}
+                        className={`p-4 rounded-xl border-2 text-left transition-all cursor-pointer ${
+                          cardFormat === 'virtual'
+                            ? 'border-purple-600 bg-purple-50/60 dark:bg-purple-950/30'
+                            : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-850'
+                        }`}
+                      >
+                        <div className="text-2xl mb-1.5">✨</div>
+                        <div className="font-semibold text-gray-900 dark:text-white text-sm">Virtual Card</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">Instant digital use</div>
+                      </button>
+                      
+                      <button
+                        type="button"
+                        onClick={() => setCardFormat('physical')}
+                        className={`p-4 rounded-xl border-2 text-left transition-all cursor-pointer ${
+                          cardFormat === 'physical'
+                            ? 'border-blue-600 bg-blue-50/60 dark:bg-blue-950/30'
+                            : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-850'
+                        }`}
+                      >
+                        <div className="text-2xl mb-1.5">💳</div>
+                        <div className="font-semibold text-gray-900 dark:text-white text-sm">Physical Card</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">Delivered to address</div>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Card Tier Selector */}
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2.5">
+                      Network Tier
+                    </label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setCardType('nova')}
+                        className={`p-4 rounded-xl border-2 text-left transition-all cursor-pointer ${
+                          cardType === 'nova'
+                            ? 'border-emerald-600 bg-emerald-50/60 dark:bg-emerald-950/30'
+                            : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-850'
+                        }`}
+                      >
+                        <div className="w-4 h-4 rounded-full bg-emerald-500 mb-2" />
+                        <div className="font-semibold text-gray-900 dark:text-white text-sm">NovaPay Standard</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">Teal emerald finish</div>
+                      </button>
+                      
+                      <button
+                        type="button"
+                        onClick={() => setCardType('nova-plus')}
+                        className={`p-4 rounded-xl border-2 text-left transition-all cursor-pointer ${
+                          cardType === 'nova-plus'
+                            ? 'border-purple-600 bg-purple-50/60 dark:bg-purple-950/30'
+                            : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-850'
+                        }`}
+                      >
+                        <div className="w-4 h-4 rounded-full bg-purple-500 mb-2" />
+                        <div className="font-semibold text-gray-900 dark:text-white text-sm">NovaPay+ Premium</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">Violet indigo finish</div>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Currency Selector */}
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">
+                      Card Billing Currency
+                    </label>
+                    <select
+                      value={cardCurrency}
+                      onChange={(e) => setCardCurrency(e.target.value as Currency)}
+                      className="w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-700 text-sm"
+                    >
+                      {getSupportedCurrencies().map((currency) => (
+                        <option key={currency} value={currency}>
+                          {currency}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <Button 
+                    onClick={handleCreateCard}
+                    isLoading={creating}
+                    className="w-full py-3"
+                  >
+                    Confirm &amp; Issue {cardFormat === 'physical' ? 'Physical' : 'Virtual'} {cardType === 'nova' ? 'NovaPay' : 'NovaPay+'}
+                  </Button>
+                </div>
+
+                {/* Live Card Preview Column */}
+                <div className="lg:col-span-5 flex flex-col items-center justify-center p-6 bg-gray-50/80 dark:bg-gray-900/60 rounded-2xl border border-gray-200/60 dark:border-gray-800">
+                  <div className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span>Live Card Visualizer</span>
+                  </div>
+                  
+                  <div className="w-full max-w-sm transform hover:rotate-1 transition-transform duration-300">
+                    <CardItem card={previewCard} />
+                  </div>
+                  
+                  <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-4 text-center">
+                    Preview updates automatically. All NovaPay cards feature biometric 3D Secure and zero-fee transactions.
+                  </p>
+                </div>
               </div>
             </div>
-
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Select Card Type
-              </label>
-              <div className="grid grid-cols-2 gap-4">
-                <button
-                  onClick={() => setCardType('nova')}
-                  className={`p-4 rounded-lg border-2 transition-all ${
-                    cardType === 'nova'
-                      ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-900/20'
-                      : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
-                  }`}
-                >
-                  <div className="text-2xl mb-2">💳</div>
-                  <div className="font-semibold text-gray-900 dark:text-white">NovaPay</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Teal gradient</div>
-                </button>
-                
-                <button
-                  onClick={() => setCardType('nova-plus')}
-                  className={`p-4 rounded-lg border-2 transition-all ${
-                    cardType === 'nova-plus'
-                      ? 'border-purple-600 bg-purple-50 dark:bg-purple-900/20'
-                      : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
-                  }`}
-                >
-                  <div className="text-2xl mb-2">💳</div>
-                  <div className="font-semibold text-gray-900 dark:text-white">NovaPay+</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Purple gradient</div>
-                </button>
-              </div>
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Card Currency
-              </label>
-              <select
-                value={cardCurrency}
-                onChange={(e) => setCardCurrency(e.target.value as Currency)}
-                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
-              >
-                {getSupportedCurrencies().map((currency) => (
-                  <option key={currency} value={currency}>
-                    {currency}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <Button 
-              onClick={handleCreateCard}
-              isLoading={creating}
-              className="w-full"
-            >
-              Create {cardFormat === 'physical' ? 'Physical' : 'Virtual'} {cardType === 'nova' ? 'NovaPay' : 'NovaPay+'} Card
-            </Button>
           </div>
         )}
 
         {error && (
-          <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-lg mb-6">
+          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 p-4 rounded-xl mb-6 text-sm">
             {error}
           </div>
         )}
@@ -247,20 +310,24 @@ export default function CardsPage() {
             ))}
           </div>
         ) : (
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-12 text-center shadow-lg">
-            <div className="text-6xl mb-4">💳</div>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              No cards yet
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Create your first virtual card to start making payments
-            </p>
-            <Button onClick={() => setShowCreateForm(true)}>
-              Create Your First Card
-            </Button>
+          <div className="bezel-card">
+            <div className="bezel-card-inner p-12 text-center">
+              <div className="text-5xl mb-4">💳</div>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                No cards created yet
+              </h3>
+              <p className="text-gray-500 dark:text-gray-400 text-sm max-w-sm mx-auto mb-6">
+                Create your first NovaPay virtual card instantly to start shopping and transferring money.
+              </p>
+              <Button onClick={() => setShowCreateForm(true)}>
+                Issue Your First Card
+              </Button>
+            </div>
           </div>
         )}
-      </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }

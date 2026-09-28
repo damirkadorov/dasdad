@@ -3,9 +3,14 @@ import { User, Card, Transaction, BankAccount, Trade, Loan, SavingsAccount, Cred
 
 // MongoDB connection URI from environment variable
 // Will be validated when connecting, not at module load time (for build compatibility)
-const MONGODB_URI = process.env.MONGODB_URI;
+/**
+ * Check if MongoDB connection is configured via environment variable
+ */
+export function isMongoConfigured(): boolean {
+  return Boolean(process.env.MONGODB_URI && process.env.MONGODB_URI.trim().length > 0);
+}
 
-// Global variable to cache the MongoDB client for reuse in serverless functions
+// Global variable to cache the MongoDB client for reuse in serverless functions (Vercel)
 let cachedClient: MongoClient | null = null;
 let cachedDb: Db | null = null;
 
@@ -14,9 +19,9 @@ let cachedDb: Db | null = null;
  * Reuses existing connection in serverless environment (Vercel)
  */
 export async function connectToDatabase(): Promise<Db> {
-  // Validate URI only when connecting
-  if (!MONGODB_URI) {
-    throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    throw new Error('Please define the MONGODB_URI environment variable inside .env.local or Vercel Environment Variables');
   }
 
   // Return cached connection if available
@@ -25,7 +30,7 @@ export async function connectToDatabase(): Promise<Db> {
   }
 
   // Create new MongoDB client
-  const client = new MongoClient(MONGODB_URI);
+  const client = new MongoClient(uri);
 
   // Connect to MongoDB
   await client.connect();

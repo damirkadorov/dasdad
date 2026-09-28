@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/layout/Footer';
+import Skeleton from '@/components/ui/Skeleton';
 import TransactionItem from '@/components/transactions/TransactionItem';
 import { Transaction } from '@/lib/db/types';
 
@@ -142,23 +144,23 @@ export default function TransactionsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
         <Navigation />
-        <div className="flex items-center justify-center h-[calc(100vh-64px)]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">Loading transactions...</p>
-          </div>
-        </div>
+        <main className="flex-1 container mx-auto px-4 py-8 max-w-6xl space-y-6">
+          <Skeleton variant="text" width={200} height={36} />
+          <Skeleton variant="rectangular" height={56} />
+          <Skeleton variant="card" height={360} />
+        </main>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
       <Navigation />
       
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <main className="flex-1 container mx-auto px-4 py-8 max-w-6xl animate-fadeIn">
         {/* Header */}
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -435,7 +437,9 @@ export default function TransactionsPage() {
             })}
           </div>
         )}
-      </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }

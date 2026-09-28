@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import BusinessNavigation from '@/components/business/BusinessNavigation';
+import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { formatCurrencyAmount } from '@/lib/utils/currency';
@@ -138,15 +139,15 @@ export default function POSTerminal() {
 
   if (showSuccess) {
     return (
-      <div className="min-h-screen bg-slate-900">
+      <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
         <BusinessNavigation />
         
-        <div className="container mx-auto px-4 py-8 max-w-2xl">
+        <main className="flex-1 container mx-auto px-4 py-12 max-w-2xl animate-scaleIn">
           <div className="bg-slate-800 rounded-2xl p-8 shadow-2xl border border-slate-700">
             <div className="text-center">
               {/* Success Animation */}
               <div className="mb-6">
-                <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto animate-pulse">
+                <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto animate-pulse shadow-xl shadow-green-500/20">
                   <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                   </svg>
@@ -196,16 +197,18 @@ export default function POSTerminal() {
               </div>
             </div>
           </div>
-        </div>
+        </main>
+
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
       <BusinessNavigation />
       
-      <div className="container mx-auto px-4 py-8 max-w-2xl">
+      <main className="flex-1 container mx-auto px-4 py-8 max-w-2xl animate-fadeIn">
         {/* Header */}
         <div className="mb-8 text-center">
           <div className="flex justify-center mb-4">
@@ -352,7 +355,9 @@ export default function POSTerminal() {
             💡 <strong>Tip:</strong> Enter <strong>personal card</strong> details from customers. Business POS terminals can only charge personal customer cards, not business cards.
           </p>
         </div>
-      </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }

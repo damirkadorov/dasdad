@@ -37,7 +37,7 @@ export default function LoginPage() {
 
       // Redirect to dashboard on success
       router.push('/dashboard');
-    } catch (error) {
+    } catch {
       setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);
@@ -46,7 +46,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 via-blue-600 to-blue-800 p-4">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md animate-scaleIn">
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
