@@ -46,7 +46,7 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
       case 'receive':
         return 'from-green-400 to-teal-500';
       case 'nfc_payment':
-        return 'from-purple-500 to-indigo-500';
+        return 'from-blue-500 to-cyan-500';
       case 'crypto_buy':
       case 'crypto_sell':
       case 'crypto_transfer':
@@ -56,7 +56,7 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
       case 'iban_transfer':
       case 'IBAN_TRANSFER':
       case 'IBAN_RECEIVE':
-        return 'from-blue-500 to-indigo-500';
+        return 'from-blue-500 to-cyan-500';
       default:
         return 'from-gray-400 to-gray-500';
     }
@@ -105,7 +105,7 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
           <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
             {getTypeLabel(transaction.type)} • {formatDate(transaction.createdAt || transaction.timestamp || '')}
             {transaction.cryptoType && transaction.cryptoAmount && (
-              <span className="ml-2 text-purple-600 dark:text-purple-400 font-medium">
+              <span className="ml-2 text-blue-600 dark:text-blue-300 font-medium">
                 {formatCryptoAmount(transaction.cryptoAmount, transaction.cryptoType)}
               </span>
             )}

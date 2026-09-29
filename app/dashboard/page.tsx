@@ -66,7 +66,7 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#05070B] text-white">
+      <div className="min-h-screen flex flex-col bg-[#07090D] text-white">
         <Navigation />
         <main className="flex-1">
           <DashboardSkeleton />
@@ -78,7 +78,7 @@ export default function Dashboard() {
 
   if (error && !profile) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#05070B] text-white">
+      <div className="min-h-screen flex flex-col bg-[#07090D] text-white">
         <Navigation />
         <main className="flex-1 container mx-auto px-4 py-8">
           <div className="bg-red-950/40 border border-red-800 text-red-400 p-4 rounded-xl">
@@ -97,11 +97,11 @@ export default function Dashboard() {
   const totalBalance = totalFiatBalance + cryptoPortfolioValue;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#05070B] text-slate-100 overflow-x-hidden selection:bg-[#d4ff00] selection:text-black">
+    <div className="min-h-screen flex flex-col bg-[#07090D] text-slate-100 overflow-x-hidden selection:bg-[#5E9FE8] selection:text-slate-950">
       {/* Background Cyber Grid & Sunset Glow Orbs (References: Image 3 & 4) */}
       <div className="fixed inset-0 bg-cyber-grid pointer-events-none opacity-40 z-0"></div>
-      <div className="fixed -top-40 right-1/4 w-[600px] h-[600px] bg-gradient-to-br from-amber-500/10 via-orange-600/5 to-transparent rounded-full blur-[140px] pointer-events-none z-0"></div>
-      <div className="fixed top-1/2 -left-40 w-[500px] h-[500px] bg-gradient-to-tr from-[#d4ff00]/10 via-emerald-600/5 to-transparent rounded-full blur-[160px] pointer-events-none z-0"></div>
+      <div className="fixed -top-40 right-1/4 w-[600px] h-[600px] bg-gradient-to-br from-blue-500/10 via-cyan-600/5 to-transparent rounded-full blur-[140px] pointer-events-none z-0"></div>
+      <div className="fixed top-1/2 -left-40 w-[500px] h-[500px] bg-gradient-to-tr from-[#5E9FE8]/10 via-emerald-600/5 to-transparent rounded-full blur-[160px] pointer-events-none z-0"></div>
 
       <Navigation />
       
@@ -112,7 +112,7 @@ export default function Dashboard() {
             <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/[0.05] border border-white/10 text-[11px] font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">
               <span>Overview</span>
               <span>&bull;</span>
-              <span className="text-[#d4ff00]">Live Session</span>
+              <span className="text-[#5E9FE8]">Live Session</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
               <span>Welcome back, {profile?.username || 'Trader'}!</span>
@@ -141,7 +141,7 @@ export default function Dashboard() {
           {/* Main Portfolio Hero Card (Sunset Glow from Reference Image 3 DigiPay) */}
           <div className="lg:col-span-7 card-sunset-glow p-8 relative overflow-hidden text-white flex flex-col justify-between min-h-[260px]">
             {/* Ambient Radiant Glow Orb */}
-            <div className="absolute right-0 bottom-0 w-64 h-64 bg-gradient-to-tl from-orange-500/30 via-amber-400/20 to-transparent rounded-full blur-2xl pointer-events-none"></div>
+            <div className="absolute right-0 bottom-0 w-64 h-64 bg-gradient-to-tl from-blue-500/25 via-cyan-400/10 to-transparent rounded-full blur-2xl pointer-events-none"></div>
 
             <div>
               <div className="flex justify-between items-start mb-6 relative z-10">
@@ -152,7 +152,7 @@ export default function Dashboard() {
                   </h2>
                 </div>
                 <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-lg">
-                  <WalletIcon className="text-amber-300" size={24} />
+                  <WalletIcon className="text-blue-200" size={24} />
                 </div>
               </div>
             </div>
@@ -166,7 +166,7 @@ export default function Dashboard() {
                 </p>
               </div>
               <div>
-                <span className="text-[11px] font-mono uppercase tracking-wider text-[#d4ff00]">Crypto Holdings</span>
+                <span className="text-[11px] font-mono uppercase tracking-wider text-[#5E9FE8]">Crypto Holdings</span>
                 <p className="text-lg font-bold font-mono text-white mt-0.5">
                   {formatCurrencyAmount(cryptoPortfolioValue, profile?.preferredCurrency || 'USD')}
                 </p>
@@ -176,7 +176,7 @@ export default function Dashboard() {
 
           {/* Multi-Currency Cash Balances (Reference Image 4 Bento) */}
           <div className="lg:col-span-5 bezel-card">
-            <div className="bezel-card-inner p-6 bg-[#080B12]/90 border border-white/10 flex flex-col justify-between h-full">
+            <div className="bezel-card-inner p-6 bg-[#101318]/90 border border-white/10 flex flex-col justify-between h-full">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-bold text-sm text-white uppercase tracking-wider">Currency Wallets</h3>
                 <span className="text-[11px] font-mono text-slate-400">7 Active Currencies</span>
@@ -187,7 +187,7 @@ export default function Dashboard() {
                   profile.balances.map((balance) => (
                     <div key={balance.currency} className="flex justify-between items-center p-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] transition-colors">
                       <div className="flex items-center space-x-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-black font-bold text-xs">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center text-black font-bold text-xs">
                           {balance.currency.substring(0, 2)}
                         </div>
                         <div>
@@ -212,7 +212,7 @@ export default function Dashboard() {
         <div className="mb-8">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <Link href="/payments?action=topup" className="bezel-card">
-              <div className="bezel-card-inner p-4 bg-[#080B12]/80 hover:bg-white/[0.06] border border-white/10 transition-all text-center group cursor-pointer">
+              <div className="bezel-card-inner p-4 bg-[#101318]/80 hover:bg-white/[0.06] border border-white/10 transition-all text-center group cursor-pointer">
                 <div className="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
                   <TopUpIcon size={20} />
                 </div>
@@ -222,7 +222,7 @@ export default function Dashboard() {
             </Link>
 
             <Link href="/payments" className="bezel-card">
-              <div className="bezel-card-inner p-4 bg-[#080B12]/80 hover:bg-white/[0.06] border border-white/10 transition-all text-center group cursor-pointer">
+              <div className="bezel-card-inner p-4 bg-[#101318]/80 hover:bg-white/[0.06] border border-white/10 transition-all text-center group cursor-pointer">
                 <div className="w-10 h-10 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
                   <SendIcon size={20} />
                 </div>
@@ -232,8 +232,8 @@ export default function Dashboard() {
             </Link>
 
             <Link href="/trading" className="bezel-card">
-              <div className="bezel-card-inner p-4 bg-[#080B12]/80 hover:bg-white/[0.06] border border-white/10 transition-all text-center group cursor-pointer">
-                <div className="w-10 h-10 rounded-full bg-[#d4ff00]/10 text-[#d4ff00] border border-[#d4ff00]/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+              <div className="bezel-card-inner p-4 bg-[#101318]/80 hover:bg-white/[0.06] border border-white/10 transition-all text-center group cursor-pointer">
+                <div className="w-10 h-10 rounded-xl bg-[#5E9FE8]/10 text-[#5E9FE8] border border-[#5E9FE8]/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
                   <CryptoIcon size={20} />
                 </div>
                 <p className="font-bold text-xs text-white">Trade Crypto</p>
@@ -242,8 +242,8 @@ export default function Dashboard() {
             </Link>
 
             <Link href="/cards" className="bezel-card">
-              <div className="bezel-card-inner p-4 bg-[#080B12]/80 hover:bg-white/[0.06] border border-white/10 transition-all text-center group cursor-pointer">
-                <div className="w-10 h-10 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+              <div className="bezel-card-inner p-4 bg-[#101318]/80 hover:bg-white/[0.06] border border-white/10 transition-all text-center group cursor-pointer">
+                <div className="w-10 h-10 rounded-full bg-blue-500/10 text-blue-300 border border-blue-400/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
                   <CardIcon size={20} />
                 </div>
                 <p className="font-bold text-xs text-white">Virtual Cards</p>
@@ -257,13 +257,13 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
           {/* Crypto Holdings Preview */}
           <div className="lg:col-span-6 bezel-card">
-            <div className="bezel-card-inner p-6 bg-[#080B12]/90 border border-white/10">
+            <div className="bezel-card-inner p-6 bg-[#101318]/90 border border-white/10">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="font-bold text-sm text-white uppercase tracking-wider flex items-center gap-2">
-                  <TrendingUpIcon size={16} className="text-[#d4ff00]" />
+                  <TrendingUpIcon size={16} className="text-[#5E9FE8]" />
                   <span>Crypto Holdings</span>
                 </h3>
-                <Link href="/trading" className="text-xs text-[#d4ff00] hover:underline font-semibold">
+                <Link href="/trading" className="text-xs text-[#5E9FE8] hover:underline font-semibold">
                   Trade Market →
                 </Link>
               </div>
@@ -273,7 +273,7 @@ export default function Dashboard() {
                   {profile.cryptoWallets.map((wallet) => (
                     <div key={wallet.cryptoType} className="flex justify-between items-center p-3 rounded-xl bg-white/[0.03] border border-white/[0.06]">
                       <div className="flex items-center space-x-3">
-                        <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-purple-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xs">
+                        <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-500 to-cyan-500 flex items-center justify-center text-white font-bold text-xs">
                           {wallet.cryptoType.substring(0, 1)}
                         </div>
                         <div>
@@ -285,7 +285,7 @@ export default function Dashboard() {
                         <p className="font-mono text-xs font-bold text-white">
                           {formatCurrencyAmount(cryptoToFiat(wallet.balance, wallet.cryptoType, profile?.preferredCurrency || 'USD'), profile?.preferredCurrency || 'USD')}
                         </p>
-                        <p className="text-[10px] text-[#d4ff00] font-mono">Secured Vault</p>
+                        <p className="text-[10px] text-[#5E9FE8] font-mono">Secured Vault</p>
                       </div>
                     </div>
                   ))}
@@ -293,7 +293,7 @@ export default function Dashboard() {
               ) : (
                 <div className="text-center py-8 text-slate-400 text-xs">
                   <p>You don&apos;t have any cryptocurrencies yet.</p>
-                  <Link href="/trading" className="inline-block mt-3 px-4 py-2 rounded-full bg-[#d4ff00] text-black font-bold text-xs">
+                  <Link href="/trading" className="inline-block mt-3 px-4 py-2 rounded-xl bg-[#5E9FE8] text-black font-bold text-xs">
                     Start Trading
                   </Link>
                 </div>
@@ -303,7 +303,7 @@ export default function Dashboard() {
 
           {/* Recent Activity */}
           <div className="lg:col-span-6 bezel-card">
-            <div className="bezel-card-inner p-6 bg-[#080B12]/90 border border-white/10">
+            <div className="bezel-card-inner p-6 bg-[#101318]/90 border border-white/10">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="font-bold text-sm text-white uppercase tracking-wider">Recent Activity</h3>
                 <Link href="/transactions" className="text-xs text-slate-400 hover:text-white transition-colors">

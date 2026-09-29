@@ -15,7 +15,7 @@ export default function Skeleton({
   height,
   count = 1,
 }: SkeletonProps) {
-  const baseClass = 'animate-shimmer bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 bg-[length:200%_100%]';
+  const baseClass = 'animate-shimmer bg-gradient-to-r from-white/[0.045] via-white/[0.09] to-white/[0.045] bg-[length:200%_100%]';
 
   const variants = {
     text: 'h-4 rounded-md',

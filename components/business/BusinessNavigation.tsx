@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { HomeIcon, CardIcon, PaymentIcon, ProfileIcon, MenuIcon } from '@/components/icons/Icons';
+import Logo from '@/components/layout/Logo';
 
 export default function BusinessNavigation() {
   const pathname = usePathname();
@@ -19,17 +20,15 @@ export default function BusinessNavigation() {
 
   return (
     <>
-      <nav className="bg-[#05070B]/80 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50 transition-all duration-300">
+      <nav className="bg-[#07090D]/80 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50 transition-all duration-300">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="flex items-center justify-between h-16">
             <Link href="/business/dashboard" className="transition-transform hover:scale-[1.02] active:scale-[0.98]">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-[#d4ff00] to-emerald-400 rounded-xl flex items-center justify-center shadow-lg shadow-[#d4ff00]/20">
-                  <span className="text-[#05070B] font-extrabold text-xl">B</span>
-                </div>
+              <div className="flex items-center gap-3">
+                <Logo size={36} showText={false} textWhite />
                 <div>
-                  <div className="text-white font-extrabold text-base tracking-tight leading-tight">LINGOUNG</div>
-                  <div className="text-[#d4ff00] text-[10px] font-bold tracking-widest uppercase">Business Banking</div>
+                  <div className="text-base font-semibold leading-tight tracking-[-0.03em] text-white">Lingoung</div>
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-blue-300">Business</div>
                 </div>
               </div>
             </Link>
@@ -43,7 +42,7 @@ export default function BusinessNavigation() {
                     href={link.href}
                     className={`flex items-center px-3.5 py-1.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
                       isActive
-                        ? 'bg-[#d4ff00] text-[#05070B] shadow-md shadow-[#d4ff00]/20'
+                        ? 'bg-blue-400/15 text-blue-200 shadow-[inset_0_0_0_1px_rgba(94,159,232,.18)]'
                         : 'text-zinc-400 hover:text-white hover:bg-white/[0.06]'
                     }`}
                   >
@@ -57,7 +56,7 @@ export default function BusinessNavigation() {
             <div className="hidden md:flex items-center space-x-3">
               <Link
                 href="/developer"
-                className="text-xs font-bold px-3 py-1.5 rounded-lg border border-[#d4ff00]/30 text-[#d4ff00] bg-[#d4ff00]/10 hover:bg-[#d4ff00]/20 transition-colors flex items-center gap-1.5"
+                className="flex min-h-9 items-center gap-1.5 rounded-lg border border-blue-300/20 bg-blue-400/10 px-3 py-1.5 text-xs font-semibold text-blue-200 transition-colors hover:bg-blue-400/15"
               >
                 <span>⚡</span>
                 <span>API Gateway</span>
@@ -104,7 +103,7 @@ export default function BusinessNavigation() {
                     onClick={() => setMobileOpen(false)}
                     className={`flex items-center space-x-2.5 p-3 rounded-xl text-sm font-semibold transition-all ${
                       isActive
-                        ? 'bg-[#d4ff00] text-[#05070B] shadow-md'
+                        ? 'bg-blue-400/15 text-blue-200 border border-blue-300/20'
                         : 'bg-white/[0.04] text-zinc-300 border border-white/10'
                     }`}
                   >
@@ -116,7 +115,7 @@ export default function BusinessNavigation() {
               <Link
                 href="/developer"
                 onClick={() => setMobileOpen(false)}
-                className="col-span-2 flex items-center justify-center space-x-2 p-3 rounded-xl text-sm font-bold bg-[#d4ff00]/10 text-[#d4ff00] border border-[#d4ff00]/30"
+                className="col-span-2 flex items-center justify-center space-x-2 p-3 rounded-xl text-sm font-bold bg-[#5E9FE8]/10 text-[#5E9FE8] border border-[#5E9FE8]/30"
               >
                 <span>⚡ Payment Gateway API</span>
               </Link>

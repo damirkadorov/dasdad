@@ -48,12 +48,12 @@ export default function ServicesPage() {
   const services: Service[] = [
     {
       id: 'credit-card',
-      name: 'Virtual NovaPay Cards',
+      name: 'Virtual Lingoung Cards',
       description: 'Issue virtual cards with zero fees and instant Apple/Google Pay sync',
       category: 'cards',
       icon: CardIcon,
       href: '/cards',
-      color: 'from-purple-500 to-indigo-600'
+      color: 'from-blue-500 to-cyan-500'
     },
     {
       id: 'crypto',
@@ -170,13 +170,13 @@ export default function ServicesPage() {
     : services.filter(s => s.category === selectedCategory);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#05070B] text-slate-100 bg-cyber-grid selection:bg-[#d4ff00] selection:text-black">
+    <div className="min-h-screen flex flex-col bg-[#07090D] text-slate-100 bg-cyber-grid selection:bg-[#5E9FE8] selection:text-slate-950">
       <Navigation />
       
       <main className="flex-1 container mx-auto px-4 py-8 max-w-7xl animate-fadeIn relative z-10">
         {/* Header */}
         <div className="mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.05] border border-white/10 text-xs font-semibold text-[#d4ff00] mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.05] border border-white/10 text-xs font-semibold text-[#5E9FE8] mb-3">
             <span>✨ Ecosystem Directory</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">
@@ -188,20 +188,22 @@ export default function ServicesPage() {
         </div>
 
         {/* Filter Pills */}
-        <div className="flex flex-wrap gap-2 mb-8 p-1.5 bg-white/[0.03] border border-white/10 rounded-full w-max">
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.id)}
-              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                selectedCategory === cat.id
-                  ? 'bg-[#d4ff00] text-black shadow-md shadow-[#d4ff00]/20'
-                  : 'text-slate-300 hover:text-white hover:bg-white/[0.06]'
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
+        <div className="-mx-4 mb-8 overflow-x-auto px-4 pb-2">
+          <div className="flex w-max flex-nowrap gap-1 rounded-xl border border-white/10 bg-white/[0.03] p-1.5">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`min-h-9 whitespace-nowrap rounded-lg px-4 py-1.5 text-xs font-bold transition-all cursor-pointer ${
+                  selectedCategory === cat.id
+                    ? 'bg-[#5E9FE8] text-slate-950 shadow-md shadow-[#5E9FE8]/20'
+                    : 'text-slate-300 hover:text-white hover:bg-white/[0.06]'
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Services Grid */}
@@ -210,7 +212,7 @@ export default function ServicesPage() {
             const Icon = service.icon;
             const cardContent = (
               <div className={`bezel-card h-full ${service.comingSoon ? 'opacity-80' : ''}`}>
-                <div className="bezel-card-inner p-6 h-full flex flex-col justify-between hover:border-purple-500/30 transition-colors">
+                <div className="bezel-card-inner p-6 h-full flex flex-col justify-between hover:border-blue-500/30 transition-colors">
                   <div>
                     <div className="flex items-center justify-between mb-4">
                       <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${service.color} flex items-center justify-center shadow-md text-white`}>
@@ -236,7 +238,7 @@ export default function ServicesPage() {
                   </div>
 
                   <div className="mt-5 pt-3 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between text-xs font-semibold">
-                    <span className={service.comingSoon ? 'text-gray-400' : 'text-purple-600 dark:text-purple-400'}>
+                    <span className={service.comingSoon ? 'text-gray-400' : 'text-blue-600 dark:text-blue-300'}>
                       {service.comingSoon ? 'Available Soon' : 'Launch Feature →'}
                     </span>
                   </div>
@@ -258,7 +260,7 @@ export default function ServicesPage() {
 
         {/* Support Banner */}
         <div className="bezel-card mb-12">
-          <div className="bezel-card-inner p-8 bg-gradient-to-r from-purple-900/40 via-indigo-950/40 to-blue-900/40 border-purple-500/20 text-center">
+          <div className="bezel-card-inner p-8 bg-gradient-to-r from-blue-900/40 via-cyan-950/40 to-blue-900/40 border-blue-400/20 text-center">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Need a Bespoke Financial Solution?</h2>
             <p className="text-sm text-gray-600 dark:text-gray-400 max-w-xl mx-auto mb-6">
               Our enterprise private banking desk assists institutional accounts, high-volume merchants, and developers with custom routing solutions.

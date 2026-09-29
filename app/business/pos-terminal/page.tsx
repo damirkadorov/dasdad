@@ -139,21 +139,21 @@ export default function POSTerminal() {
 
   if (showSuccess) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#05070B] text-zinc-100 bg-cyber-grid">
+      <div className="min-h-screen flex flex-col bg-[#07090D] text-zinc-100 bg-cyber-grid">
         <BusinessNavigation />
         
         <main className="flex-1 container mx-auto px-4 py-12 max-w-xl animate-scaleIn">
           <div className="bg-white/[0.03] rounded-3xl p-8 shadow-2xl border border-white/10 backdrop-blur-xl text-center">
             {/* Success Animation */}
             <div className="mb-6">
-              <div className="w-20 h-20 bg-gradient-to-br from-[#d4ff00] to-emerald-400 rounded-full flex items-center justify-center mx-auto shadow-xl shadow-[#d4ff00]/20 text-[#05070B]">
+              <div className="w-20 h-20 bg-gradient-to-br from-[#5E9FE8] to-emerald-400 rounded-full flex items-center justify-center mx-auto shadow-xl shadow-[#5E9FE8]/20 text-[#07090D]">
                 <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
             </div>
 
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#d4ff00]/10 border border-[#d4ff00]/30 text-xs font-bold text-[#d4ff00] mb-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#5E9FE8]/10 border border-[#5E9FE8]/30 text-xs font-bold text-[#5E9FE8] mb-3">
               <span>✓ TRANSACTION CLEARED</span>
             </div>
 
@@ -161,11 +161,11 @@ export default function POSTerminal() {
             <p className="text-zinc-400 text-sm mb-6">Customer funds captured and credited to corporate treasury</p>
 
             {/* Transaction Receipt Card */}
-            <div className="bg-[#05070B] border border-white/10 rounded-2xl p-6 mb-6 text-left font-mono">
+            <div className="bg-[#07090D] border border-white/10 rounded-2xl p-6 mb-6 text-left font-mono">
               <div className="space-y-3.5 text-xs">
                 <div className="flex justify-between items-center pb-3 border-b border-white/10">
                   <span className="text-zinc-400 uppercase">Amount Captured:</span>
-                  <span className="text-[#d4ff00] font-extrabold text-xl">
+                  <span className="text-[#5E9FE8] font-extrabold text-xl">
                     {transactionDetails && formatCurrencyAmount(transactionDetails.amount, transactionDetails.currency)}
                   </span>
                 </div>
@@ -194,7 +194,7 @@ export default function POSTerminal() {
             </div>
 
             <div className="flex gap-3">
-              <Button onClick={handleNewTransaction} className="flex-1 bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold">
+              <Button onClick={handleNewTransaction} className="flex-1 bg-[#5E9FE8] hover:bg-[#7AB2EE] text-[#07090D] font-extrabold">
                 + New Terminal Charge
               </Button>
               <Button onClick={() => router.push('/business/dashboard')} variant="secondary" className="flex-1 border border-white/10 text-white">
@@ -210,14 +210,14 @@ export default function POSTerminal() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#05070B] text-zinc-100 bg-cyber-grid">
+    <div className="min-h-screen flex flex-col bg-[#07090D] text-zinc-100 bg-cyber-grid">
       <BusinessNavigation />
       
       <main className="flex-1 container mx-auto px-4 py-8 max-w-xl animate-fadeIn">
         {/* Header */}
         <div className="mb-8 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#d4ff00]/10 border border-[#d4ff00]/30 text-xs font-bold text-[#d4ff00] mb-3">
-            <span className="w-2 h-2 rounded-full bg-[#d4ff00] animate-pulse"></span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-[#5E9FE8]/10 border border-[#5E9FE8]/30 text-xs font-bold text-[#5E9FE8] mb-3">
+            <span className="w-2 h-2 rounded-xl bg-[#5E9FE8] animate-pulse"></span>
             <span>VIRTUAL POINT-OF-SALE</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-2">
@@ -244,14 +244,14 @@ export default function POSTerminal() {
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     placeholder="0.00"
-                    className="w-full px-5 py-3.5 text-3xl font-extrabold bg-[#05070B] border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white font-mono placeholder-zinc-700"
+                    className="w-full px-5 py-3.5 text-3xl font-extrabold bg-[#07090D] border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5E9FE8] text-white font-mono placeholder-zinc-700"
                     required
                   />
                 </div>
                 <select
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value as Currency)}
-                  className="px-4 py-3.5 text-lg font-bold bg-[#05070B] border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white font-mono"
+                  className="px-4 py-3.5 text-lg font-bold bg-[#07090D] border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5E9FE8] text-white font-mono"
                 >
                   <option value="USD">USD</option>
                   <option value="EUR">EUR</option>
@@ -275,7 +275,7 @@ export default function POSTerminal() {
                 onChange={handleCardNumberChange}
                 placeholder="7000 0000 0000 0000"
                 maxLength={19}
-                className="w-full px-4 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white text-base font-mono tracking-wider placeholder-zinc-700"
+                className="w-full px-4 py-3 bg-[#07090D] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5E9FE8] text-white text-base font-mono tracking-wider placeholder-zinc-700"
                 required
               />
             </div>
@@ -292,7 +292,7 @@ export default function POSTerminal() {
                   onChange={handleExpiryChange}
                   placeholder="12/28"
                   maxLength={5}
-                  className="w-full px-4 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white text-base font-mono placeholder-zinc-700"
+                  className="w-full px-4 py-3 bg-[#07090D] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5E9FE8] text-white text-base font-mono placeholder-zinc-700"
                   required
                 />
               </div>
@@ -306,7 +306,7 @@ export default function POSTerminal() {
                   onChange={handleCvvChange}
                   placeholder="123"
                   maxLength={3}
-                  className="w-full px-4 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white text-base font-mono placeholder-zinc-700"
+                  className="w-full px-4 py-3 bg-[#07090D] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5E9FE8] text-white text-base font-mono placeholder-zinc-700"
                   required
                 />
               </div>
@@ -322,7 +322,7 @@ export default function POSTerminal() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="e.g. Retail Order #892"
-                className="w-full px-4 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white text-sm placeholder-zinc-700"
+                className="w-full px-4 py-3 bg-[#07090D] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5E9FE8] text-white text-sm placeholder-zinc-700"
               />
             </div>
 
@@ -337,7 +337,7 @@ export default function POSTerminal() {
             <Button
               type="submit"
               isLoading={loading}
-              className="w-full bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold text-base py-4 rounded-2xl shadow-xl shadow-[#d4ff00]/20"
+              className="w-full bg-[#5E9FE8] hover:bg-[#7AB2EE] text-[#07090D] font-extrabold text-base py-4 rounded-2xl shadow-xl shadow-[#5E9FE8]/20"
             >
               {loading ? 'Processing Authorization...' : `Charge ${amount ? formatCurrencyAmount(parseFloat(amount), currency) : 'Now'}`}
             </Button>
@@ -352,9 +352,9 @@ export default function POSTerminal() {
 
         {/* Tip Box */}
         <div className="mt-4 bg-white/[0.02] border border-white/10 rounded-2xl p-4 text-xs text-zinc-400 flex items-center gap-2.5">
-          <span className="text-base text-[#d4ff00]">💡</span>
+          <span className="text-base text-[#5E9FE8]">💡</span>
           <span>
-            <strong>Note:</strong> POS Terminal accepts customer personal NovaPay cards for instant clearing directly into this corporate balance.
+            <strong>Note:</strong> POS Terminal accepts customer personal Lingoung cards for instant clearing directly into this corporate balance.
           </span>
         </div>
       </main>

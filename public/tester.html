@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment Gateway API Tester | NovaPay Sandbox</title>
+  <title>Payment Gateway API Tester | Lingoung Sandbox</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,11 +18,11 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800 mb-8">
       <div>
-        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-purple-500/10 text-purple-400 text-xs font-semibold mb-2 border border-purple-500/20">
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-blue-500/10 text-blue-400 text-xs font-semibold mb-2 border border-blue-500/20">
           <span>⚡ API Quickstart Sandbox</span>
         </div>
         <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center gap-2">
-          <span>NovaPay Payment Gateway Tester</span>
+          <span>Lingoung Payment Gateway Tester</span>
         </h1>
         <p class="text-sm text-slate-400 mt-1">Lightweight external client for testing the 3-step payment flow.</p>
       </div>
@@ -45,7 +45,7 @@
             id="apiKey"
             type="text"
             value="pk_f5b9c5381e00084a9e00ee970c6ef79c39c506ee1fc5e6785f8e63e707db46cf"
-            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 font-mono text-xs text-purple-400 focus:outline-none focus:border-purple-500"
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 font-mono text-xs text-blue-400 focus:outline-none focus:border-blue-500"
           />
         </div>
         <div>
@@ -57,7 +57,7 @@
             type="text"
             value=""
             placeholder="http://localhost:3000"
-            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 font-mono text-xs text-slate-300 focus:outline-none focus:border-purple-500"
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 font-mono text-xs text-slate-300 focus:outline-none focus:border-blue-500"
           />
         </div>
       </div>
@@ -66,9 +66,9 @@
     <!-- 3 Steps Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
       <!-- Step 1 -->
-      <div class="p-4 rounded-xl border border-purple-500/30 bg-purple-950/20">
+      <div class="p-4 rounded-xl border border-blue-500/30 bg-blue-950/20">
         <div class="flex items-center gap-3 mb-2">
-          <div class="w-7 h-7 rounded-lg bg-purple-600 text-white font-bold flex items-center justify-center text-xs">1</div>
+          <div class="w-7 h-7 rounded-lg bg-blue-600 text-white font-bold flex items-center justify-center text-xs">1</div>
           <div>
             <p class="text-xs font-bold text-white">Create Payment Session</p>
             <p class="text-[11px] text-slate-400">POST /api/payment-gateway/payments</p>
@@ -136,7 +136,7 @@
             <button
               id="btnCreate"
               onclick="createPaymentSession()"
-              class="w-full mt-4 py-2.5 px-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold text-xs rounded-xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
+              class="w-full mt-4 py-2.5 px-4 bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-400 hover:to-cyan-300 text-white font-semibold text-xs rounded-xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
             >
               <span>⚡ Execute Step 1: Create Session</span>
             </button>
@@ -145,7 +145,7 @@
 
         <!-- Demo Card Helper -->
         <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
-          <p class="text-[11px] font-bold uppercase tracking-wider text-purple-400 mb-2 flex items-center justify-between">
+          <p class="text-[11px] font-bold uppercase tracking-wider text-blue-400 mb-2 flex items-center justify-between">
             <span>💳 Active Test Card</span>
             <span class="text-[10px] text-slate-400 font-normal">Pre-funded</span>
           </p>
@@ -231,7 +231,7 @@
         });
 
         const data = await res.json();
-        viewer.innerHTML = `<span class="text-purple-400">// Response from POST /api/payment-gateway/payments:</span>\n` + JSON.stringify(data, null, 2);
+        viewer.innerHTML = `<span class="text-blue-400">// Response from POST /api/payment-gateway/payments:</span>\n` + JSON.stringify(data, null, 2);
 
         if (!res.ok) {
           throw new Error(data.error || 'Failed to create payment session');

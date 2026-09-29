@@ -107,14 +107,14 @@ export default function BusinessPaymentsContent() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#05070B] text-zinc-100 bg-cyber-grid">
+    <div className="min-h-screen flex flex-col bg-[#07090D] text-zinc-100 bg-cyber-grid">
       <BusinessNavigation />
       
       <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl animate-fadeIn">
         {/* Header */}
         <div className="mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#d4ff00]/10 border border-[#d4ff00]/30 text-xs font-bold text-[#d4ff00] mb-2">
-            <span className="w-2 h-2 rounded-full bg-[#d4ff00] animate-pulse"></span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-[#5E9FE8]/10 border border-[#5E9FE8]/30 text-xs font-bold text-[#5E9FE8] mb-2">
+            <span className="w-2 h-2 rounded-xl bg-[#5E9FE8] animate-pulse"></span>
             <span>ENTERPRISE TREASURY</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
@@ -131,7 +131,7 @@ export default function BusinessPaymentsContent() {
             onClick={() => setActiveTab('send')}
             className={`flex-1 py-3 px-6 rounded-xl font-bold text-sm transition-all cursor-pointer ${
               activeTab === 'send'
-                ? 'bg-[#d4ff00] text-[#05070B] shadow-lg shadow-[#d4ff00]/20'
+                ? 'bg-[#5E9FE8] text-[#07090D] shadow-lg shadow-[#5E9FE8]/20'
                 : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
             }`}
           >
@@ -141,7 +141,7 @@ export default function BusinessPaymentsContent() {
             onClick={() => setActiveTab('topup')}
             className={`flex-1 py-3 px-6 rounded-xl font-bold text-sm transition-all cursor-pointer ${
               activeTab === 'topup'
-                ? 'bg-[#d4ff00] text-[#05070B] shadow-lg shadow-[#d4ff00]/20'
+                ? 'bg-[#5E9FE8] text-[#07090D] shadow-lg shadow-[#5E9FE8]/20'
                 : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
             }`}
           >
@@ -178,13 +178,13 @@ export default function BusinessPaymentsContent() {
                       value={sendAmount}
                       onChange={(e) => setSendAmount(e.target.value)}
                       placeholder="0.00"
-                      className="flex-1 px-4 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white font-mono text-base placeholder-zinc-600"
+                      className="flex-1 px-4 py-3 bg-[#07090D] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5E9FE8] text-white font-mono text-base placeholder-zinc-600"
                       required
                     />
                     <select
                       value={sendCurrency}
                       onChange={(e) => setSendCurrency(e.target.value as Currency)}
-                      className="px-4 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white font-mono text-sm"
+                      className="px-4 py-3 bg-[#07090D] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5E9FE8] text-white font-mono text-sm"
                     >
                       {getSupportedCurrencies().map((curr) => (
                         <option key={curr} value={curr}>
@@ -210,7 +210,7 @@ export default function BusinessPaymentsContent() {
                 <Button
                   type="submit"
                   isLoading={sendLoading}
-                  className="w-full py-3.5 bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold text-sm shadow-xl shadow-[#d4ff00]/20"
+                  className="w-full py-3.5 bg-[#5E9FE8] hover:bg-[#7AB2EE] text-[#07090D] font-extrabold text-sm shadow-xl shadow-[#5E9FE8]/20"
                 >
                   {sendLoading ? 'Executing Transfer...' : 'Authorize Disbursement'}
                 </Button>
@@ -238,13 +238,13 @@ export default function BusinessPaymentsContent() {
                       value={topupAmount}
                       onChange={(e) => setTopupAmount(e.target.value)}
                       placeholder="0.00"
-                      className="flex-1 px-4 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white font-mono text-base placeholder-zinc-600"
+                      className="flex-1 px-4 py-3 bg-[#07090D] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5E9FE8] text-white font-mono text-base placeholder-zinc-600"
                       required
                     />
                     <select
                       value={topupCurrency}
                       onChange={(e) => setTopupCurrency(e.target.value as Currency)}
-                      className="px-4 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] text-white font-mono text-sm"
+                      className="px-4 py-3 bg-[#07090D] border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5E9FE8] text-white font-mono text-sm"
                     >
                       {getSupportedCurrencies().map((curr) => (
                         <option key={curr} value={curr}>
@@ -270,7 +270,7 @@ export default function BusinessPaymentsContent() {
                 <Button
                   type="submit"
                   isLoading={topupLoading}
-                  className="w-full py-3.5 bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold text-sm shadow-xl shadow-[#d4ff00]/20"
+                  className="w-full py-3.5 bg-[#5E9FE8] hover:bg-[#7AB2EE] text-[#07090D] font-extrabold text-sm shadow-xl shadow-[#5E9FE8]/20"
                 >
                   {topupLoading ? 'Crediting Treasury...' : 'Credit Liquidity Now'}
                 </Button>

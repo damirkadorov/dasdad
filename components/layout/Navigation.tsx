@@ -22,7 +22,7 @@ export default function Navigation() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 backdrop-blur-xl bg-[#05070B]/85 border-b border-white/[0.08] transition-all">
+      <nav className="sticky top-0 z-50 backdrop-blur-xl bg-[#07090D]/85 border-b border-white/[0.08] transition-all">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="flex items-center justify-between h-16">
             <Link href="/dashboard" className="transition-transform hover:scale-[1.02] active:scale-[0.98]">
@@ -30,16 +30,16 @@ export default function Navigation() {
             </Link>
             
             {/* Desktop Navigation Links */}
-            <div className="hidden lg:flex items-center space-x-1 p-1 bg-white/[0.04] backdrop-blur-md rounded-full border border-white/[0.08]">
+            <div className="hidden lg:flex items-center gap-1 rounded-xl border border-white/[0.08] bg-white/[0.035] p-1 backdrop-blur-md">
               {links.map((link) => {
                 const isActive = pathname === link.href || (link.href !== '/dashboard' && pathname?.startsWith(link.href));
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ease-spring ${
+                    className={`flex min-h-9 items-center rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all duration-200 ease-spring ${
                       isActive
-                        ? 'bg-white text-black shadow-md'
+                        ? 'bg-blue-400/15 text-blue-200 shadow-[inset_0_0_0_1px_rgba(94,159,232,.18)]'
                         : 'text-slate-300 hover:text-white hover:bg-white/[0.08]'
                     }`}
                   >
@@ -53,14 +53,14 @@ export default function Navigation() {
             <div className="hidden md:flex items-center space-x-2">
               <Link
                 href="/developer/tester"
-                className="text-xs font-semibold px-3 py-1.5 rounded-full border border-[#d4ff00]/30 text-[#d4ff00] bg-[#d4ff00]/10 hover:bg-[#d4ff00]/20 transition-all flex items-center gap-1.5"
+                className="flex min-h-9 items-center gap-1.5 rounded-lg border border-[#5E9FE8]/25 bg-[#5E9FE8]/10 px-3 py-1.5 text-xs font-semibold text-blue-200 transition-all hover:bg-[#5E9FE8]/15"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#d4ff00] animate-pulse"></span>
+                <span className="w-1.5 h-1.5 rounded-xl bg-[#5E9FE8] animate-pulse"></span>
                 <span>API Sandbox</span>
               </Link>
               <Link
                 href="/business"
-                className="text-xs font-semibold px-3 py-1.5 rounded-full border border-amber-500/30 text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 transition-all flex items-center gap-1.5"
+                className="flex min-h-9 items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-semibold text-slate-300 transition-all hover:bg-white/[0.08] hover:text-white"
               >
                 <span>💼</span>
                 <span>Business</span>
@@ -100,7 +100,7 @@ export default function Navigation() {
                     onClick={() => setMobileOpen(false)}
                     className={`flex items-center space-x-2.5 p-3 rounded-xl text-xs font-semibold transition-all ${
                       isActive
-                        ? 'bg-white text-black font-bold shadow-md'
+                        ? 'bg-blue-400/15 text-blue-200 font-bold border border-blue-300/20'
                         : 'bg-white/[0.05] text-slate-300 border border-white/[0.08]'
                     }`}
                   >
@@ -112,7 +112,7 @@ export default function Navigation() {
               <Link
                 href="/developer/tester"
                 onClick={() => setMobileOpen(false)}
-                className="col-span-2 flex items-center justify-center gap-2 p-2.5 rounded-xl text-xs font-bold bg-[#d4ff00] text-black shadow-md mt-1"
+                className="col-span-2 mt-1 flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#5E9FE8] p-2.5 text-xs font-bold text-slate-950 shadow-md"
               >
                 <span>⚡ Open API Tester</span>
               </Link>

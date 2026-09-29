@@ -22,7 +22,7 @@ export default function Card({ card, onClick }: CardProps) {
       <div className="flex justify-between items-start mb-6 relative z-10">
         <div className="flex items-center gap-1.5">
           <span className="text-xl font-bold tracking-tight">
-            {isNovaPlus ? 'Zip Nova+' : 'NovaPay'}
+            {isNovaPlus ? 'Zip Nova+' : 'Lingoung'}
           </span>
           {card.accountType && (
             <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/15 backdrop-blur text-white/90">

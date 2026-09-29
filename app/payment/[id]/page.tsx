@@ -126,7 +126,7 @@ export default function PaymentPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F4F5FA] dark:bg-[#07090E] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#07090D] flex items-center justify-center p-4">
         <div className="text-center space-y-3">
           <div className="w-10 h-10 border-3 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
           <p className="text-xs font-mono text-gray-500">Preparing secure checkout session...</p>
@@ -137,12 +137,12 @@ export default function PaymentPage() {
 
   if (error && !payment) {
     return (
-      <div className="min-h-screen bg-[#F4F5FA] dark:bg-[#07090E] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#07090D] flex items-center justify-center p-4">
         <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 max-w-sm w-full text-center shadow-xl border border-gray-100 dark:border-gray-800">
           <div className="w-12 h-12 bg-red-100 dark:bg-red-950/50 rounded-full flex items-center justify-center mx-auto mb-3 text-red-600">
             ✕
           </div>
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Payment Session Expired</h2>
+          <h2 className="text-lg font-bold text-white mb-2">Payment Session Expired</h2>
           <p className="text-xs text-gray-500 dark:text-gray-400 mb-6">{error}</p>
           <Link
             href="/"
@@ -157,12 +157,12 @@ export default function PaymentPage() {
 
   if (payment?.status !== 'pending') {
     return (
-      <div className="min-h-screen bg-[#F4F5FA] dark:bg-[#07090E] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#07090D] flex items-center justify-center p-4">
         <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 max-w-sm w-full text-center shadow-xl border border-gray-100 dark:border-gray-800">
           <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-950/50 rounded-full flex items-center justify-center mx-auto mb-3 text-emerald-600 text-lg font-bold">
             ✓
           </div>
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Payment Already Settled</h2>
+          <h2 className="text-lg font-bold text-white mb-2">Payment Already Settled</h2>
           <p className="text-xs text-gray-500 dark:text-gray-400 mb-6">
             This checkout session has already been completed.
           </p>
@@ -178,7 +178,7 @@ export default function PaymentPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F5FA] dark:bg-[#07090E] text-gray-900 dark:text-white flex flex-col items-center justify-center px-4 py-10 selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen bg-[#07090D] text-white flex flex-col items-center justify-center px-4 py-10 selection:bg-blue-600 selection:text-white">
       {/* Container modeled directly after Reference Image 2 (Affirm Checkout) */}
       <div className="w-full max-w-[420px] mx-auto flex flex-col items-center">
         {/* Top Header with Close Icon */}
@@ -192,23 +192,23 @@ export default function PaymentPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-          <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest">NovaPay Checkout</span>
+          <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest">Lingoung Checkout</span>
           <div className="w-6"></div>
         </div>
 
         {/* Heading: Ready to check out */}
         <div className="text-center space-y-2 mb-4">
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h1 className="text-2xl font-bold tracking-tight text-white">
             Ready to check out{payment?.description ? ` for ${payment.description}` : ''}?
           </h1>
           <p className="text-xs text-gray-500 dark:text-gray-400 max-w-[320px] mx-auto leading-relaxed">
-            Use your NovaPay Card at the register or online. Your balance applies to this transaction.
+            Use your Lingoung Card at the register or online. Your balance applies to this transaction.
           </p>
         </div>
 
         {/* Big Amount & Active Status Badge (Reference: Image 2) */}
         <div className="text-center my-4 space-y-3">
-          <div className="text-4xl sm:text-5xl font-extrabold tracking-tight font-mono text-gray-900 dark:text-white">
+          <div className="text-4xl sm:text-5xl font-extrabold tracking-tight font-mono text-white">
             ${payment?.amount.toFixed(2)}
           </div>
           <div>
@@ -298,7 +298,7 @@ export default function PaymentPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs font-mono text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs font-mono text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
@@ -308,7 +308,7 @@ export default function PaymentPage() {
                 required
                 value={cardNumber}
                 onChange={(e) => setCardNumber(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs font-mono text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs font-mono text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -340,7 +340,7 @@ export default function PaymentPage() {
             type="button"
             onClick={() => handlePayment()}
             disabled={processing}
-            className="w-full py-3.5 px-6 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white font-bold text-sm rounded-2xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+            className="w-full py-3.5 px-6 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 text-white font-bold text-sm rounded-2xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer shadow-sm"
           >
             <span></span>
             <span>Pay</span>
@@ -348,7 +348,7 @@ export default function PaymentPage() {
         </form>
 
         <p className="text-[11px] text-gray-400 text-center mt-6">
-          🔒 Secured with NovaPay 256-bit End-to-End Encryption
+          🔒 Secured with Lingoung 256-bit End-to-End Encryption
         </p>
       </div>
     </div>

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --background: #07090d;
@@ -18,6 +19,10 @@ body {
   font-family: var(--font-sans);
   overflow-x: hidden;
   min-width: 320px;
+}
+
+html {
+  color-scheme: dark;
 }
 
 *:focus-visible {
@@ -219,10 +224,10 @@ body {
   background-size: 48px 48px;
 }
 
-/* 2. Frosted Sunset Glow Card (Image 3 DigiPay) */
+/* Frosted account summary surface */
 .card-sunset-glow {
   position: relative;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+  background: linear-gradient(135deg, rgba(39, 131, 222, 0.24) 0%, rgba(15, 39, 68, 0.92) 52%, rgba(12, 17, 24, 0.98) 100%);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -232,11 +237,11 @@ body {
   border-radius: 1.5rem;
 }
 
-/* 3. Affirm Royal Cobalt Wave Card (Image 2 Affirm) */
+/* Cobalt payment card */
 .card-affirm-wave {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(145deg, #10143a 0%, #1e256b 100%);
+  background: linear-gradient(145deg, #0d315a 0%, #174d91 55%, #286fbf 100%);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 1.5rem;
   box-shadow: 0 20px 40px -12px rgba(15, 23, 42, 0.45);
@@ -249,42 +254,42 @@ body {
   bottom: -40%;
   width: 120%;
   height: 120%;
-  background: radial-gradient(circle at center, #3b82f6 0%, #2563eb 50%, transparent 75%);
+  background: radial-gradient(circle at center, #7de2d1 0%, #5e9fe8 48%, transparent 75%);
   border-radius: 50%;
   opacity: 0.85;
   pointer-events: none;
 }
 
-/* 4. Zip Diagonal Split Plum-to-Violet Card (Image 1 Zip) */
+/* Premium cyan split card */
 .card-zip-split {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(110deg, #140d1e 0%, #1b1228 48%, #7c3aed 52%, #8b5cf6 100%);
+  background: linear-gradient(110deg, #0b1724 0%, #10263b 48%, #286fbf 52%, #5e9fe8 100%);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 1.5rem;
-  box-shadow: 0 20px 40px -12px rgba(124, 58, 237, 0.35);
+  box-shadow: 0 20px 40px -12px rgba(39, 131, 222, 0.35);
 }
 
-/* 5. Electric Neon Lime Card & Tokens (Image 4 CRYPTO) */
+/* Featured blue surface */
 .card-neon-lime {
-  background: #d4ff00;
-  color: #000000;
+  background: #5e9fe8;
+  color: #08111d;
   border-radius: 1.5rem;
-  box-shadow: 0 0 45px -8px rgba(212, 255, 0, 0.35);
+  box-shadow: 0 20px 52px -16px rgba(39, 131, 222, 0.42);
   transition: all 0.35s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .card-neon-lime:hover {
-  box-shadow: 0 0 60px -5px rgba(212, 255, 0, 0.5);
+  box-shadow: 0 24px 64px -16px rgba(39, 131, 222, 0.52);
   transform: translateY(-2px);
 }
 
 .text-neon-lime {
-  color: #d4ff00;
+  color: #5e9fe8;
 }
 
 .bg-neon-lime {
-  background-color: #d4ff00;
+  background-color: #5e9fe8;
 }
 
 .hero-mesh {

@@ -90,7 +90,7 @@ export default function BusinessCardsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#05070B] text-zinc-100 bg-cyber-grid">
+      <div className="min-h-screen flex flex-col bg-[#07090D] text-zinc-100 bg-cyber-grid">
         <BusinessNavigation />
         <main className="flex-1">
           <CardsSkeleton />
@@ -115,15 +115,15 @@ export default function BusinessCardsPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#05070B] text-zinc-100 bg-cyber-grid">
+    <div className="min-h-screen flex flex-col bg-[#07090D] text-zinc-100 bg-cyber-grid">
       <BusinessNavigation />
       
       <main className="flex-1 container mx-auto px-4 py-8 max-w-6xl animate-fadeIn">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#d4ff00]/10 border border-[#d4ff00]/30 text-xs font-bold text-[#d4ff00] mb-2">
-              <span className="w-2 h-2 rounded-full bg-[#d4ff00] animate-pulse"></span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-[#5E9FE8]/10 border border-[#5E9FE8]/30 text-xs font-bold text-[#5E9FE8] mb-2">
+              <span className="w-2 h-2 rounded-xl bg-[#5E9FE8] animate-pulse"></span>
               <span>COMMERCIAL EXPENSE FLEET</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
@@ -137,12 +137,12 @@ export default function BusinessCardsPage() {
           {cards.length < 5 ? (
             <Button
               onClick={() => setShowCreateForm(!showCreateForm)}
-              className="bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold shadow-lg shadow-[#d4ff00]/20"
+              className="bg-[#5E9FE8] hover:bg-[#7AB2EE] text-[#07090D] font-extrabold shadow-lg shadow-[#5E9FE8]/20"
             >
               {showCreateForm ? '✕ Close Configurator' : '+ Issue Corporate Card'}
             </Button>
           ) : (
-            <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-[#d4ff00]/20 text-[#d4ff00] border border-[#d4ff00]/30">
+            <span className="text-xs font-bold px-3 py-1.5 rounded-xl bg-[#5E9FE8]/20 text-[#5E9FE8] border border-[#5E9FE8]/30">
               Fleet Maximum Reached (5/5)
             </span>
           )}
@@ -160,7 +160,7 @@ export default function BusinessCardsPage() {
                   Select network tier, physical delivery or virtual issuance, and account currency.
                 </p>
               </div>
-              <span className="text-xs font-bold px-2.5 py-1 rounded-md bg-[#d4ff00]/20 text-[#d4ff00] border border-[#d4ff00]/30 font-mono">
+              <span className="text-xs font-bold px-2.5 py-1 rounded-md bg-[#5E9FE8]/20 text-[#5E9FE8] border border-[#5E9FE8]/30 font-mono">
                 ENTERPRISE LEVEL
               </span>
             </div>
@@ -178,7 +178,7 @@ export default function BusinessCardsPage() {
                       onClick={() => setCardFormat('virtual')}
                       className={`p-4 rounded-2xl border-2 text-left transition-all cursor-pointer ${
                         cardFormat === 'virtual'
-                          ? 'border-[#d4ff00] bg-[#d4ff00]/10 text-white'
+                          ? 'border-[#5E9FE8] bg-[#5E9FE8]/10 text-white'
                           : 'border-white/10 hover:border-white/20 bg-white/[0.02] text-zinc-400'
                       }`}
                     >
@@ -192,7 +192,7 @@ export default function BusinessCardsPage() {
                       onClick={() => setCardFormat('physical')}
                       className={`p-4 rounded-2xl border-2 text-left transition-all cursor-pointer ${
                         cardFormat === 'physical'
-                          ? 'border-[#d4ff00] bg-[#d4ff00]/10 text-white'
+                          ? 'border-[#5E9FE8] bg-[#5E9FE8]/10 text-white'
                           : 'border-white/10 hover:border-white/20 bg-white/[0.02] text-zinc-400'
                       }`}
                     >
@@ -218,7 +218,7 @@ export default function BusinessCardsPage() {
                       }`}
                     >
                       <div className="w-3 h-3 rounded-full bg-emerald-400 mb-2" />
-                      <div className="font-bold text-sm text-white">NovaPay Commercial</div>
+                      <div className="font-bold text-sm text-white">Lingoung Commercial</div>
                       <div className="text-xs text-zinc-400">Standard business clearing</div>
                     </button>
                     
@@ -227,12 +227,12 @@ export default function BusinessCardsPage() {
                       onClick={() => setCardType('nova-plus')}
                       className={`p-4 rounded-2xl border-2 text-left transition-all cursor-pointer ${
                         cardType === 'nova-plus'
-                          ? 'border-[#d4ff00] bg-[#d4ff00]/10 text-white'
+                          ? 'border-[#5E9FE8] bg-[#5E9FE8]/10 text-white'
                           : 'border-white/10 hover:border-white/20 bg-white/[0.02] text-zinc-400'
                       }`}
                     >
-                      <div className="w-3 h-3 rounded-full bg-[#d4ff00] mb-2" />
-                      <div className="font-bold text-sm text-white">NovaPay+ Executive</div>
+                      <div className="w-3 h-3 rounded-xl bg-[#5E9FE8] mb-2" />
+                      <div className="font-bold text-sm text-white">Lingoung+ Executive</div>
                       <div className="text-xs text-zinc-400">Unlimited limits &amp; zero FX fee</div>
                     </button>
                   </div>
@@ -245,7 +245,7 @@ export default function BusinessCardsPage() {
                   <select
                     value={cardCurrency}
                     onChange={(e) => setCardCurrency(e.target.value as Currency)}
-                    className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d4ff00] bg-[#05070B] text-white border-white/10 text-sm font-mono"
+                    className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5E9FE8] bg-[#07090D] text-white border-white/10 text-sm font-mono"
                   >
                     {getSupportedCurrencies().map((currency) => (
                       <option key={currency} value={currency}>
@@ -258,7 +258,7 @@ export default function BusinessCardsPage() {
                 <Button 
                   onClick={handleCreateCard}
                   isLoading={creating}
-                  className="w-full py-3.5 bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold text-sm shadow-xl shadow-[#d4ff00]/20"
+                  className="w-full py-3.5 bg-[#5E9FE8] hover:bg-[#7AB2EE] text-[#07090D] font-extrabold text-sm shadow-xl shadow-[#5E9FE8]/20"
                 >
                   Issue Corporate Card Now
                 </Button>
@@ -267,7 +267,7 @@ export default function BusinessCardsPage() {
               {/* Live Preview */}
               <div className="lg:col-span-5 flex flex-col items-center justify-center p-6 bg-white/[0.02] rounded-2xl border border-white/10">
                 <div className="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-4 flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#d4ff00] animate-pulse" />
+                  <span className="w-2 h-2 rounded-xl bg-[#5E9FE8] animate-pulse" />
                   <span>Real-time Card Geometry</span>
                 </div>
                 
@@ -303,11 +303,11 @@ export default function BusinessCardsPage() {
               No corporate cards issued yet
             </h3>
             <p className="text-zinc-400 text-sm max-w-sm mx-auto mb-6">
-              Create your corporate NovaPay card to handle business expenses and team disbursements.
+              Create your corporate Lingoung card to handle business expenses and team disbursements.
             </p>
             <Button 
               onClick={() => setShowCreateForm(true)}
-              className="bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold"
+              className="bg-[#5E9FE8] hover:bg-[#7AB2EE] text-[#07090D] font-extrabold"
             >
               Issue First Corporate Card
             </Button>

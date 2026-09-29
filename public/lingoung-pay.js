@@ -113,7 +113,7 @@
         'background: #090d16',
         'border: 1px solid rgba(255, 255, 255, 0.15)',
         'border-radius: 24px',
-        'box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 45px rgba(212, 255, 0, 0.15)',
+        'box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 45px rgba(39, 131, 222, 0.15)',
         'overflow: hidden',
         'display: flex',
         'flex-direction: column',
@@ -133,7 +133,7 @@
 
       header.innerHTML = [
         '<div style="display:flex;align-items:center;gap:8px;">',
-        '  <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#d4ff00;box-shadow:0 0 8px #d4ff00;"></span>',
+        '  <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#5E9FE8;box-shadow:0 0 8px #5E9FE8;"></span>',
         '  <span style="font-size:12px;font-weight:800;letter-spacing:1px;color:#fff;text-transform:uppercase;">Lingoung Secure Checkout</span>',
         '</div>',
         '<button id="lingoung-modal-close" type="button" style="background:rgba(255,255,255,0.08);border:none;color:#94a3b8;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;transition:background 0.2s;">&times;</button>'
