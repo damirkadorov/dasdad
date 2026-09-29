@@ -32,6 +32,20 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
       case 'IBAN_TRANSFER':
       case 'IBAN_RECEIVE':
         return '🏦';
+      case 'LOAN_DISBURSED':
+      case 'LOAN_PAYMENT':
+        return '🏛️';
+      case 'SAVINGS_DEPOSIT':
+      case 'SAVINGS_WITHDRAWAL':
+        return '🏦';
+      case 'BILL_PAYMENT':
+        return '🧾';
+      case 'INVESTMENT_BUY':
+      case 'INVESTMENT_SELL':
+        return '📈';
+      case 'marketplace_purchase':
+      case 'marketplace_sale':
+        return '🛍️';
       default:
         return '💳';
     }
@@ -57,6 +71,19 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
       case 'IBAN_TRANSFER':
       case 'IBAN_RECEIVE':
         return 'from-blue-500 to-cyan-500';
+      case 'LOAN_DISBURSED':
+      case 'LOAN_PAYMENT':
+      case 'SAVINGS_DEPOSIT':
+      case 'SAVINGS_WITHDRAWAL':
+        return 'from-blue-500 to-cyan-500';
+      case 'BILL_PAYMENT':
+        return 'from-orange-500 to-amber-500';
+      case 'INVESTMENT_BUY':
+      case 'INVESTMENT_SELL':
+        return 'from-emerald-500 to-teal-500';
+      case 'marketplace_purchase':
+      case 'marketplace_sale':
+        return 'from-sky-500 to-blue-500';
       default:
         return 'from-gray-400 to-gray-500';
     }
@@ -85,6 +112,24 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
         return 'IBAN Transfer';
       case 'IBAN_RECEIVE':
         return 'IBAN Received';
+      case 'LOAN_DISBURSED':
+        return 'Loan Disbursed';
+      case 'LOAN_PAYMENT':
+        return 'Loan Payment';
+      case 'SAVINGS_DEPOSIT':
+        return 'Savings Deposit';
+      case 'SAVINGS_WITHDRAWAL':
+        return 'Savings Withdrawal';
+      case 'BILL_PAYMENT':
+        return 'Bill Payment';
+      case 'INVESTMENT_BUY':
+        return 'Investment Purchase';
+      case 'INVESTMENT_SELL':
+        return 'Investment Sale';
+      case 'marketplace_purchase':
+        return 'Marketplace Purchase';
+      case 'marketplace_sale':
+        return 'Marketplace Sale';
       default:
         return 'Transaction';
     }
@@ -100,7 +145,7 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
         </div>
         <div>
           <div className="font-semibold text-gray-900 dark:text-white text-sm">
-            {transaction.description}
+            {transaction.description || getTypeLabel(transaction.type)}
           </div>
           <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
             {getTypeLabel(transaction.type)} • {formatDate(transaction.createdAt || transaction.timestamp || '')}

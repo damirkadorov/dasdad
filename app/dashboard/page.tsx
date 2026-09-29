@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
-import Button from '@/components/ui/Button';
 import TransactionItem from '@/components/transactions/TransactionItem';
 import { DashboardSkeleton } from '@/components/ui/Skeleton';
 import { convertCurrency, formatCurrencyAmount } from '@/lib/utils/currency';
@@ -38,8 +37,8 @@ export default function Dashboard() {
   const fetchData = async () => {
     try {
       const [profileRes, transactionsRes] = await Promise.all([
-        fetch('/api/user/profile'),
-        fetch('/api/transactions')
+        fetch('/api/user/profile', { cache: 'no-store' }),
+        fetch('/api/transactions', { cache: 'no-store' })
       ]);
 
       if (!profileRes.ok) {
@@ -55,7 +54,7 @@ export default function Dashboard() {
 
       if (transactionsRes.ok) {
         const transactionsData = await transactionsRes.json();
-        setTransactions(transactionsData.transactions.slice(0, 5));
+        setTransactions(transactionsData.transactions.slice(0, 8));
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load data');
