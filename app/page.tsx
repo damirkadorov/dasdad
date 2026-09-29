@@ -4,204 +4,138 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Logo from '@/components/layout/Logo';
 import Footer from '@/components/layout/Footer';
-import Button from '@/components/ui/Button';
+
+const activity = [
+  { name: 'Card payment', detail: 'Vercel Cloud', amount: '−$49.00', tone: 'text-white' },
+  { name: 'Transfer received', detail: 'From Alex Morgan', amount: '+$2,450.00', tone: 'text-emerald-300' },
+  { name: 'Crypto purchase', detail: '0.0142 BTC', amount: '−$1,125.40', tone: 'text-white' },
+];
+
+const features = [
+  { number: '01', title: 'Spend globally', copy: 'Create virtual cards instantly, set limits, freeze access, and pay in 7 currencies.', href: '/cards', label: 'Explore cards' },
+  { number: '02', title: 'Move money instantly', copy: 'Send secure transfers, manage IBAN accounts, and keep every payment in one timeline.', href: '/payments', label: 'See payments' },
+  { number: '03', title: 'Build with one API', copy: 'Launch hosted checkout, issue API keys, and test webhooks in a safe sandbox.', href: '/developer', label: 'Open developer portal' },
+];
+
+const Arrow = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M5 12h14m-5-5 5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
 
 export default function Home() {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubscribe = (event: React.FormEvent) => {
+    event.preventDefault();
     if (!email) return;
     setSubscribed(true);
     setTimeout(() => setSubscribed(false), 4000);
   };
 
-  const tickerItems = [
-    { title: 'Therapy Session', amount: '$400.15', time: '4:56 pm', subtitle: 'Dr. Roy' },
-    { title: 'StockX Order #4092', amount: '$765.00', time: 'Just now', subtitle: 'Verified Authentic' },
-    { title: 'Cyberpunk Sneakers', amount: '$100.00', time: '2 min ago', subtitle: 'NovaPay Checkout' },
-    { title: 'Cloud Infrastructure API', amount: '$49.00', time: '14 min ago', subtitle: 'AWS / Vercel' },
-    { title: 'Coffee Artisan Batch', amount: '$18.00', time: '42 min ago', subtitle: 'Single Origin' },
-    { title: 'BTC/USD Buy Order', amount: '+$2,450.00', time: '1 hr ago', subtitle: 'Instant Settlement' },
-  ];
-
   return (
-    <div className="min-h-screen flex flex-col bg-[#05070B] text-slate-100 overflow-x-hidden selection:bg-[#d4ff00] selection:text-black">
-      {/* Background Cyber Grid & Glow Orbs (References: Image 3 & 4) */}
-      <div className="fixed inset-0 bg-cyber-grid pointer-events-none opacity-40 z-0"></div>
-      <div className="fixed -top-40 right-1/4 w-[600px] h-[600px] bg-gradient-to-br from-amber-500/15 via-orange-600/10 to-transparent rounded-full blur-[140px] pointer-events-none z-0"></div>
-      <div className="fixed top-1/2 -left-40 w-[500px] h-[500px] bg-gradient-to-tr from-[#d4ff00]/10 via-emerald-600/5 to-transparent rounded-full blur-[160px] pointer-events-none z-0"></div>
+    <div className="hero-mesh min-h-screen overflow-x-hidden text-slate-100 selection:bg-blue-400 selection:text-slate-950">
+      <div className="surface-grid pointer-events-none fixed inset-0 z-0" />
 
-      {/* Floating Glass Navigation (Reference: DigiPay) */}
-      <nav className="sticky top-0 z-50 backdrop-blur-xl bg-[#05070B]/80 border-b border-white/[0.07] transition-all">
-        <div className="container mx-auto px-4 max-w-7xl h-18 flex items-center justify-between">
-          <Link href="/" className="transition-transform hover:scale-[1.02] active:scale-[0.98]">
-            <Logo size={34} showText={true} textWhite={true} />
+      <header className="sticky top-0 z-50 border-b border-white/[0.08] bg-[#07090d]/80 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
+          <Link href="/" aria-label="Lingoung home" className="rounded-xl">
+            <Logo size={34} showText textWhite />
           </Link>
 
-          <div className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
-            <Link href="/cards" className="hover:text-white transition-colors">Cards</Link>
-            <Link href="/trading" className="hover:text-white transition-colors">Trading</Link>
-            <Link href="/services" className="hover:text-white transition-colors">Features</Link>
-            <Link href="/developer" className="hover:text-[#d4ff00] transition-colors flex items-center gap-1.5">
-              <span>API Gateway</span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#d4ff00]/10 text-[#d4ff00] font-mono border border-[#d4ff00]/20">v2</span>
+          <nav aria-label="Primary navigation" className="hidden items-center gap-7 text-sm text-slate-400 md:flex">
+            <Link href="/cards" className="transition-colors hover:text-white">Cards</Link>
+            <Link href="/trading" className="transition-colors hover:text-white">Trading</Link>
+            <Link href="/business" className="transition-colors hover:text-white">Business</Link>
+            <Link href="/developer" className="flex items-center gap-2 transition-colors hover:text-white">
+              Developers
+              <span className="rounded-md border border-blue-400/20 bg-blue-400/10 px-1.5 py-0.5 text-[10px] font-semibold text-blue-300">API</span>
             </Link>
-          </div>
+          </nav>
 
-          <div className="flex items-center gap-3">
-            <Link href="/login">
-              <button className="px-4 py-2 text-xs font-semibold text-slate-300 hover:text-white transition-colors cursor-pointer">
-                Log In
-              </button>
-            </Link>
-            <Link href="/register">
-              <button className="px-5 py-2.5 rounded-full bg-white hover:bg-slate-200 text-black text-xs font-bold transition-all shadow-lg hover:shadow-white/20 active:scale-[0.97] cursor-pointer">
-                Get Started
-              </button>
-            </Link>
+          <div className="flex items-center gap-2">
+            <Link href="/login" className="hidden min-h-11 items-center px-3 text-sm font-medium text-slate-300 transition-colors hover:text-white sm:flex">Log in</Link>
+            <Link href="/register" className="inline-flex min-h-11 items-center rounded-xl bg-white px-4 text-sm font-semibold text-slate-950 transition-transform hover:-translate-y-0.5 hover:bg-blue-50">Open account</Link>
           </div>
         </div>
-      </nav>
+      </header>
 
-      {/* Hero Section (Reference: Image 3 DigiPay + Image 4 CRYPTO) */}
-      <main className="relative z-10 flex-1">
-        <section className="container mx-auto px-4 max-w-7xl pt-16 md:pt-24 pb-16">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Column: Headlines & Interaction */}
-            <div className="lg:col-span-6 space-y-6">
-              {/* Eyebrow */}
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.05] border border-white/10 text-xs font-semibold text-slate-300">
-                <span className="w-2 h-2 rounded-full bg-[#d4ff00] animate-pulse"></span>
-                <span className="tracking-wide uppercase text-[11px]">Your finances in your pocket</span>
-              </div>
-
-              {/* Main Headline */}
-              <h1 className="text-4xl sm:text-6xl lg:text-[4.2rem] font-bold tracking-tight leading-[1.08] text-white">
-                Smart banking for your{' '}
-                <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-amber-200 bg-clip-text text-transparent">
-                  transactions.
-                </span>
-              </h1>
-
-              {/* Subtitle */}
-              <p className="text-base sm:text-lg text-slate-400 max-w-lg leading-relaxed font-normal">
-                Multi-currency accounts, instant virtual card issuing, and high-frequency crypto trading engineered for digital-first commerce.
-              </p>
-
-              {/* Interactive Pill Email Subscription / Instant Launch (Reference: Image 3 DigiPay) */}
-              <form onSubmit={handleSubscribe} className="pt-2 max-w-md">
-                <div className="flex items-center bg-white/[0.06] hover:bg-white/[0.08] border border-white/15 focus-within:border-white/30 backdrop-blur-xl rounded-full p-1.5 transition-all shadow-2xl">
-                  <div className="pl-3.5 pr-2 text-slate-400">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    className="flex-1 bg-transparent text-xs text-white placeholder-slate-400 focus:outline-none px-1"
-                  />
-                  <button
-                    type="submit"
-                    className="px-5 py-2.5 rounded-full bg-white hover:bg-slate-200 text-black text-xs font-bold transition-all active:scale-95 cursor-pointer whitespace-nowrap shadow-md"
-                  >
-                    {subscribed ? '✓ Subscribed' : 'Subscribe'}
-                  </button>
-                </div>
-              </form>
-
-              {/* Social Proof (Reference: Image 4 CRYPTO) */}
-              <div className="flex items-center gap-4 pt-4">
-                <div className="flex -space-x-2">
-                  <div className="w-8 h-8 rounded-full border-2 border-[#05070B] bg-gradient-to-tr from-amber-400 to-orange-500 flex items-center justify-center text-[10px] font-bold text-white shadow">AK</div>
-                  <div className="w-8 h-8 rounded-full border-2 border-[#05070B] bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-[10px] font-bold text-white shadow">DK</div>
-                  <div className="w-8 h-8 rounded-full border-2 border-[#05070B] bg-gradient-to-tr from-emerald-500 to-teal-600 flex items-center justify-center text-[10px] font-bold text-white shadow">MR</div>
-                  <div className="w-8 h-8 rounded-full border-2 border-[#05070B] bg-gradient-to-tr from-purple-500 to-pink-600 flex items-center justify-center text-[10px] font-bold text-white shadow">SV</div>
-                </div>
-                <div className="text-xs">
-                  <p className="font-bold text-white tracking-wide">168K+ Realtime Users</p>
-                  <p className="text-slate-400 text-[11px]">Accepting payments globally</p>
-                </div>
-              </div>
+      <main className="relative z-10">
+        <section className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-14 px-5 pb-20 pt-16 lg:grid-cols-12 lg:px-8 lg:pb-28 lg:pt-24">
+          <div className="lg:col-span-6">
+            <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.045] px-3 py-1.5 text-xs font-medium text-slate-300">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,.8)]" />
+              Banking, cards and crypto — together
             </div>
 
-            {/* Right Column: Floating Glowing Cards Showcase (Reference: Image 3 DigiPay) */}
-            <div className="lg:col-span-6 relative flex items-center justify-center min-h-[420px]">
-              {/* Sunset Radiant Glow Orb behind cards */}
-              <div className="absolute w-72 h-72 rounded-full bg-gradient-to-tr from-orange-600 via-amber-500 to-red-500 opacity-60 blur-3xl pointer-events-none animate-pulse"></div>
+            <h1 className="max-w-2xl text-5xl font-semibold leading-[1.02] tracking-[-0.055em] text-white sm:text-6xl lg:text-[4.7rem]">
+              Money moves.
+              <span className="block bg-gradient-to-r from-[#8EC5FF] via-[#5E9FE8] to-[#7DE2D1] bg-clip-text text-transparent">You stay in control.</span>
+            </h1>
 
-              {/* Card 1 (Back Card, tilted +12deg with Sunset Glow) */}
-              <div className="absolute w-[290px] sm:w-[340px] h-[190px] sm:h-[220px] rounded-2xl p-5 border border-white/20 bg-gradient-to-br from-amber-500/80 via-orange-600/70 to-red-600/80 text-white shadow-2xl backdrop-blur-md transform rotate-12 translate-x-8 -translate-y-6 transition-transform hover:rotate-6 duration-500 group select-none">
-                <div className="flex justify-between items-start mb-6">
-                  <span className="font-bold tracking-widest text-sm text-white/90">VISA</span>
-                  <div className="flex -space-x-1">
-                    <div className="w-5 h-5 rounded-full bg-red-500/90 shadow"></div>
-                    <div className="w-5 h-5 rounded-full bg-amber-400/90 shadow"></div>
-                  </div>
-                </div>
-                <div className="text-right mb-6">
-                  <span className="text-[11px] font-mono text-white/70">01/25</span>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-[10px] tracking-wider uppercase text-white/70 font-mono">Card Number</p>
-                  <p className="font-mono text-sm sm:text-base font-semibold tracking-wider text-white">4804 9556 8008 8300</p>
-                </div>
-              </div>
+            <p className="mt-7 max-w-xl text-base leading-7 text-slate-400 sm:text-lg">
+              One simple account for everyday payments, multi-currency cards, and digital assets — designed to feel fast, clear, and secure.
+            </p>
 
-              {/* Card 2 (Front Card, tilted -4deg with Glass Frosted Core) */}
-              <div className="relative w-[300px] sm:w-[350px] h-[200px] sm:h-[230px] rounded-2xl p-6 border border-white/25 bg-gradient-to-br from-[#121620]/90 to-[#0A0D14]/95 text-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] backdrop-blur-2xl transform -rotate-3 hover:rotate-0 transition-transform duration-500 select-none">
-                {/* Internal Card Glow */}
-                <div className="absolute right-0 bottom-0 w-36 h-36 bg-gradient-to-tl from-orange-500/40 via-amber-400/20 to-transparent rounded-full blur-2xl pointer-events-none"></div>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <Link href="/register" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#5E9FE8] px-5 text-sm font-semibold text-slate-950 transition-all hover:-translate-y-0.5 hover:bg-[#7AB2EE]">Get started free <Arrow /></Link>
+              <Link href="/developer/tester" className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/12 bg-white/[0.045] px-5 text-sm font-semibold text-white transition-colors hover:bg-white/[0.09]">Try API sandbox</Link>
+            </div>
 
-                <div className="flex justify-between items-center mb-6">
-                  <span className="font-bold tracking-widest text-base font-mono text-white">VISA</span>
-                  <div className="flex -space-x-1.5">
-                    <div className="w-6 h-6 rounded-full bg-red-500 shadow"></div>
-                    <div className="w-6 h-6 rounded-full bg-amber-400 shadow"></div>
-                  </div>
-                </div>
-
-                <div className="my-5">
-                  <p className="text-[10px] font-mono text-slate-400 uppercase tracking-widest mb-1">Card Number</p>
-                  <p className="font-mono text-base sm:text-lg font-bold tracking-widest text-white">
-                    4804 9556 8008 8300
-                  </p>
-                </div>
-
-                <div className="flex justify-between items-end pt-1">
-                  <div>
-                    <p className="text-[9px] font-mono text-slate-400 uppercase tracking-widest">Card Holder Name</p>
-                    <p className="text-xs font-semibold tracking-wide text-white uppercase">Damir Kadorov</p>
-                  </div>
-                  <span className="font-mono text-xs text-slate-300">01/29</span>
-                </div>
-              </div>
+            <div className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 text-xs text-slate-500">
+              <span className="flex items-center gap-2"><span className="text-emerald-300">✓</span> No setup fee</span>
+              <span className="flex items-center gap-2"><span className="text-emerald-300">✓</span> Virtual card in seconds</span>
+              <span className="flex items-center gap-2"><span className="text-emerald-300">✓</span> Demo money only</span>
             </div>
           </div>
-        </section>
 
-        {/* Live Activity Ticker (Reference: Image 3 DigiPay Bottom Carousel) */}
-        <section className="border-y border-white/[0.07] bg-white/[0.02] py-4 overflow-hidden">
-          <div className="container mx-auto px-4 max-w-7xl">
-            <div className="flex items-center gap-4 overflow-x-auto no-scrollbar py-2">
-              <span className="text-xs font-mono uppercase tracking-wider text-slate-500 shrink-0 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                Live Activity
-              </span>
-              <div className="flex items-center gap-3 shrink-0">
-                {tickerItems.map((item, i) => (
-                  <div key={i} className="ticker-pill">
-                    <div>
-                      <p className="text-xs font-semibold text-white">{item.title}</p>
-                      <p className="text-[10px] text-slate-400">{item.time} &bull; {item.subtitle}</p>
+          <div className="relative mx-auto w-full max-w-[560px] lg:col-span-6">
+            <div className="absolute -inset-10 rounded-full bg-blue-500/10 blur-3xl" />
+            <div className="relative overflow-hidden rounded-[28px] border border-white/12 bg-[#101318]/90 p-4 shadow-[0_32px_90px_rgba(0,0,0,.5)] backdrop-blur-xl sm:p-5">
+              <div className="mb-4 flex items-center justify-between px-1">
+                <div>
+                  <p className="text-xs text-slate-500">Total balance</p>
+                  <p className="mt-1 text-3xl font-semibold tracking-[-0.04em] text-white">$24,820.40</p>
+                </div>
+                <button aria-label="More account options" className="grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/[0.04] text-slate-400 transition-colors hover:bg-white/[0.08] hover:text-white">•••</button>
+              </div>
+
+              <div className="relative mb-4 min-h-[210px] overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br from-[#286FBF] via-[#174D91] to-[#0B2446] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,.18)]">
+                <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full border-[38px] border-white/[0.08]" />
+                <div className="absolute -bottom-24 right-14 h-48 w-48 rounded-full border-[30px] border-cyan-200/[0.08]" />
+                <div className="relative flex h-full flex-col justify-between">
+                  <div className="flex items-start justify-between">
+                    <Logo size={30} showText={false} />
+                    <span className="text-lg font-semibold italic tracking-tight">VISA</span>
+                  </div>
+                  <div className="mt-14">
+                    <p className="font-mono text-lg tracking-[0.16em] text-white sm:text-xl">4804 •••• •••• 8300</p>
+                    <div className="mt-5 flex items-end justify-between">
+                      <div>
+                        <p className="text-[9px] uppercase tracking-[0.16em] text-blue-100/60">Card holder</p>
+                        <p className="mt-1 text-xs font-medium uppercase tracking-wider">Damir Kadorov</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[9px] uppercase tracking-[0.16em] text-blue-100/60">Expires</p>
+                        <p className="mt-1 text-xs font-medium">01/29</p>
+                      </div>
                     </div>
-                    <span className="font-mono text-xs font-bold text-[#d4ff00] pl-2 border-l border-white/10">
-                      {item.amount}
-                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-white/[0.08] bg-black/20 p-2">
+                {activity.map((item) => (
+                  <div key={item.name} className="flex items-center justify-between rounded-xl px-3 py-3 transition-colors hover:bg-white/[0.04]">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-white/[0.06] text-sm text-blue-300">↗</span>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-medium text-slate-200">{item.name}</p>
+                        <p className="truncate text-xs text-slate-500">{item.detail}</p>
+                      </div>
+                    </div>
+                    <span className={`ml-4 text-sm font-medium ${item.tone}`}>{item.amount}</span>
                   </div>
                 ))}
               </div>
@@ -209,149 +143,54 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Bento Feature Section (Reference: Image 4 CRYPTO.) */}
-        <section className="container mx-auto px-4 max-w-7xl py-24">
-          <div className="max-w-2xl mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-3">
-              Your <span className="text-[#d4ff00]">trusted</span> partner of modern digital finance.
-            </h2>
-            <p className="text-sm text-slate-400">
-              Polkadot, IBAN accounts, and high-security payment gateways uniting a growing ecosystem of specialized blockchain and fiat rails.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Card 01 (Dark Frosted) */}
-            <div className="bezel-card">
-              <div className="bezel-card-inner p-8 bg-[#090D14]/90 border border-white/10 flex flex-col justify-between min-h-[280px]">
-                <div>
-                  <span className="text-sm font-mono text-slate-400 font-bold block mb-4">01.</span>
-                  <h3 className="text-xl font-bold text-white mb-3">Service for Any Level of Expertise.</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
-                    Intuitive personal banking combined with institutional liquidity, multi-currency IBANs, and NFC POS terminal infrastructure.
-                  </p>
-                </div>
-                <div className="pt-6">
-                  <Link href="/cards" className="text-xs font-semibold text-slate-300 hover:text-white flex items-center gap-1.5 transition-colors">
-                    <span>Explore Cards</span>
-                    <span>→</span>
-                  </Link>
-                </div>
+        <section className="border-y border-white/[0.08] bg-white/[0.025]">
+          <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px px-5 py-7 sm:grid-cols-4 lg:px-8">
+            {[['7', 'fiat currencies'], ['8', 'digital assets'], ['< 1s', 'transfer updates'], ['24/7', 'sandbox access']].map(([value, label]) => (
+              <div key={label} className="px-3 py-3 text-center">
+                <p className="text-xl font-semibold tracking-tight text-white">{value}</p>
+                <p className="mt-1 text-xs text-slate-500">{label}</p>
               </div>
-            </div>
-
-            {/* Card 02 (Featured Electric Neon Lime Card from Image 4!) */}
-            <div className="card-neon-lime p-8 flex flex-col justify-between min-h-[280px] text-black">
-              <div>
-                <span className="text-sm font-mono font-bold block mb-4 text-black/80">02.</span>
-                <h3 className="text-xl font-extrabold mb-3 text-black">Industry best practices.</h3>
-                <p className="text-xs text-black/80 font-medium leading-relaxed">
-                  Cryptographically secured token vaults, sub-second API card issuance, and automated fraud prevention tested under 100,000+ daily events.
-                </p>
-              </div>
-              <div className="pt-6">
-                <Link
-                  href="/developer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black text-[#d4ff00] text-xs font-bold hover:bg-black/90 transition-all active:scale-95"
-                >
-                  <span>Learn More</span>
-                  <span>→</span>
-                </Link>
-              </div>
-            </div>
-
-            {/* Card 03 (Dark Frosted) */}
-            <div className="bezel-card">
-              <div className="bezel-card-inner p-8 bg-[#090D14]/90 border border-white/10 flex flex-col justify-between min-h-[280px]">
-                <div>
-                  <span className="text-sm font-mono text-slate-400 font-bold block mb-4">03.</span>
-                  <h3 className="text-xl font-bold text-white mb-3">Protected by Reserve Insurance.</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
-                    1:1 backing for all customer deposits, segregated fiat accounts across Tier-1 institutions, and automated cold-storage security.
-                  </p>
-                </div>
-                <div className="pt-6">
-                  <Link href="/trading" className="text-xs font-semibold text-slate-300 hover:text-white flex items-center gap-1.5 transition-colors">
-                    <span>View Markets</span>
-                    <span>→</span>
-                  </Link>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </section>
 
-        {/* Interactive Wave Chart & Live Rate Section (Reference: Image 4 CRYPTO bottom section) */}
-        <section className="container mx-auto px-4 max-w-7xl pb-24">
-          <div className="bezel-card">
-            <div className="bezel-card-inner p-8 md:p-12 bg-gradient-to-br from-[#080B11] to-[#040609] border border-white/10">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                {/* Left: Wave Chart Mockup with Floating Crypto Badges */}
-                <div className="lg:col-span-7 relative min-h-[260px] flex flex-col justify-between">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-3 rounded-xl bg-white/[0.04] border border-white/10">
-                      <span className="text-xs font-mono text-slate-400">Average Rate</span>
-                      <p className="text-2xl font-bold font-mono text-white">$4,528.00 USD</p>
-                      <span className="text-[10px] text-[#d4ff00] font-mono">↗ +45.66% 24h</span>
-                    </div>
+        <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+          <div className="mb-12 grid gap-5 lg:grid-cols-2 lg:items-end">
+            <div>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-blue-300">Built around real life</p>
+              <h2 className="max-w-xl text-3xl font-semibold tracking-[-0.04em] text-white sm:text-4xl">Everything you need.<br />Nothing you do not.</h2>
+            </div>
+            <p className="max-w-lg text-sm leading-6 text-slate-400 lg:justify-self-end">Clear balances, purposeful controls, and one consistent experience across personal banking, business payments, and developer tools.</p>
+          </div>
 
-                    <div className="p-3 rounded-xl bg-white/[0.04] border border-white/10">
-                      <span className="text-xs font-mono text-slate-400">Volume</span>
-                      <p className="text-2xl font-bold font-mono text-white">1,44,528 BTC</p>
-                      <span className="text-[10px] text-slate-400 font-mono">Global Liquidity</span>
-                    </div>
-                  </div>
-
-                  {/* SVG Glowing Wave Path */}
-                  <div className="relative w-full h-32">
-                    <svg className="w-full h-full" viewBox="0 0 600 120" preserveAspectRatio="none">
-                      <defs>
-                        <linearGradient id="waveGlow" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#d4ff00" stopOpacity="0.3" />
-                          <stop offset="100%" stopColor="#d4ff00" stopOpacity="0" />
-                        </linearGradient>
-                      </defs>
-                      <path
-                        d="M0,80 C100,20 180,100 280,40 C380,-10 460,70 600,25 L600,120 L0,120 Z"
-                        fill="url(#waveGlow)"
-                      />
-                      <path
-                        d="M0,80 C100,20 180,100 280,40 C380,-10 460,70 600,25"
-                        fill="none"
-                        stroke="#d4ff00"
-                        strokeWidth="3"
-                      />
-                      {/* Floating Coin Nodes */}
-                      <circle cx="100" cy="50" r="10" fill="#f59e0b" stroke="#000" strokeWidth="2" />
-                      <circle cx="280" cy="40" r="10" fill="#10b981" stroke="#000" strokeWidth="2" />
-                      <circle cx="480" cy="55" r="10" fill="#e11d48" stroke="#000" strokeWidth="2" />
-                    </svg>
-                  </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {features.map((feature, index) => (
+              <article key={feature.number} className={`group flex min-h-[300px] flex-col justify-between rounded-2xl border p-6 transition-all hover:-translate-y-1 ${index === 1 ? 'border-blue-300/30 bg-[#5E9FE8] text-slate-950 shadow-[0_20px_60px_rgba(39,131,222,.18)]' : 'border-white/[0.09] bg-white/[0.035] text-white hover:border-white/20 hover:bg-white/[0.055]'}`}>
+                <div>
+                  <span className={`font-mono text-xs ${index === 1 ? 'text-slate-950/60' : 'text-slate-500'}`}>{feature.number}</span>
+                  <h3 className="mt-14 text-2xl font-semibold tracking-[-0.035em]">{feature.title}</h3>
+                  <p className={`mt-3 text-sm leading-6 ${index === 1 ? 'text-slate-950/70' : 'text-slate-400'}`}>{feature.copy}</p>
                 </div>
+                <Link href={feature.href} className="mt-8 inline-flex min-h-11 items-center gap-2 text-sm font-semibold">{feature.label} <Arrow /></Link>
+              </article>
+            ))}
+          </div>
+        </section>
 
-                {/* Right: Call to Action */}
-                <div className="lg:col-span-5 space-y-4">
-                  <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-white leading-tight">
-                    Trusted platform <br />
-                    <span className="text-[#d4ff00]">anytime &amp; anywhere.</span>
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                    Open an account in 2 minutes, get your first virtual card immediately, and connect your business directly to the NovaPay Payment Gateway.
-                  </p>
-                  <div className="pt-2 flex flex-wrap items-center gap-3">
-                    <Link href="/register">
-                      <button className="px-6 py-3 rounded-full bg-[#d4ff00] hover:bg-[#bce400] text-black font-extrabold text-xs transition-all shadow-lg active:scale-95 cursor-pointer">
-                        Get Started Now →
-                      </button>
-                    </Link>
-                    <Link href="/developer/tester">
-                      <button className="px-5 py-3 rounded-full bg-white/[0.08] hover:bg-white/[0.15] text-white font-semibold text-xs transition-all border border-white/15 cursor-pointer">
-                        Test API Gateway
-                      </button>
-                    </Link>
-                  </div>
-                </div>
+        <section className="mx-auto max-w-7xl px-5 pb-20 lg:px-8 lg:pb-28">
+          <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-gradient-to-br from-[#111923] to-[#0B0E13] px-6 py-12 sm:px-10 lg:px-14">
+            <div className="absolute -right-16 -top-28 h-80 w-80 rounded-full bg-blue-500/15 blur-3xl" />
+            <div className="relative grid gap-10 lg:grid-cols-2 lg:items-center">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-300">Ready when you are</p>
+                <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-white sm:text-4xl">A smarter account starts here.</h2>
+                <p className="mt-4 max-w-lg text-sm leading-6 text-slate-400">Join the product preview and get updates as new payment, card, and trading features launch.</p>
               </div>
+              <form onSubmit={handleSubscribe} className="flex flex-col gap-3 sm:flex-row lg:justify-end">
+                <label htmlFor="preview-email" className="sr-only">Email address</label>
+                <input id="preview-email" type="email" required value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" className="min-h-12 w-full rounded-xl border border-white/12 bg-black/20 px-4 text-sm text-white placeholder:text-slate-500 focus:border-blue-300 focus:outline-none sm:max-w-xs" />
+                <button type="submit" className="min-h-12 whitespace-nowrap rounded-xl bg-white px-5 text-sm font-semibold text-slate-950 transition-colors hover:bg-blue-50">{subscribed ? 'You are on the list ✓' : 'Join preview'}</button>
+              </form>
             </div>
           </div>
         </section>
