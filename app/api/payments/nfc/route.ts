@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     if (error) return error;
 
     const body = await request.json();
-    const { amount, cardId, description } = body;
+    const { amount, cardId, description, currency = 'USD' } = body;
 
     // Validate input
     if (!amount || amount <= 0) {
@@ -55,7 +55,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const paymentCurrency: Currency = card ? card.currency : 'USD';
+    const validCurrencies: Currency[] = ['USD', 'EUR', 'GBP', 'CHF', 'JPY', 'CAD', 'AUD'];
+    if (!validCurrencies.includes(currency as Currency)) {
+      return NextResponse.json({ error: 'Invalid currency' }, { status: 400 });
+    }
+
+    const paymentCurrency: Currency = card ? card.currency : currency as Currency;
     const userBalances = user.balances && user.balances.length > 0
       ? user.balances
       : [{ currency: 'USD' as Currency, amount: user.balance || 0 }];

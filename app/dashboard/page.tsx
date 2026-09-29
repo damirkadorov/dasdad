@@ -8,7 +8,7 @@ import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
 import TransactionItem from '@/components/transactions/TransactionItem';
 import { DashboardSkeleton } from '@/components/ui/Skeleton';
-import { formatCurrencyAmount } from '@/lib/utils/currency';
+import { convertCurrency, formatCurrencyAmount } from '@/lib/utils/currency';
 import { formatCryptoAmount, calculatePortfolioValue, cryptoToFiat } from '@/lib/utils/crypto';
 import { Transaction, CurrencyBalance, CryptoWallet, Currency } from '@/lib/db/types';
 import { WalletIcon, TopUpIcon, SendIcon, CryptoIcon, CardIcon, TrendingUpIcon } from '@/components/icons/Icons';
@@ -90,9 +90,13 @@ export default function Dashboard() {
     );
   }
 
-  const totalFiatBalance = profile?.balances?.reduce((sum, b) => sum + b.amount, 0) || 0;
+  const displayCurrency = profile?.preferredCurrency || 'USD';
+  const totalFiatBalance = profile?.balances?.reduce(
+    (sum, balance) => sum + convertCurrency(balance.amount, balance.currency, displayCurrency),
+    0
+  ) || 0;
   const cryptoPortfolioValue = profile?.cryptoWallets && profile.cryptoWallets.length > 0
-    ? calculatePortfolioValue(profile.cryptoWallets, profile.preferredCurrency || 'USD')
+    ? calculatePortfolioValue(profile.cryptoWallets, displayCurrency)
     : 0;
   const totalBalance = totalFiatBalance + cryptoPortfolioValue;
 

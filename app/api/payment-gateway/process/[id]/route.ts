@@ -77,9 +77,6 @@ export async function POST(
       );
     }
 
-    // Update payment to processing
-    await updatePayment(paymentId, { status: 'processing' });
-
     // Find the card in the database
     const normalizedCardNumber = cardNumber.replace(/\s/g, '');
     const normalizedExpiry = expiryDate.replace(/\//g, '');
@@ -96,10 +93,6 @@ export async function POST(
     });
 
     if (!card) {
-      await updatePayment(paymentId, { 
-        status: 'failed',
-        failedReason: 'Invalid card details'
-      });
       return NextResponse.json(
         { error: 'Invalid card details' },
         { status: 400 }
@@ -110,10 +103,6 @@ export async function POST(
     const payer = await getUserById(card.userId);
     
     if (!payer) {
-      await updatePayment(paymentId, { 
-        status: 'failed',
-        failedReason: 'Card owner not found'
-      });
       return NextResponse.json(
         { error: 'Card owner not found' },
         { status: 404 }
@@ -125,10 +114,6 @@ export async function POST(
     const payerBalance = payerBalances.find(b => b.currency === payment.currency);
     
     if (!payerBalance || payerBalance.amount < payment.amount) {
-      await updatePayment(paymentId, { 
-        status: 'failed',
-        failedReason: 'Insufficient balance'
-      });
       return NextResponse.json(
         { error: 'Insufficient balance' },
         { status: 400 }
@@ -139,10 +124,6 @@ export async function POST(
     const merchant = await getUserById(payment.merchantId);
     
     if (!merchant) {
-      await updatePayment(paymentId, { 
-        status: 'failed',
-        failedReason: 'Merchant not found'
-      });
       return NextResponse.json(
         { error: 'Merchant not found' },
         { status: 404 }
@@ -164,7 +145,7 @@ export async function POST(
     );
     
     // Update merchant balance (add)
-    let merchantCurrencyBalance = merchantBalances.find(b => b.currency === payment.currency);
+    const merchantCurrencyBalance = merchantBalances.find(b => b.currency === payment.currency);
     const updatedMerchantBalances = merchantCurrencyBalance
       ? merchantBalances.map(b => 
           b.currency === payment.currency
@@ -176,6 +157,10 @@ export async function POST(
     // Update both users
     const payerNewBal = payerBalance.amount - payment.amount;
     const merchantNewBal = merchantCurrencyBalance ? merchantCurrencyBalance.amount + merchantAmount : merchantAmount;
+
+    // Only lock the session after all user-correctable validations pass.
+    // Invalid card details or a low balance can therefore be fixed and retried.
+    await updatePayment(paymentId, { status: 'processing' });
 
     await updateUser(payer.id, { 
       balances: updatedPayerBalances,
