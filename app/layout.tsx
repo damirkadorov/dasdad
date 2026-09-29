@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PayDemo - Smart Banking App",
-  description: "Experience the future of banking with instant transfers, virtual cards, and NFC payments",
+  title: "Lingoung — Banking, cards and digital assets",
+  description: "A modern multi-currency banking demo with cards, payments, digital assets, and developer tools.",
 };
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
         {children}
       </body>

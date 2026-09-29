@@ -58,7 +58,7 @@ export default function DeveloperPage() {
   <script src="${origin}/lingoung-pay.js"></script>
   <style>
     body {
-      background: #05070B;
+      background: #07090D;
       color: #fff;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       display: flex;
@@ -82,8 +82,8 @@ export default function DeveloperPage() {
       display: inline-block;
       padding: 4px 12px;
       border-radius: 9999px;
-      background: rgba(212, 255, 0, 0.1);
-      color: #d4ff00;
+      background: rgba(39, 131, 222, 0.1);
+      color: #5E9FE8;
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 1px;
@@ -97,8 +97,8 @@ export default function DeveloperPage() {
       color: #fff;
     }
     .btn {
-      background: #d4ff00;
-      color: #05070B;
+      background: #5E9FE8;
+      color: #07090D;
       font-weight: 800;
       font-size: 15px;
       padding: 16px 28px;
@@ -109,9 +109,9 @@ export default function DeveloperPage() {
       transition: all 0.2s;
     }
     .btn:hover {
-      background: #bce600;
+      background: #7AB2EE;
       transform: translateY(-1px);
-      box-shadow: 0 10px 25px rgba(212,255,0,0.3);
+      box-shadow: 0 10px 25px rgba(39,131,222,0.3);
     }
   </style>
 </head>
@@ -276,14 +276,14 @@ export default function DeveloperPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#05070B] text-zinc-100 bg-cyber-grid">
+    <div className="min-h-screen flex flex-col bg-[#07090D] text-zinc-100 bg-cyber-grid">
       <Navigation />
       
       <main className="flex-1 container mx-auto px-4 py-8 max-w-6xl animate-fadeIn">
         {/* Header */}
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#d4ff00]/10 border border-[#d4ff00]/30 text-xs font-bold text-[#d4ff00] mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-[#5E9FE8]/10 border border-[#5E9FE8]/30 text-xs font-bold text-[#5E9FE8] mb-3">
               <CodeIcon size={14} />
               <span>DEVELOPER PORTAL &bull; API ENGINE</span>
             </div>
@@ -297,7 +297,7 @@ export default function DeveloperPage() {
 
           <Button
             onClick={() => setShowForm(!showForm)}
-            className="self-start sm:self-auto bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold shadow-lg shadow-[#d4ff00]/20"
+            className="self-start sm:self-auto bg-[#5E9FE8] hover:bg-[#7AB2EE] text-[#07090D] font-extrabold shadow-lg shadow-[#5E9FE8]/20"
           >
             {showForm ? '✕ Close Form' : '+ Generate API Key'}
           </Button>
@@ -336,7 +336,7 @@ export default function DeveloperPage() {
               )}
 
               <div className="flex gap-3 pt-2">
-                <Button type="submit" isLoading={creating} className="bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold">
+                <Button type="submit" isLoading={creating} className="bg-[#5E9FE8] hover:bg-[#7AB2EE] text-[#07090D] font-extrabold">
                   Create API Key
                 </Button>
                 <Button
@@ -359,14 +359,14 @@ export default function DeveloperPage() {
               <h2 className="text-xl font-extrabold text-white">Active Merchant Credentials</h2>
               <p className="text-xs text-zinc-400 mt-0.5">Keep your keys confidential. Never expose private keys in client-side code.</p>
             </div>
-            <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-white/[0.06] border border-white/10 text-[#d4ff00]">
+            <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-white/[0.06] border border-white/10 text-[#5E9FE8]">
               {apiKeys.length} {apiKeys.length === 1 ? 'Key' : 'Keys'}
             </span>
           </div>
 
           {loading ? (
             <div className="py-12 text-center">
-              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#d4ff00] mx-auto"></div>
+              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#5E9FE8] mx-auto"></div>
               <p className="mt-3 text-xs text-zinc-400">Loading API keys...</p>
             </div>
           ) : apiKeys.length === 0 ? (
@@ -376,7 +376,7 @@ export default function DeveloperPage() {
               <p className="text-xs text-zinc-400 mb-4 max-w-sm mx-auto">
                 Generate your first key to start accepting automated transactions via our REST API.
               </p>
-              <Button size="sm" onClick={() => setShowForm(true)} className="bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold">
+              <Button size="sm" onClick={() => setShowForm(true)} className="bg-[#5E9FE8] hover:bg-[#7AB2EE] text-[#07090D] font-extrabold">
                 Create Your First Key
               </Button>
             </div>
@@ -385,7 +385,7 @@ export default function DeveloperPage() {
               {apiKeys.map((apiKey) => (
                 <div
                   key={apiKey.id}
-                  className="p-5 rounded-2xl border border-white/10 bg-[#05070B] hover:border-[#d4ff00]/40 transition-all duration-200"
+                  className="p-5 rounded-2xl border border-white/10 bg-[#07090D] hover:border-[#5E9FE8]/40 transition-all duration-200"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
                     <div>
@@ -418,7 +418,7 @@ export default function DeveloperPage() {
                   </div>
 
                   <div className="flex items-center gap-2 bg-white/[0.03] p-2.5 rounded-xl border border-white/10 mb-3">
-                    <code className="text-xs font-mono text-[#d4ff00] flex-1 truncate select-all">
+                    <code className="text-xs font-mono text-[#5E9FE8] flex-1 truncate select-all">
                       {apiKey.key}
                     </code>
                     <button
@@ -453,7 +453,7 @@ export default function DeveloperPage() {
             </div>
             <Link
               href="/developer/tester"
-              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] text-xs font-extrabold rounded-xl shadow-lg shadow-[#d4ff00]/20 transition-all active:scale-[0.98]"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#5E9FE8] hover:bg-[#7AB2EE] text-[#07090D] text-xs font-extrabold rounded-xl shadow-lg shadow-[#5E9FE8]/20 transition-all active:scale-[0.98]"
             >
               <span>🧪 Launch Live API Sandbox</span>
               <span>→</span>
@@ -462,27 +462,27 @@ export default function DeveloperPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Step 1 */}
-            <div className="p-5 rounded-2xl border border-white/10 bg-[#05070B] flex flex-col justify-between">
+            <div className="p-5 rounded-2xl border border-white/10 bg-[#07090D] flex flex-col justify-between">
               <div>
-                <div className="w-8 h-8 rounded-lg bg-[#d4ff00] text-[#05070B] font-extrabold flex items-center justify-center text-sm mb-3">1</div>
+                <div className="w-8 h-8 rounded-lg bg-[#5E9FE8] text-[#07090D] font-extrabold flex items-center justify-center text-sm mb-3">1</div>
                 <h3 className="font-bold text-white text-sm mb-2">Create Payment Session</h3>
                 <p className="text-xs text-zinc-400 mb-4 leading-relaxed">
                   Make a server-to-server POST request with your API Key to initialize the payment intent.
                 </p>
               </div>
               <div className="bg-black/60 border border-white/10 text-zinc-300 p-3 rounded-xl text-[11px] font-mono overflow-x-auto">
-                <p className="text-[#d4ff00] font-bold mb-1">POST /api/payment-gateway/payments</p>
+                <p className="text-[#5E9FE8] font-bold mb-1">POST /api/payment-gateway/payments</p>
                 <p>{`{ "amount": 100, "currency": "USD", "description": "Order #4092" }`}</p>
               </div>
             </div>
 
             {/* Step 2 */}
-            <div className="p-5 rounded-2xl border border-white/10 bg-[#05070B] flex flex-col justify-between">
+            <div className="p-5 rounded-2xl border border-white/10 bg-[#07090D] flex flex-col justify-between">
               <div>
                 <div className="w-8 h-8 rounded-lg bg-blue-500 text-white font-extrabold flex items-center justify-center text-sm mb-3">2</div>
                 <h3 className="font-bold text-white text-sm mb-2">Redirect Customer</h3>
                 <p className="text-xs text-zinc-400 mb-4 leading-relaxed">
-                  Send the customer to the secure hosted <code className="bg-white/10 px-1 py-0.5 rounded text-[#d4ff00]">paymentUrl</code> returned in the response payload.
+                  Send the customer to the secure hosted <code className="bg-white/10 px-1 py-0.5 rounded text-[#5E9FE8]">paymentUrl</code> returned in the response payload.
                 </p>
               </div>
               <div className="bg-black/60 border border-white/10 text-zinc-300 p-3 rounded-xl text-[11px] font-mono overflow-x-auto">
@@ -492,7 +492,7 @@ export default function DeveloperPage() {
             </div>
 
             {/* Step 3 */}
-            <div className="p-5 rounded-2xl border border-white/10 bg-[#05070B] flex flex-col justify-between">
+            <div className="p-5 rounded-2xl border border-white/10 bg-[#07090D] flex flex-col justify-between">
               <div>
                 <div className="w-8 h-8 rounded-lg bg-emerald-500 text-white font-extrabold flex items-center justify-center text-sm mb-3">3</div>
                 <h3 className="font-bold text-white text-sm mb-2">Receive Webhooks</h3>
@@ -510,11 +510,11 @@ export default function DeveloperPage() {
 
         {/* Ready-to-Use HTML Integration Section */}
         <div className="mb-12 p-6 sm:p-8 rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-xl shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-[#d4ff00]/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#5E9FE8]/5 rounded-full blur-3xl pointer-events-none" />
 
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6 relative z-10">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#d4ff00]/10 border border-[#d4ff00]/30 text-xs font-bold text-[#d4ff00] mb-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-[#5E9FE8]/10 border border-[#5E9FE8]/30 text-xs font-bold text-[#5E9FE8] mb-2">
                 <span>⚡</span>
                 <span>Zero-Config Drop-in Integration</span>
               </div>
@@ -537,7 +537,7 @@ export default function DeveloperPage() {
               <button
                 onClick={handleTestDropInWidget}
                 disabled={testTesting}
-                className="px-4 py-2.5 rounded-xl bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] text-xs font-extrabold shadow-lg shadow-[#d4ff00]/20 transition-all flex items-center gap-2 cursor-pointer active:scale-95 disabled:opacity-50"
+                className="px-4 py-2.5 rounded-xl bg-[#5E9FE8] hover:bg-[#7AB2EE] text-[#07090D] text-xs font-extrabold shadow-lg shadow-[#5E9FE8]/20 transition-all flex items-center gap-2 cursor-pointer active:scale-95 disabled:opacity-50"
               >
                 <span>{testTesting ? '⏳' : '⚡'}</span>
                 <span>{testTesting ? 'Launching...' : 'Test Drop-in Widget Live'}</span>
@@ -546,7 +546,7 @@ export default function DeveloperPage() {
           </div>
 
           {testResult && (
-            <div className="mb-6 p-4 rounded-2xl bg-[#d4ff00]/10 border border-[#d4ff00]/30 text-xs text-[#d4ff00] flex items-center justify-between animate-fadeIn">
+            <div className="mb-6 p-4 rounded-2xl bg-[#5E9FE8]/10 border border-[#5E9FE8]/30 text-xs text-[#5E9FE8] flex items-center justify-between animate-fadeIn">
               <div className="flex items-center gap-2">
                 <span>⚡</span>
                 <span className="font-semibold">{testResult}</span>
@@ -561,7 +561,7 @@ export default function DeveloperPage() {
               onClick={() => setActiveHtmlTab('sdk')}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 activeHtmlTab === 'sdk'
-                  ? 'bg-[#d4ff00] text-black shadow-md shadow-[#d4ff00]/20'
+                  ? 'bg-[#5E9FE8] text-black shadow-md shadow-[#5E9FE8]/20'
                   : 'bg-white/[0.04] text-zinc-400 hover:text-white hover:bg-white/[0.08]'
               }`}
             >
@@ -571,7 +571,7 @@ export default function DeveloperPage() {
               onClick={() => setActiveHtmlTab('standalone')}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 activeHtmlTab === 'standalone'
-                  ? 'bg-[#d4ff00] text-black shadow-md shadow-[#d4ff00]/20'
+                  ? 'bg-[#5E9FE8] text-black shadow-md shadow-[#5E9FE8]/20'
                   : 'bg-white/[0.04] text-zinc-400 hover:text-white hover:bg-white/[0.08]'
               }`}
             >
@@ -581,7 +581,7 @@ export default function DeveloperPage() {
               onClick={() => setActiveHtmlTab('iframe')}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 activeHtmlTab === 'iframe'
-                  ? 'bg-[#d4ff00] text-black shadow-md shadow-[#d4ff00]/20'
+                  ? 'bg-[#5E9FE8] text-black shadow-md shadow-[#5E9FE8]/20'
                   : 'bg-white/[0.04] text-zinc-400 hover:text-white hover:bg-white/[0.08]'
               }`}
             >
@@ -591,7 +591,7 @@ export default function DeveloperPage() {
               onClick={() => setActiveHtmlTab('react')}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 activeHtmlTab === 'react'
-                  ? 'bg-[#d4ff00] text-black shadow-md shadow-[#d4ff00]/20'
+                  ? 'bg-[#5E9FE8] text-black shadow-md shadow-[#5E9FE8]/20'
                   : 'bg-white/[0.04] text-zinc-400 hover:text-white hover:bg-white/[0.08]'
               }`}
             >
@@ -615,7 +615,7 @@ export default function DeveloperPage() {
   data-amount="100.00"
   data-currency="USD"
   data-description="Order #4092 - Cyberpunk Sneakers"
-  style="background:#d4ff00;color:#05070B;font-weight:800;padding:14px 28px;border-radius:12px;border:none;cursor:pointer;font-family:sans-serif;box-shadow:0 10px 20px rgba(212,255,0,0.25);">
+  style="background:#5E9FE8;color:#07090D;font-weight:800;padding:14px 28px;border-radius:12px;border:none;cursor:pointer;font-family:sans-serif;box-shadow:0 10px 20px rgba(39,131,222,0.25);">
   ⚡ Pay $100.00 with Lingoung Bank
 </button>
 
@@ -631,18 +631,18 @@ export default function DeveloperPage() {
                 </button>
               </div>
 
-              <div className="bg-[#05070B] border border-white/10 p-4 rounded-2xl text-[12px] font-mono text-zinc-300 overflow-x-auto leading-relaxed shadow-inner">
+              <div className="bg-[#07090D] border border-white/10 p-4 rounded-2xl text-[12px] font-mono text-zinc-300 overflow-x-auto leading-relaxed shadow-inner">
                 <p className="text-zinc-500">{`<!-- 1. Include Lingoung Pay SDK in your <head> or before </body> -->`}</p>
-                <p className="text-blue-400">&lt;<span className="text-rose-400">script</span> <span className="text-amber-300">src</span>=<span className="text-emerald-300">&quot;{typeof window !== 'undefined' ? window.location.origin : 'https://lingoung-bank.vercel.app'}/lingoung-pay.js&quot;</span>&gt;&lt;/<span className="text-rose-400">script</span>&gt;</p>
+                <p className="text-blue-400">&lt;<span className="text-rose-400">script</span> <span className="text-blue-200">src</span>=<span className="text-emerald-300">&quot;{typeof window !== 'undefined' ? window.location.origin : 'https://lingoung-bank.vercel.app'}/lingoung-pay.js&quot;</span>&gt;&lt;/<span className="text-rose-400">script</span>&gt;</p>
                 <br />
                 <p className="text-zinc-500">{`<!-- 2. Drop-in Checkout Button (pre-configured with your active API key) -->`}</p>
                 <p className="text-blue-400">&lt;<span className="text-rose-400">button</span></p>
-                <p className="text-amber-300 pl-4">data-lingoung-pay</p>
-                <p className="text-amber-300 pl-4">data-key=<span className="text-emerald-300">&quot;{activeApiKey}&quot;</span></p>
-                <p className="text-amber-300 pl-4">data-amount=<span className="text-emerald-300">&quot;100.00&quot;</span></p>
-                <p className="text-amber-300 pl-4">data-currency=<span className="text-emerald-300">&quot;USD&quot;</span></p>
-                <p className="text-amber-300 pl-4">data-description=<span className="text-emerald-300">&quot;Order #4092 - Cyberpunk Sneakers&quot;</span></p>
-                <p className="text-amber-300 pl-4">style=<span className="text-emerald-300">&quot;background:#d4ff00;color:#05070B;font-weight:800;padding:14px 28px;border-radius:12px;border:none;cursor:pointer;&quot;</span>&gt;</p>
+                <p className="text-blue-200 pl-4">data-lingoung-pay</p>
+                <p className="text-blue-200 pl-4">data-key=<span className="text-emerald-300">&quot;{activeApiKey}&quot;</span></p>
+                <p className="text-blue-200 pl-4">data-amount=<span className="text-emerald-300">&quot;100.00&quot;</span></p>
+                <p className="text-blue-200 pl-4">data-currency=<span className="text-emerald-300">&quot;USD&quot;</span></p>
+                <p className="text-blue-200 pl-4">data-description=<span className="text-emerald-300">&quot;Order #4092 - Cyberpunk Sneakers&quot;</span></p>
+                <p className="text-blue-200 pl-4">style=<span className="text-emerald-300">&quot;background:#5E9FE8;color:#07090D;font-weight:800;padding:14px 28px;border-radius:12px;border:none;cursor:pointer;&quot;</span>&gt;</p>
                 <p className="pl-4 text-white">⚡ Pay $100.00 with Lingoung Bank</p>
                 <p className="text-blue-400">&lt;/<span className="text-rose-400">button</span>&gt;</p>
                 <br />
@@ -662,7 +662,7 @@ export default function DeveloperPage() {
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs text-zinc-400 font-mono">checkout.html (Zero external dependencies)</span>
                 <button
-                  onClick={() => handleCopySnippet(`<button id="lingoung-checkout-btn" style="background:#d4ff00;color:#05070B;font-weight:800;padding:14px 28px;border-radius:12px;border:none;cursor:pointer;font-family:sans-serif;box-shadow:0 10px 20px rgba(212,255,0,0.25);">
+                  onClick={() => handleCopySnippet(`<button id="lingoung-checkout-btn" style="background:#5E9FE8;color:#07090D;font-weight:800;padding:14px 28px;border-radius:12px;border:none;cursor:pointer;font-family:sans-serif;box-shadow:0 10px 20px rgba(39,131,222,0.25);">
   ⚡ Pay $100.00 with Lingoung
 </button>
 
@@ -706,9 +706,9 @@ export default function DeveloperPage() {
                 </button>
               </div>
 
-              <div className="bg-[#05070B] border border-white/10 p-4 rounded-2xl text-[12px] font-mono text-zinc-300 overflow-x-auto leading-relaxed shadow-inner">
+              <div className="bg-[#07090D] border border-white/10 p-4 rounded-2xl text-[12px] font-mono text-zinc-300 overflow-x-auto leading-relaxed shadow-inner">
                 <p className="text-zinc-500">{`<!-- Fully self-contained drop-in button and handler -->`}</p>
-                <p className="text-blue-400">&lt;<span className="text-rose-400">button</span> <span className="text-amber-300">id</span>=<span className="text-emerald-300">&quot;lingoung-checkout-btn&quot;</span> <span className="text-amber-300">style</span>=<span className="text-emerald-300">&quot;background:#d4ff00;color:#05070B;font-weight:800;padding:14px 28px;border-radius:12px;border:none;cursor:pointer;&quot;</span>&gt;</p>
+                <p className="text-blue-400">&lt;<span className="text-rose-400">button</span> <span className="text-blue-200">id</span>=<span className="text-emerald-300">&quot;lingoung-checkout-btn&quot;</span> <span className="text-blue-200">style</span>=<span className="text-emerald-300">&quot;background:#5E9FE8;color:#07090D;font-weight:800;padding:14px 28px;border-radius:12px;border:none;cursor:pointer;&quot;</span>&gt;</p>
                 <p className="pl-4 text-white">⚡ Pay $100.00 with Lingoung</p>
                 <p className="text-blue-400">&lt;/<span className="text-rose-400">button</span>&gt;</p>
                 <br />
@@ -748,12 +748,12 @@ export default function DeveloperPage() {
                 </button>
               </div>
 
-              <div className="bg-[#05070B] border border-white/10 p-4 rounded-2xl text-[12px] font-mono text-zinc-300 overflow-x-auto leading-relaxed shadow-inner">
+              <div className="bg-[#07090D] border border-white/10 p-4 rounded-2xl text-[12px] font-mono text-zinc-300 overflow-x-auto leading-relaxed shadow-inner">
                 <p className="text-zinc-500">{`<!-- Embed Lingoung Bank checkout directly inside your checkout page -->`}</p>
-                <p className="text-blue-400">&lt;<span className="text-rose-400">div</span> <span className="text-amber-300">style</span>=<span className="text-emerald-300">&quot;max-width:480px;height:650px;border-radius:24px;overflow:hidden;border:1px solid rgba(255,255,255,0.15);&quot;</span>&gt;</p>
+                <p className="text-blue-400">&lt;<span className="text-rose-400">div</span> <span className="text-blue-200">style</span>=<span className="text-emerald-300">&quot;max-width:480px;height:650px;border-radius:24px;overflow:hidden;border:1px solid rgba(255,255,255,0.15);&quot;</span>&gt;</p>
                 <p className="pl-4 text-blue-400">&lt;<span className="text-rose-400">iframe</span></p>
-                <p className="pl-8 text-amber-300">src=<span className="text-emerald-300">&quot;{typeof window !== 'undefined' ? window.location.origin : 'https://lingoung-bank.vercel.app'}/payment/PAYMENT_ID?embedded=true&quot;</span></p>
-                <p className="pl-8 text-amber-300">width=<span className="text-emerald-300">&quot;100%&quot;</span> height=<span className="text-emerald-300">&quot;100%&quot;</span> frameborder=<span className="text-emerald-300">&quot;0&quot;</span> allow=<span className="text-emerald-300">&quot;payment&quot;</span>&gt;</p>
+                <p className="pl-8 text-blue-200">src=<span className="text-emerald-300">&quot;{typeof window !== 'undefined' ? window.location.origin : 'https://lingoung-bank.vercel.app'}/payment/PAYMENT_ID?embedded=true&quot;</span></p>
+                <p className="pl-8 text-blue-200">width=<span className="text-emerald-300">&quot;100%&quot;</span> height=<span className="text-emerald-300">&quot;100%&quot;</span> frameborder=<span className="text-emerald-300">&quot;0&quot;</span> allow=<span className="text-emerald-300">&quot;payment&quot;</span>&gt;</p>
                 <p className="pl-4 text-blue-400">&lt;/<span className="text-rose-400">iframe</span>&gt;</p>
                 <p className="text-blue-400">&lt;/<span className="text-rose-400">div</span>&gt;</p>
               </div>
@@ -796,7 +796,7 @@ export function LingoungPayButton({ amount = 100, currency = 'USD', description 
     <button
       onClick={handleCheckout}
       disabled={loading}
-      className="px-6 py-3.5 bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold text-sm rounded-xl shadow-lg transition-all"
+      className="px-6 py-3.5 bg-[#5E9FE8] hover:bg-[#7AB2EE] text-[#07090D] font-extrabold text-sm rounded-xl shadow-lg transition-all"
     >
       {loading ? 'Processing...' : \`Pay \${amount} \${currency} with Lingoung\`}
     </button>
@@ -808,14 +808,14 @@ export function LingoungPayButton({ amount = 100, currency = 'USD', description 
                 </button>
               </div>
 
-              <div className="bg-[#05070B] border border-white/10 p-4 rounded-2xl text-[12px] font-mono text-zinc-300 overflow-x-auto leading-relaxed shadow-inner">
+              <div className="bg-[#07090D] border border-white/10 p-4 rounded-2xl text-[12px] font-mono text-zinc-300 overflow-x-auto leading-relaxed shadow-inner">
                 <p className="text-zinc-500">{`// Ready React / Next.js button component`}</p>
                 <p className="text-blue-400">import <span className="text-white">&#123; useState &#125;</span> from <span className="text-emerald-300">&apos;react&apos;</span>;</p>
                 <br />
-                <p className="text-blue-400">export function <span className="text-amber-300">LingoungPayButton</span>() &#123;</p>
+                <p className="text-blue-400">export function <span className="text-blue-200">LingoungPayButton</span>() &#123;</p>
                 <p className="pl-4 text-blue-400">const <span className="text-white">[loading, setLoading] = useState(false);</span></p>
                 <br />
-                <p className="pl-4 text-blue-400">const <span className="text-amber-300">handleCheckout</span> = async () =&gt; &#123;</p>
+                <p className="pl-4 text-blue-400">const <span className="text-blue-200">handleCheckout</span> = async () =&gt; &#123;</p>
                 <p className="pl-8 text-zinc-300">setLoading(true);</p>
                 <p className="pl-8 text-blue-400">const <span className="text-zinc-300">res = await fetch(</span><span className="text-emerald-300">&apos;{typeof window !== 'undefined' ? window.location.origin : 'https://lingoung-bank.vercel.app'}/api/payment-gateway/payments&apos;</span>, &#123;</p>
                 <p className="pl-12 text-zinc-300">method: <span className="text-emerald-300">&apos;POST&apos;</span>,</p>
@@ -827,7 +827,7 @@ export function LingoungPayButton({ amount = 100, currency = 'USD', description 
                 <p className="pl-4 text-zinc-300">&#125;;</p>
                 <br />
                 <p className="pl-4 text-blue-400">return (</p>
-                <p className="pl-8 text-blue-400">&lt;<span className="text-rose-400">button</span> <span className="text-amber-300">onClick</span>=&#123;handleCheckout&#125; <span className="text-amber-300">className</span>=<span className="text-emerald-300">&quot;px-6 py-3 bg-[#d4ff00] text-black font-extrabold rounded-xl&quot;</span>&gt;</p>
+                <p className="pl-8 text-blue-400">&lt;<span className="text-rose-400">button</span> <span className="text-blue-200">onClick</span>=&#123;handleCheckout&#125; <span className="text-blue-200">className</span>=<span className="text-emerald-300">&quot;px-6 py-3 bg-[#5E9FE8] text-black font-extrabold rounded-xl&quot;</span>&gt;</p>
                 <p className="pl-12 text-white">&#123;loading ? &apos;Processing...&apos; : &apos;Pay with Lingoung&apos;&#125;</p>
                 <p className="pl-8 text-blue-400">&lt;/<span className="text-rose-400">button</span>&gt;</p>
                 <p className="pl-4 text-blue-400">);</p>

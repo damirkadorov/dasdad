@@ -104,7 +104,7 @@ export default function CardsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#05070B] text-white">
+      <div className="min-h-screen flex flex-col bg-[#07090D] text-white">
         <Navigation />
         <main className="flex-1">
           <CardsSkeleton />
@@ -115,11 +115,11 @@ export default function CardsPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#05070B] text-slate-100 overflow-x-hidden selection:bg-[#d4ff00] selection:text-black">
+    <div className="min-h-screen flex flex-col bg-[#07090D] text-slate-100 overflow-x-hidden selection:bg-[#5E9FE8] selection:text-slate-950">
       {/* Background Cyber Grid & Sunset Glow Orbs (References: Image 3 & 4) */}
       <div className="fixed inset-0 bg-cyber-grid pointer-events-none opacity-40 z-0"></div>
-      <div className="fixed -top-40 right-1/4 w-[600px] h-[600px] bg-gradient-to-br from-amber-500/10 via-orange-600/5 to-transparent rounded-full blur-[140px] pointer-events-none z-0"></div>
-      <div className="fixed top-1/2 -left-40 w-[500px] h-[500px] bg-gradient-to-tr from-[#d4ff00]/10 via-emerald-600/5 to-transparent rounded-full blur-[160px] pointer-events-none z-0"></div>
+      <div className="fixed -top-40 right-1/4 w-[600px] h-[600px] bg-gradient-to-br from-blue-500/10 via-cyan-600/5 to-transparent rounded-full blur-[140px] pointer-events-none z-0"></div>
+      <div className="fixed top-1/2 -left-40 w-[500px] h-[500px] bg-gradient-to-tr from-[#5E9FE8]/10 via-emerald-600/5 to-transparent rounded-full blur-[160px] pointer-events-none z-0"></div>
 
       <Navigation />
       
@@ -130,7 +130,7 @@ export default function CardsPage() {
             <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/[0.05] border border-white/10 text-[11px] font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">
               <span>Card Studio</span>
               <span>&bull;</span>
-              <span className="text-[#d4ff00]">NovaPay Cards</span>
+              <span className="text-[#5E9FE8]">Lingoung Cards</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
               <span>Virtual &amp; Physical Cards</span>
@@ -144,7 +144,7 @@ export default function CardsPage() {
             {cards.length < 5 ? (
               <button
                 onClick={() => setShowCreateForm(!showCreateForm)}
-                className="px-5 py-2.5 rounded-full bg-[#d4ff00] hover:bg-[#bce400] text-black font-extrabold text-xs transition-all active:scale-95 shadow cursor-pointer flex items-center gap-2"
+                className="px-5 py-2.5 rounded-xl bg-[#5E9FE8] hover:bg-[#7AB2EE] text-slate-950 font-extrabold text-xs transition-all active:scale-95 shadow cursor-pointer flex items-center gap-2"
               >
                 <span>{showCreateForm ? '✕ Close Studio' : '+ Issue New Card'}</span>
               </button>
@@ -158,7 +158,7 @@ export default function CardsPage() {
 
         {/* Warning notification */}
         {cards.length >= 5 && (
-          <div className="bg-amber-950/40 border border-amber-800 text-amber-300 p-4 rounded-xl mb-6 text-xs flex items-center gap-3">
+          <div className="bg-amber-950/40 border border-amber-800 text-blue-200 p-4 rounded-xl mb-6 text-xs flex items-center gap-3">
             <span>ℹ️</span>
             <span>You have reached the maximum limit of 5 cards per account. To issue a new card, delete an existing one.</span>
           </div>
@@ -167,17 +167,17 @@ export default function CardsPage() {
         {/* Create Card Form with Live Interactive Preview (References: Images 1, 2 & 3) */}
         {showCreateForm && (
           <div className="bezel-card mb-10 animate-slideDown">
-            <div className="bezel-card-inner p-6 sm:p-8 bg-[#080B12]/95 border border-white/10">
+            <div className="bezel-card-inner p-6 sm:p-8 bg-[#101318]/95 border border-white/10">
               <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/[0.08]">
                 <div>
                   <h2 className="text-lg font-bold text-white">
-                    Issue New NovaPay Card
+                    Issue New Lingoung Card
                   </h2>
                   <p className="text-xs text-slate-400 mt-0.5">
                     Customize your card format, network aesthetic, and ledger currency in real-time.
                   </p>
                 </div>
-                <span className="text-xs font-mono px-2.5 py-1 rounded-md bg-[#d4ff00]/10 text-[#d4ff00] border border-[#d4ff00]/20">
+                <span className="text-xs font-mono px-2.5 py-1 rounded-md bg-[#5E9FE8]/10 text-[#5E9FE8] border border-[#5E9FE8]/20">
                   Instant Activation
                 </span>
               </div>
@@ -196,7 +196,7 @@ export default function CardsPage() {
                         onClick={() => setCardFormat('virtual')}
                         className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${
                           cardFormat === 'virtual'
-                            ? 'border-purple-500 bg-purple-950/30 ring-1 ring-purple-500'
+                            ? 'border-blue-500 bg-blue-950/30 ring-1 ring-blue-500'
                             : 'border-white/10 hover:border-white/20 bg-white/[0.02]'
                         }`}
                       >
@@ -246,11 +246,11 @@ export default function CardsPage() {
                         onClick={() => setCardType('nova-plus')}
                         className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${
                           cardType === 'nova-plus'
-                            ? 'border-purple-500 bg-purple-950/30 ring-1 ring-purple-500'
+                            ? 'border-blue-500 bg-blue-950/30 ring-1 ring-blue-500'
                             : 'border-white/10 hover:border-white/20 bg-white/[0.02]'
                         }`}
                       >
-                        <div className="w-4 h-4 rounded-full bg-purple-500 mb-2" />
+                        <div className="w-4 h-4 rounded-full bg-blue-500 mb-2" />
                         <div className="font-semibold text-white text-sm">Zip Diagonal Split</div>
                         <div className="text-xs text-slate-400">Plum-to-violet two-tone</div>
                       </button>
@@ -265,7 +265,7 @@ export default function CardsPage() {
                     <select
                       value={cardCurrency}
                       onChange={(e) => setCardCurrency(e.target.value as Currency)}
-                      className="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 bg-[#06080E] text-white border-white/15 text-sm"
+                      className="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 bg-[#07090D] text-white border-white/15 text-sm"
                     >
                       {getSupportedCurrencies().map((currency) => (
                         <option key={currency} value={currency}>
@@ -287,7 +287,7 @@ export default function CardsPage() {
                 {/* Live Card Preview Column */}
                 <div className="lg:col-span-5 flex flex-col items-center justify-center p-6 bg-white/[0.02] rounded-2xl border border-white/[0.08]">
                   <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#d4ff00] animate-pulse" />
+                    <span className="w-2 h-2 rounded-xl bg-[#5E9FE8] animate-pulse" />
                     <span>Live Reference Visualizer</span>
                   </div>
                   
@@ -323,17 +323,17 @@ export default function CardsPage() {
           </div>
         ) : (
           <div className="bezel-card">
-            <div className="bezel-card-inner text-center py-16 px-4 bg-[#080B12]/80 border border-white/10">
+            <div className="bezel-card-inner text-center py-16 px-4 bg-[#101318]/80 border border-white/10">
               <div className="w-16 h-16 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center mx-auto mb-4 text-2xl">
                 💳
               </div>
               <h3 className="text-lg font-bold text-white mb-2">No Cards Issued Yet</h3>
               <p className="text-xs text-slate-400 max-w-md mx-auto mb-6 leading-relaxed">
-                Create your first NovaPay virtual card in seconds to start shopping online with zero fees and custom spending limits.
+                Create your first Lingoung virtual card in seconds to start shopping online with zero fees and custom spending limits.
               </p>
               <button
                 onClick={() => setShowCreateForm(true)}
-                className="px-6 py-2.5 rounded-full bg-[#d4ff00] text-black font-extrabold text-xs transition-all active:scale-95 shadow cursor-pointer"
+                className="px-6 py-2.5 rounded-xl bg-[#5E9FE8] text-black font-extrabold text-xs transition-all active:scale-95 shadow cursor-pointer"
               >
                 + Issue Your First Card
               </button>

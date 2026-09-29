@@ -109,12 +109,12 @@ export default function TradingPage() {
   const supportedCurrencies = getSupportedCurrencies();
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e] bg-cyber-grid">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#07090D] bg-cyber-grid">
       <Navigation />
       
       <main className="flex-1 container mx-auto px-4 py-8 max-w-6xl animate-fadeIn">
         <div className="mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800 text-xs font-semibold text-purple-700 dark:text-purple-300 mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-xs font-semibold text-blue-700 dark:text-blue-300 mb-3">
             <CryptoIcon size={14} />
             <span>Digital Asset Exchange</span>
           </div>
@@ -163,7 +163,7 @@ export default function TradingPage() {
                     <select
                       value={selectedCrypto}
                       onChange={(e) => setSelectedCrypto(e.target.value as CryptoType)}
-                      className="w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-700 text-sm font-medium"
+                      className="w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-700 text-sm font-medium"
                     >
                       {supportedCryptos.map((crypto) => (
                         <option key={crypto} value={crypto}>
@@ -180,7 +180,7 @@ export default function TradingPage() {
                     <select
                       value={selectedCurrency}
                       onChange={(e) => setSelectedCurrency(e.target.value as Currency)}
-                      className="w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-700 text-sm font-medium"
+                      className="w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-700 text-sm font-medium"
                     >
                       {supportedCurrencies.map((currency) => (
                         <option key={currency} value={currency}>
@@ -198,7 +198,7 @@ export default function TradingPage() {
                       <button
                         type="button"
                         onClick={() => setIsAmountInCrypto(!isAmountInCrypto)}
-                        className="text-xs text-purple-600 dark:text-purple-400 hover:underline font-semibold"
+                        className="text-xs text-blue-600 dark:text-blue-300 hover:underline font-semibold"
                       >
                         Switch unit to {isAmountInCrypto ? selectedCurrency : selectedCrypto}
                       </button>
@@ -240,7 +240,7 @@ export default function TradingPage() {
                       </div>
                       <div className="pt-2 border-t border-gray-200 dark:border-gray-800 flex justify-between font-bold text-base">
                         <span className="text-gray-900 dark:text-white">Net Total:</span>
-                        <span className="text-purple-600 dark:text-purple-400 font-mono">
+                        <span className="text-blue-600 dark:text-blue-300 font-mono">
                           {formatCurrencyAmount(totalFiat, selectedCurrency)}
                         </span>
                       </div>
@@ -282,7 +282,7 @@ export default function TradingPage() {
                   <TrendingUpIcon size={20} className="text-black/80" />
                   <span className="text-xs uppercase tracking-wider font-extrabold text-black/80">Live Spot Rate</span>
                 </div>
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-black text-[#d4ff00] font-mono font-bold">1 {selectedCrypto}</span>
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-black text-[#5E9FE8] font-mono font-bold">1 {selectedCrypto}</span>
               </div>
               <h3 className="text-3xl sm:text-4xl font-black tracking-tight font-mono mb-1 text-black">
                 {formatCurrencyAmount(currentPrice, selectedCurrency)}
@@ -308,11 +308,11 @@ export default function TradingPage() {
                         key={crypto} 
                         onClick={() => setSelectedCrypto(crypto)}
                         className={`flex justify-between items-center p-2 rounded-lg cursor-pointer transition-colors ${
-                          selectedCrypto === crypto ? 'bg-purple-50 dark:bg-purple-950/40' : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
+                          selectedCrypto === crypto ? 'bg-blue-50 dark:bg-blue-950/40' : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
                         }`}
                       >
                         <div className="flex items-center space-x-2.5">
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-xs font-bold text-slate-950 shadow-sm">
                             {crypto.slice(0, 1)}
                           </div>
                           <div>
@@ -335,7 +335,7 @@ export default function TradingPage() {
               <div className="bezel-card">
                 <div className="bezel-card-inner p-6">
                   <div className="flex items-center space-x-2 mb-3">
-                    <WalletIcon size={18} className="text-purple-600 dark:text-purple-400" />
+                    <WalletIcon size={18} className="text-blue-600 dark:text-blue-300" />
                     <h3 className="font-bold text-gray-900 dark:text-white text-sm">Available Cash Balance</h3>
                   </div>
                   <div className="space-y-2">

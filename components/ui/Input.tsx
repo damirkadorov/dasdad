@@ -16,13 +16,13 @@ export default function Input({
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+        <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.08em] text-slate-400">
           {label}
         </label>
       )}
       <div className="relative">
         <input
-          className={`w-full px-4 py-2.5 border rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white ${error ? 'border-red-500 ring-1 ring-red-500/20' : 'border-gray-300 dark:border-gray-600'} ${className}`}
+          className={`min-h-11 w-full rounded-xl border bg-white/[0.045] px-4 py-2.5 text-sm text-white placeholder:text-slate-500 transition-all duration-200 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400/20 ${error ? 'border-red-500 ring-1 ring-red-500/20' : 'border-white/10 hover:border-white/20'} ${className}`}
           {...props}
         />
         {error && (
@@ -36,7 +36,7 @@ export default function Input({
         )}
       </div>
       {error && (
-        <p className="mt-1.5 text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
+        <p className="mt-1.5 flex items-center gap-1 text-xs text-red-400">
           {error}
         </p>
       )}

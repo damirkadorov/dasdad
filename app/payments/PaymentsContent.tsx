@@ -197,13 +197,13 @@ export default function PaymentsContent() {
   const getTabClassName = (tab: typeof activeTab) => {
     return `flex-1 py-2.5 px-4 rounded-full font-bold text-xs transition-all whitespace-nowrap cursor-pointer ${
       activeTab === tab
-        ? 'bg-[#d4ff00] text-black shadow-lg shadow-[#d4ff00]/20'
+        ? 'bg-[#5E9FE8] text-black shadow-lg shadow-[#5E9FE8]/20'
         : 'bg-white/[0.05] hover:bg-white/[0.08] text-slate-300 border border-white/10'
     }`;
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#05070B] text-slate-100 bg-cyber-grid selection:bg-[#d4ff00] selection:text-black">
+    <div className="min-h-screen flex flex-col bg-[#07090D] text-slate-100 bg-cyber-grid selection:bg-[#5E9FE8] selection:text-slate-950">
       <Navigation />
       
       <main className="flex-1 max-w-2xl w-full mx-auto p-4 pt-10 pb-20 animate-fadeIn relative z-10">
@@ -256,7 +256,7 @@ export default function PaymentsContent() {
                 <select
                   value={topupCurrency}
                   onChange={(e) => setTopupCurrency(e.target.value as Currency)}
-                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
                 >
                   {getSupportedCurrencies().map((currency) => (
                     <option key={currency} value={currency}>
@@ -373,7 +373,7 @@ export default function PaymentsContent() {
                 <select
                   value={ibanCurrency}
                   onChange={(e) => setIbanCurrency(e.target.value as Currency)}
-                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
                 >
                   {getSupportedCurrencies().map((currency) => (
                     <option key={currency} value={currency}>
@@ -465,8 +465,8 @@ export default function PaymentsContent() {
             </form>
 
             <div className="mt-6 space-y-4">
-              <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-                <p className="text-sm text-purple-600 dark:text-purple-400">
+              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <p className="text-sm text-blue-600 dark:text-blue-300">
                   📱 Simulate a contactless payment by tapping the button above
                 </p>
               </div>
@@ -474,7 +474,7 @@ export default function PaymentsContent() {
               {nfcAnimating && (
                 <div className="flex justify-center">
                   <div className="relative w-32 h-32">
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 animate-pulse"></div>
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 animate-pulse"></div>
                     <div className="absolute inset-2 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center">
                       <span className="text-4xl">📱</span>
                     </div>

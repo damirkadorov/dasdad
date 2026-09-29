@@ -68,7 +68,7 @@ export default function PortfolioPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
+      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#07090D]">
         <Navigation />
         <main className="flex-1 container mx-auto px-4 py-8 max-w-7xl space-y-6">
           <Skeleton variant="text" width={220} height={36} />
@@ -90,7 +90,7 @@ export default function PortfolioPage() {
 
   if (error && !profile) {
     return (
-      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
+      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#07090D]">
         <Navigation />
         <main className="flex-1 container mx-auto px-4 py-16 max-w-xl text-center">
           <div className="bezel-card">
@@ -135,7 +135,7 @@ export default function PortfolioPage() {
   })) || [];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#05070B] text-slate-100 bg-cyber-grid selection:bg-[#d4ff00] selection:text-black">
+    <div className="min-h-screen flex flex-col bg-[#07090D] text-slate-100 bg-cyber-grid selection:bg-[#5E9FE8] selection:text-slate-950">
       <Navigation />
       
       <main className="flex-1 container mx-auto px-4 py-8 max-w-7xl animate-fadeIn relative z-10">
@@ -143,7 +143,7 @@ export default function PortfolioPage() {
           <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/[0.05] border border-white/10 text-[11px] font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">
             <span>Asset Management</span>
             <span>&bull;</span>
-            <span className="text-[#d4ff00]">Live Valuation</span>
+            <span className="text-[#5E9FE8]">Live Valuation</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-1">
             Crypto Portfolio &amp; Custody
@@ -156,12 +156,12 @@ export default function PortfolioPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* Total Value Banner (Sunset Radiant Glow from Image 3 DigiPay) */}
           <div className="card-sunset-glow p-8 text-white shadow-2xl flex flex-col justify-between relative overflow-hidden">
-            <div className="absolute right-0 bottom-0 w-48 h-48 bg-gradient-to-tl from-orange-500/30 via-amber-400/20 to-transparent rounded-full blur-2xl pointer-events-none"></div>
+            <div className="absolute right-0 bottom-0 w-48 h-48 bg-gradient-to-tl from-blue-500/25 via-cyan-400/10 to-transparent rounded-full blur-2xl pointer-events-none"></div>
 
             <div className="relative z-10">
               <div className="flex justify-between items-start mb-4">
                 <span className="text-xs uppercase tracking-wider font-semibold text-white/70">Total Portfolio Value</span>
-                <span className="w-10 h-10 rounded-xl bg-white/15 backdrop-blur border border-white/20 flex items-center justify-center font-bold text-xl text-amber-300">₿</span>
+                <span className="w-10 h-10 rounded-xl bg-white/15 backdrop-blur border border-white/20 flex items-center justify-center font-bold text-xl text-blue-200">₿</span>
               </div>
               <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight font-mono mb-2 text-white">
                 {formatCurrencyAmount(totalPortfolioValue, preferredCurrency)}
@@ -173,7 +173,7 @@ export default function PortfolioPage() {
             
             <div className="mt-8 relative z-10">
               <Link href="/trading">
-                <button className="w-full py-3 px-6 rounded-full bg-[#d4ff00] hover:bg-[#bce400] text-black font-extrabold text-xs transition-all active:scale-95 shadow cursor-pointer">
+                <button className="w-full py-3 px-6 rounded-xl bg-[#5E9FE8] hover:bg-[#7AB2EE] text-slate-950 font-extrabold text-xs transition-all active:scale-95 shadow cursor-pointer">
                   + Trade Cryptocurrencies →
                 </button>
               </Link>
@@ -258,7 +258,7 @@ export default function PortfolioPage() {
                             <p className="font-bold text-gray-900 dark:text-white text-base font-mono">
                               {formatCurrencyAmount(value, preferredCurrency)}
                             </p>
-                            <p className="text-xs text-purple-600 dark:text-purple-400 font-mono font-medium">
+                            <p className="text-xs text-blue-600 dark:text-blue-300 font-mono font-medium">
                               {formatCryptoAmount(wallet.balance, wallet.cryptoType)}
                             </p>
                           </div>

@@ -181,7 +181,7 @@ export default function PaymentGatewayTesterPage() {
   data-description="${description}"
   data-customer-name="${customerName}"
   data-customer-email="${customerEmail}"
-  style="background:#d4ff00;color:#05070B;font-weight:800;padding:14px 28px;border-radius:12px;border:none;cursor:pointer;font-family:sans-serif;box-shadow:0 10px 20px rgba(212,255,0,0.25);">
+  style="background:#5E9FE8;color:#07090D;font-weight:800;padding:14px 28px;border-radius:12px;border:none;cursor:pointer;font-family:sans-serif;box-shadow:0 10px 20px rgba(39,131,222,0.25);">
   ⚡ Pay ${amount} ${currency} with Lingoung Bank
 </button>
 
@@ -200,10 +200,10 @@ export default function PaymentGatewayTesterPage() {
   <title>Lingoung Bank Payment Demo</title>
   <script src="${hostOrigin}/lingoung-pay.js"></script>
   <style>
-    body { background: #05070B; color: #fff; font-family: sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
+    body { background: #07090D; color: #fff; font-family: sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
     .card { background: #090d16; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-    .price { font-size: 38px; font-weight: 900; margin: 16px 0; color: #d4ff00; }
-    .btn { background: #d4ff00; color: #000; font-weight: 800; padding: 16px 24px; border-radius: 12px; border: none; cursor: pointer; width: 100%; font-size: 16px; transition: transform 0.2s; }
+    .price { font-size: 38px; font-weight: 900; margin: 16px 0; color: #5E9FE8; }
+    .btn { background: #5E9FE8; color: #000; font-weight: 800; padding: 16px 24px; border-radius: 12px; border: none; cursor: pointer; width: 100%; font-size: 16px; transition: transform 0.2s; }
     .btn:hover { transform: scale(1.02); }
   </style>
 </head>
@@ -236,14 +236,14 @@ export default function PaymentGatewayTesterPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#05070B] text-zinc-100 bg-cyber-grid">
+    <div className="min-h-screen flex flex-col bg-[#07090D] text-zinc-100 bg-cyber-grid">
       <Navigation />
 
       <main className="flex-1 container mx-auto px-4 py-8 max-w-6xl animate-fadeIn">
         {/* Breadcrumb Header */}
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <div>
-            <div className="flex items-center gap-2 text-xs font-bold text-[#d4ff00] uppercase tracking-wider mb-1">
+            <div className="flex items-center gap-2 text-xs font-bold text-[#5E9FE8] uppercase tracking-wider mb-1">
               <Link href="/developer" className="hover:underline flex items-center gap-1">
                 <span>← Developer Portal</span>
               </Link>
@@ -259,8 +259,8 @@ export default function PaymentGatewayTesterPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#d4ff00]/10 text-[#d4ff00] border border-[#d4ff00]/30 font-mono">
-              <span className="w-2 h-2 rounded-full bg-[#d4ff00] animate-pulse"></span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#5E9FE8]/10 text-[#5E9FE8] border border-[#5E9FE8]/30 font-mono">
+              <span className="w-2 h-2 rounded-xl bg-[#5E9FE8] animate-pulse"></span>
               SANDBOX ENGINE READY
             </span>
             <Button size="sm" variant="secondary" onClick={resetFlow} className="border border-white/10 text-zinc-300 hover:text-white">
@@ -281,7 +281,7 @@ export default function PaymentGatewayTesterPage() {
                   type="text"
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
-                  className="flex-1 bg-[#05070B] border border-white/10 rounded-xl px-4 py-2.5 font-mono text-xs text-[#d4ff00] focus:outline-none focus:ring-2 focus:ring-[#d4ff00]"
+                  className="flex-1 bg-[#07090D] border border-white/10 rounded-xl px-4 py-2.5 font-mono text-xs text-[#5E9FE8] focus:outline-none focus:ring-2 focus:ring-[#5E9FE8]"
                   placeholder="pk_..."
                 />
                 <button
@@ -301,7 +301,7 @@ export default function PaymentGatewayTesterPage() {
           <div
             className={`p-4 rounded-2xl border transition-all ${
               currentStep === 1
-                ? 'bg-[#d4ff00]/10 border-[#d4ff00] shadow-lg shadow-[#d4ff00]/10'
+                ? 'bg-[#5E9FE8]/10 border-[#5E9FE8] shadow-lg shadow-[#5E9FE8]/10'
                 : paymentSession
                 ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400'
                 : 'bg-white/[0.02] border-white/10 opacity-70'
@@ -313,7 +313,7 @@ export default function PaymentGatewayTesterPage() {
                   paymentSession
                     ? 'bg-emerald-500 text-zinc-950'
                     : currentStep === 1
-                    ? 'bg-[#d4ff00] text-[#05070B]'
+                    ? 'bg-[#5E9FE8] text-[#07090D]'
                     : 'bg-white/10 text-zinc-400'
                 }`}
               >
@@ -408,7 +408,7 @@ export default function PaymentGatewayTesterPage() {
                       onClick={() => handleSelectPreset(preset)}
                       className={`w-full text-left p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer flex items-center justify-between ${
                         isSelected
-                          ? 'border-[#d4ff00] bg-[#d4ff00]/10 shadow-md shadow-[#d4ff00]/10'
+                          ? 'border-[#5E9FE8] bg-[#5E9FE8]/10 shadow-md shadow-[#5E9FE8]/10'
                           : 'border-white/10 hover:border-white/20 bg-white/[0.02]'
                       }`}
                     >
@@ -420,7 +420,7 @@ export default function PaymentGatewayTesterPage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <span className="text-sm font-extrabold font-mono text-[#d4ff00]">
+                        <span className="text-sm font-extrabold font-mono text-[#5E9FE8]">
                           {preset.amount} {preset.currency}
                         </span>
                       </div>
@@ -444,7 +444,7 @@ export default function PaymentGatewayTesterPage() {
                         setAmount(Number(e.target.value));
                         setSelectedPreset('');
                       }}
-                      className="w-full px-3 py-2 bg-[#05070B] border border-white/10 rounded-xl text-xs font-mono text-white focus:outline-none focus:ring-2 focus:ring-[#d4ff00]"
+                      className="w-full px-3 py-2 bg-[#07090D] border border-white/10 rounded-xl text-xs font-mono text-white focus:outline-none focus:ring-2 focus:ring-[#5E9FE8]"
                     />
                   </div>
                   <div>
@@ -454,7 +454,7 @@ export default function PaymentGatewayTesterPage() {
                     <select
                       value={currency}
                       onChange={(e) => setCurrency(e.target.value)}
-                      className="w-full px-3 py-2 bg-[#05070B] border border-white/10 rounded-xl text-xs font-mono text-white focus:outline-none focus:ring-2 focus:ring-[#d4ff00]"
+                      className="w-full px-3 py-2 bg-[#07090D] border border-white/10 rounded-xl text-xs font-mono text-white focus:outline-none focus:ring-2 focus:ring-[#5E9FE8]"
                     >
                       <option value="USD">USD ($)</option>
                       <option value="EUR">EUR (€)</option>
@@ -472,7 +472,7 @@ export default function PaymentGatewayTesterPage() {
                     type="text"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#05070B] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-[#d4ff00]"
+                    className="w-full px-3 py-2 bg-[#07090D] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-[#5E9FE8]"
                   />
                 </div>
 
@@ -484,7 +484,7 @@ export default function PaymentGatewayTesterPage() {
                     type="email"
                     value={customerEmail}
                     onChange={(e) => setCustomerEmail(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#05070B] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-[#d4ff00]"
+                    className="w-full px-3 py-2 bg-[#07090D] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-[#5E9FE8]"
                   />
                 </div>
               </div>
@@ -494,11 +494,11 @@ export default function PaymentGatewayTesterPage() {
                 <button
                   onClick={handleCreatePayment}
                   disabled={isCreating}
-                  className="w-full py-3 px-4 bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold text-xs rounded-xl shadow-lg shadow-[#d4ff00]/20 transition-all active:scale-[0.98] disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full py-3 px-4 bg-[#5E9FE8] hover:bg-[#7AB2EE] text-[#07090D] font-extrabold text-xs rounded-xl shadow-lg shadow-[#5E9FE8]/20 transition-all active:scale-[0.98] disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
                 >
                   {isCreating ? (
                     <>
-                      <div className="w-4 h-4 border-2 border-[#05070B] border-t-transparent rounded-full animate-spin"></div>
+                      <div className="w-4 h-4 border-2 border-[#07090D] border-t-transparent rounded-full animate-spin"></div>
                       <span>Initializing Session...</span>
                     </>
                   ) : (
@@ -520,10 +520,10 @@ export default function PaymentGatewayTesterPage() {
             {/* Test Card Cheat Sheet Card */}
             <div className="p-6 rounded-3xl bg-white/[0.03] text-white border border-white/10 backdrop-blur-xl">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-[#d4ff00] flex items-center gap-1.5">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[#5E9FE8] flex items-center gap-1.5">
                   <span>💳 Sandbox Test Card</span>
                 </h3>
-                <span className="text-[10px] bg-[#d4ff00]/20 text-[#d4ff00] px-2 py-0.5 rounded-full border border-[#d4ff00]/30 font-bold">
+                <span className="text-[10px] bg-[#5E9FE8]/20 text-[#5E9FE8] px-2 py-0.5 rounded-full border border-[#5E9FE8]/30 font-bold">
                   Pre-funded ($1,000)
                 </span>
               </div>
@@ -532,13 +532,13 @@ export default function PaymentGatewayTesterPage() {
               </p>
 
               <div className="space-y-2 font-mono text-xs">
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#05070B] border border-white/10">
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#07090D] border border-white/10">
                   <span className="text-zinc-500 text-[11px]">Card Number:</span>
                   <div className="flex items-center gap-2">
                     <span className="text-white font-bold tracking-wider">7003 2114 8051 1885</span>
                     <button
                       onClick={() => copyToClipboard('7003211480511885', 'cardNum')}
-                      className="text-[10px] text-[#d4ff00] hover:underline cursor-pointer"
+                      className="text-[10px] text-[#5E9FE8] hover:underline cursor-pointer"
                     >
                       {copiedText === 'cardNum' ? '✓' : 'Copy'}
                     </button>
@@ -546,11 +546,11 @@ export default function PaymentGatewayTesterPage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
-                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#05070B] border border-white/10">
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#07090D] border border-white/10">
                     <span className="text-zinc-500 text-[11px]">Exp:</span>
                     <span className="text-white font-bold">07/31</span>
                   </div>
-                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#05070B] border border-white/10">
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#07090D] border border-white/10">
                     <span className="text-zinc-500 text-[11px]">CVV:</span>
                     <span className="text-white font-bold">481</span>
                   </div>
@@ -577,7 +577,7 @@ export default function PaymentGatewayTesterPage() {
 
               {paymentSession ? (
                 <div className="space-y-4">
-                  <div className="p-3.5 rounded-2xl bg-[#05070B] border border-white/10">
+                  <div className="p-3.5 rounded-2xl bg-[#07090D] border border-white/10">
                     <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1">
                       Hosted Payment URL:
                     </p>
@@ -602,7 +602,7 @@ export default function PaymentGatewayTesterPage() {
                       href={paymentSession.paymentUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 py-3 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs rounded-xl shadow-lg transition-all text-center flex items-center justify-center gap-2 cursor-pointer"
+                      className="flex-1 py-3 px-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold text-xs rounded-xl shadow-lg transition-all text-center flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <span>👉 Open Hosted Payment Checkout</span>
                       <span>↗</span>
@@ -625,7 +625,7 @@ export default function PaymentGatewayTesterPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   {pollingStatus === 'pending' && (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-blue-200 border border-amber-500/30">
                       <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
                       Listening for payment...
                     </span>
@@ -656,8 +656,8 @@ export default function PaymentGatewayTesterPage() {
                     </div>
                   </div>
 
-                  <div className="bg-[#05070B] text-zinc-300 p-4 rounded-2xl font-mono text-xs overflow-x-auto border border-white/10">
-                    <p className="text-[#d4ff00] font-bold mb-2">// Webhook Event Payload Dispatched to Merchant Server</p>
+                  <div className="bg-[#07090D] text-zinc-300 p-4 rounded-2xl font-mono text-xs overflow-x-auto border border-white/10">
+                    <p className="text-[#5E9FE8] font-bold mb-2">// Webhook Event Payload Dispatched to Merchant Server</p>
                     <pre>{JSON.stringify({
                       event: 'payment.completed',
                       paymentId: completedPayment?.paymentId,
@@ -671,7 +671,7 @@ export default function PaymentGatewayTesterPage() {
                   </div>
                 </div>
               ) : (
-                <div className="bg-[#05070B] text-zinc-400 p-4 rounded-2xl font-mono text-xs overflow-x-auto border border-white/10">
+                <div className="bg-[#07090D] text-zinc-400 p-4 rounded-2xl font-mono text-xs overflow-x-auto border border-white/10">
                   <p className="text-zinc-500 mb-2">// Webhook Dispatcher Listener</p>
                   <p className="text-xs text-zinc-400">
                     {paymentSession
@@ -690,12 +690,12 @@ export default function PaymentGatewayTesterPage() {
                 </h3>
                 <button
                   onClick={() => copyToClipboard(curlCommand, 'curl')}
-                  className="text-xs text-[#d4ff00] hover:underline cursor-pointer"
+                  className="text-xs text-[#5E9FE8] hover:underline cursor-pointer"
                 >
                   {copiedText === 'curl' ? '✓ Copied' : 'Copy cURL'}
                 </button>
               </div>
-              <div className="bg-[#05070B] p-4 rounded-2xl font-mono text-xs text-emerald-400 overflow-x-auto border border-white/10">
+              <div className="bg-[#07090D] p-4 rounded-2xl font-mono text-xs text-emerald-400 overflow-x-auto border border-white/10">
                 <pre>{curlCommand}</pre>
               </div>
             </div>
@@ -704,7 +704,7 @@ export default function PaymentGatewayTesterPage() {
             <div className="p-6 rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-xl shadow-2xl relative overflow-hidden">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
                 <div>
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#d4ff00] flex items-center gap-1.5">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#5E9FE8] flex items-center gap-1.5">
                     <span>🌐 Ready-to-Use Drop-in HTML Code</span>
                   </h3>
                   <p className="text-[11px] text-zinc-400 mt-0.5">
@@ -720,13 +720,13 @@ export default function PaymentGatewayTesterPage() {
                   </button>
                   <button
                     onClick={() => copyToClipboard(dropInHtmlSnippet, 'html')}
-                    className="px-3 py-1 rounded-lg bg-[#d4ff00] hover:bg-[#bce600] text-xs font-mono font-extrabold text-[#05070B] transition-all cursor-pointer"
+                    className="px-3 py-1 rounded-lg bg-[#5E9FE8] hover:bg-[#7AB2EE] text-xs font-mono font-extrabold text-[#07090D] transition-all cursor-pointer"
                   >
                     {copiedText === 'html' ? '✓ Copied' : '📋 Copy HTML'}
                   </button>
                 </div>
               </div>
-              <div className="bg-[#05070B] p-4 rounded-2xl font-mono text-xs text-zinc-300 overflow-x-auto border border-white/10">
+              <div className="bg-[#07090D] p-4 rounded-2xl font-mono text-xs text-zinc-300 overflow-x-auto border border-white/10">
                 <pre>{dropInHtmlSnippet}</pre>
               </div>
             </div>

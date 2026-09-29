@@ -99,7 +99,7 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
+      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#07090D]">
         <Navigation />
         <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl space-y-6">
           <Skeleton variant="text" width={180} height={36} />
@@ -118,7 +118,7 @@ export default function ProfilePage() {
 
   if (error && !profile) {
     return (
-      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
+      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#07090D]">
         <Navigation />
         <main className="flex-1 container mx-auto px-4 py-16 max-w-md text-center">
           <div className="bezel-card">
@@ -137,7 +137,7 @@ export default function ProfilePage() {
   const initial = profile?.username?.slice(0, 1)?.toUpperCase() || 'U';
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#05070B] text-slate-100 bg-cyber-grid selection:bg-[#d4ff00] selection:text-black">
+    <div className="min-h-screen flex flex-col bg-[#07090D] text-slate-100 bg-cyber-grid selection:bg-[#5E9FE8] selection:text-slate-950">
       <Navigation />
       
       <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl animate-fadeIn relative z-10">
@@ -156,7 +156,7 @@ export default function ProfilePage() {
 
         {/* Profile Card Banner (Sunset Radiant Glow from Image 3 DigiPay) */}
         <div className="card-sunset-glow p-8 text-white shadow-2xl mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative overflow-hidden">
-          <div className="absolute right-0 bottom-0 w-48 h-48 bg-gradient-to-tl from-orange-500/30 via-amber-400/20 to-transparent rounded-full blur-2xl pointer-events-none"></div>
+          <div className="absolute right-0 bottom-0 w-48 h-48 bg-gradient-to-tl from-blue-500/25 via-cyan-400/10 to-transparent rounded-full blur-2xl pointer-events-none"></div>
 
           <div className="flex items-center space-x-5 relative z-10">
             <div className="w-18 h-18 rounded-2xl bg-white/15 backdrop-blur-lg flex items-center justify-center text-3xl font-extrabold shadow-inner border border-white/20 text-white">
@@ -165,7 +165,7 @@ export default function ProfilePage() {
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-2xl font-bold">{profile?.username}</h2>
-                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-[#d4ff00]/15 text-[#d4ff00] border border-[#d4ff00]/30 font-bold">
+                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-xl bg-[#5E9FE8]/15 text-[#5E9FE8] border border-[#5E9FE8]/30 font-bold">
                   Verified Tier 1
                 </span>
               </div>
@@ -178,7 +178,7 @@ export default function ProfilePage() {
           
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 sm:text-right border border-white/15 relative z-10">
             <p className="text-white/80 text-xs uppercase tracking-wider mb-0.5">Primary Cash Balance</p>
-            <p className="text-3xl font-extrabold font-mono tracking-tight text-[#d4ff00]">{formatCurrency(profile?.balance || 0)}</p>
+            <p className="text-3xl font-extrabold font-mono tracking-tight text-[#5E9FE8]">{formatCurrency(profile?.balance || 0)}</p>
           </div>
         </div>
 
@@ -191,7 +191,7 @@ export default function ProfilePage() {
             <div className="bezel-card">
               <div className="bezel-card-inner p-4 text-center">
                 <div className="text-2xl mb-1">💳</div>
-                <div className="text-2xl font-bold font-mono text-purple-600 dark:text-purple-400">
+                <div className="text-2xl font-bold font-mono text-blue-600 dark:text-blue-300">
                   {stats.totalCards}
                 </div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">Total Cards</div>
@@ -283,7 +283,7 @@ export default function ProfilePage() {
                   Manage API keys for server-to-server payment checkout integrations.
                 </p>
               </div>
-              <Button variant="ghost" onClick={() => router.push('/developer')} className="justify-start px-0 text-purple-600 dark:text-purple-400">
+              <Button variant="ghost" onClick={() => router.push('/developer')} className="justify-start px-0 text-blue-600 dark:text-blue-300">
                 Open Developer Portal →
               </Button>
             </div>

@@ -144,7 +144,7 @@ export default function TransactionsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#06090e]">
+      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-[#07090D]">
         <Navigation />
         <main className="flex-1 container mx-auto px-4 py-8 max-w-6xl space-y-6">
           <Skeleton variant="text" width={200} height={36} />
@@ -157,7 +157,7 @@ export default function TransactionsPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#05070B] text-slate-100 bg-cyber-grid selection:bg-[#d4ff00] selection:text-black">
+    <div className="min-h-screen flex flex-col bg-[#07090D] text-slate-100 bg-cyber-grid selection:bg-[#5E9FE8] selection:text-slate-950">
       <Navigation />
       
       <main className="flex-1 container mx-auto px-4 py-8 max-w-6xl animate-fadeIn relative z-10">
@@ -218,7 +218,7 @@ export default function TransactionsPage() {
                           type="date"
                           value={startDate}
                           onChange={(e) => setStartDate(e.target.value)}
-                          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500"
+                          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400"
                         />
                       </div>
                       <div>
@@ -229,7 +229,7 @@ export default function TransactionsPage() {
                           type="date"
                           value={endDate}
                           onChange={(e) => setEndDate(e.target.value)}
-                          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500"
+                          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400"
                         />
                       </div>
                     </div>
@@ -238,7 +238,7 @@ export default function TransactionsPage() {
                       <button
                         onClick={generateStatement}
                         disabled={statementLoading}
-                        className="flex-1 px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all disabled:opacity-50"
+                        className="flex-1 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-400 px-4 py-3 font-medium text-slate-950 transition-all hover:from-blue-400 hover:to-cyan-300 disabled:opacity-50"
                       >
                         {statementLoading ? 'Generating...' : '📊 View Statement'}
                       </button>
@@ -253,7 +253,7 @@ export default function TransactionsPage() {
                 ) : (
                   <>
                     {/* Statement Header */}
-                    <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-xl p-6 mb-6">
+                    <div className="mb-6 rounded-xl bg-gradient-to-r from-blue-900/20 to-cyan-900/20 p-6">
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
                           <p className="text-gray-500 dark:text-gray-400">Account Holder</p>
@@ -292,8 +292,8 @@ export default function TransactionsPage() {
                           -${statement.summary.totalOutgoing.toFixed(2)}
                         </p>
                       </div>
-                      <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 text-center">
-                        <p className="text-sm text-purple-600 dark:text-purple-400">Net Change</p>
+                      <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 text-center">
+                        <p className="text-sm text-blue-600 dark:text-blue-300">Net Change</p>
                         <p className={`text-xl font-bold ${statement.summary.netChange >= 0 ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'}`}>
                           {statement.summary.netChange >= 0 ? '+$' : '-$'}{Math.abs(statement.summary.netChange).toFixed(2)}
                         </p>
@@ -350,7 +350,7 @@ export default function TransactionsPage() {
         )}
 
         {/* Filters */}
-        <div className="bg-[#080B12]/80 border border-white/10 rounded-2xl p-3 shadow-lg mb-8">
+        <div className="bg-[#101318]/80 border border-white/10 rounded-2xl p-3 shadow-lg mb-8">
           <div className="flex flex-wrap gap-2">
             {filterOptions.map((option) => (
               <button
@@ -358,7 +358,7 @@ export default function TransactionsPage() {
                 onClick={() => setFilter(option.value)}
                 className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   filter === option.value
-                    ? 'bg-[#d4ff00] text-black shadow-md shadow-[#d4ff00]/20'
+                    ? 'bg-[#5E9FE8] text-black shadow-md shadow-[#5E9FE8]/20'
                     : 'bg-white/[0.04] text-slate-300 hover:bg-white/[0.08] hover:text-white border border-white/[0.06]'
                 }`}
               >
@@ -400,7 +400,7 @@ export default function TransactionsPage() {
             {filter !== 'all' && (
               <button
                 onClick={() => setFilter('all')}
-                className="text-purple-600 hover:text-purple-700 font-medium"
+                className="text-blue-600 hover:text-blue-700 font-medium"
               >
                 View all transactions
               </button>

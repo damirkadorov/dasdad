@@ -64,7 +64,7 @@ export default function BusinessDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#05070B] text-zinc-100 bg-cyber-grid">
+      <div className="min-h-screen flex flex-col bg-[#07090D] text-zinc-100 bg-cyber-grid">
         <BusinessNavigation />
         <main className="flex-1">
           <DashboardSkeleton />
@@ -76,7 +76,7 @@ export default function BusinessDashboard() {
 
   if (error && !profile) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#05070B] text-zinc-100 bg-cyber-grid">
+      <div className="min-h-screen flex flex-col bg-[#07090D] text-zinc-100 bg-cyber-grid">
         <BusinessNavigation />
         <main className="flex-1 container mx-auto px-4 py-16 text-center">
           <div className="bg-red-950/40 border border-red-500/30 text-red-400 p-6 rounded-2xl max-w-md mx-auto backdrop-blur-md">
@@ -91,15 +91,15 @@ export default function BusinessDashboard() {
   const totalBalance = profile?.balances?.reduce((sum, b) => sum + b.amount, 0) || 0;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#05070B] text-zinc-100 bg-cyber-grid">
+    <div className="min-h-screen flex flex-col bg-[#07090D] text-zinc-100 bg-cyber-grid">
       <BusinessNavigation />
       
       <main className="flex-1 container mx-auto px-4 py-8 max-w-7xl animate-fadeIn">
         {/* Welcome Section */}
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#d4ff00]/10 border border-[#d4ff00]/30 text-xs font-bold text-[#d4ff00] mb-3">
-              <span className="w-2 h-2 rounded-full bg-[#d4ff00] animate-pulse"></span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-[#5E9FE8]/10 border border-[#5E9FE8]/30 text-xs font-bold text-[#5E9FE8] mb-3">
+              <span className="w-2 h-2 rounded-xl bg-[#5E9FE8] animate-pulse"></span>
               <span>COMMERCIAL TIER • ENTERPRISE</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
@@ -112,7 +112,7 @@ export default function BusinessDashboard() {
           <div className="flex items-center gap-2">
             <Link
               href="/developer"
-              className="px-4 py-2 rounded-xl text-xs font-bold bg-[#d4ff00] text-[#05070B] hover:bg-[#bce600] transition-colors shadow-lg shadow-[#d4ff00]/20 flex items-center gap-1.5"
+              className="px-4 py-2 rounded-xl text-xs font-bold bg-[#5E9FE8] text-[#07090D] hover:bg-[#7AB2EE] transition-colors shadow-lg shadow-[#5E9FE8]/20 flex items-center gap-1.5"
             >
               <span>⚡ API Keys</span>
               <span>→</span>
@@ -126,7 +126,7 @@ export default function BusinessDashboard() {
             <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xs font-bold uppercase tracking-wider text-amber-200/90">
+                  <span className="text-xs font-bold uppercase tracking-wider text-blue-100/90">
                     Total Business Balance
                   </span>
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
@@ -136,7 +136,7 @@ export default function BusinessDashboard() {
                 <h2 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white drop-shadow-md">
                   {formatCurrencyAmount(totalBalance, profile?.preferredCurrency || 'USD')}
                 </h2>
-                <p className="text-xs text-amber-100/70 mt-2 font-mono">
+                <p className="text-xs text-blue-100/70 mt-2 font-mono">
                   Primary Settlement: {profile?.preferredCurrency || 'USD'} • Last synchronized just now
                 </p>
               </div>
@@ -158,16 +158,16 @@ export default function BusinessDashboard() {
             {/* Quick Stats Grid */}
             <div className="relative z-10 grid grid-cols-3 gap-4 pt-6 mt-6 border-t border-white/15">
               <div>
-                <p className="text-amber-200/80 text-xs mb-1 font-medium">Available to Disburse</p>
+                <p className="text-blue-100/80 text-xs mb-1 font-medium">Available to Disburse</p>
                 <p className="font-extrabold text-lg text-white font-mono">{formatCurrencyAmount(totalBalance, profile?.preferredCurrency || 'USD')}</p>
               </div>
               <div>
-                <p className="text-amber-200/80 text-xs mb-1 font-medium">Account Tier</p>
+                <p className="text-blue-100/80 text-xs mb-1 font-medium">Account Tier</p>
                 <p className="font-extrabold text-lg text-white">Commercial Corp</p>
               </div>
               <div>
-                <p className="text-amber-200/80 text-xs mb-1 font-medium">API Merchant Engine</p>
-                <p className="font-extrabold text-lg text-[#d4ff00]">● Online (100%)</p>
+                <p className="text-blue-100/80 text-xs mb-1 font-medium">API Merchant Engine</p>
+                <p className="font-extrabold text-lg text-[#5E9FE8]">● Online (100%)</p>
               </div>
             </div>
           </div>
@@ -175,10 +175,10 @@ export default function BusinessDashboard() {
 
         {/* API Gateway Notice */}
         <div className="mb-8">
-          <div className="rounded-2xl p-6 bg-white/[0.03] border border-white/10 backdrop-blur-xl relative overflow-hidden group hover:border-[#d4ff00]/40 transition-all">
+          <div className="rounded-2xl p-6 bg-white/[0.03] border border-white/10 backdrop-blur-xl relative overflow-hidden group hover:border-[#5E9FE8]/40 transition-all">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-[#d4ff00]/10 border border-[#d4ff00]/30 flex items-center justify-center text-xl text-[#d4ff00] shrink-0">
+                <div className="w-12 h-12 rounded-2xl bg-[#5E9FE8]/10 border border-[#5E9FE8]/30 flex items-center justify-center text-xl text-[#5E9FE8] shrink-0">
                   ⚡
                 </div>
                 <div>
@@ -186,7 +186,7 @@ export default function BusinessDashboard() {
                     <h3 className="text-lg font-bold text-white">
                       Payment Gateway &amp; Checkout API
                     </h3>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#d4ff00]/20 text-[#d4ff00]">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#5E9FE8]/20 text-[#5E9FE8]">
                       v2.4 Live
                     </span>
                   </div>
@@ -204,7 +204,7 @@ export default function BusinessDashboard() {
                 <Link href="/developer">
                   <Button 
                     variant="primary" 
-                    className="bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-bold shadow-lg shadow-[#d4ff00]/20"
+                    className="bg-[#5E9FE8] hover:bg-[#7AB2EE] text-[#07090D] font-bold shadow-lg shadow-[#5E9FE8]/20"
                   >
                     🔑 Manage API Keys
                   </Button>
@@ -222,10 +222,10 @@ export default function BusinessDashboard() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Link href="/business/payments?action=topup">
-              <div className="bg-white/[0.03] hover:bg-white/[0.06] rounded-2xl p-6 transition-all border border-white/10 hover:border-[#d4ff00]/50 text-center group cursor-pointer">
+              <div className="bg-white/[0.03] hover:bg-white/[0.06] rounded-2xl p-6 transition-all border border-white/10 hover:border-[#5E9FE8]/50 text-center group cursor-pointer">
                 <div className="flex justify-center mb-3">
-                  <div className="p-3.5 bg-white/[0.04] group-hover:bg-[#d4ff00]/20 rounded-2xl transition-all border border-white/5">
-                    <TopUpIcon className="text-zinc-300 group-hover:text-[#d4ff00] transition-colors" size={24} />
+                  <div className="p-3.5 bg-white/[0.04] group-hover:bg-[#5E9FE8]/20 rounded-2xl transition-all border border-white/5">
+                    <TopUpIcon className="text-zinc-300 group-hover:text-[#5E9FE8] transition-colors" size={24} />
                   </div>
                 </div>
                 <h3 className="font-bold text-white text-sm">Deposit Capital</h3>
@@ -234,10 +234,10 @@ export default function BusinessDashboard() {
             </Link>
 
             <Link href="/business/payments">
-              <div className="bg-white/[0.03] hover:bg-white/[0.06] rounded-2xl p-6 transition-all border border-white/10 hover:border-[#d4ff00]/50 text-center group cursor-pointer">
+              <div className="bg-white/[0.03] hover:bg-white/[0.06] rounded-2xl p-6 transition-all border border-white/10 hover:border-[#5E9FE8]/50 text-center group cursor-pointer">
                 <div className="flex justify-center mb-3">
-                  <div className="p-3.5 bg-white/[0.04] group-hover:bg-[#d4ff00]/20 rounded-2xl transition-all border border-white/5">
-                    <SendIcon className="text-zinc-300 group-hover:text-[#d4ff00] transition-colors" size={24} />
+                  <div className="p-3.5 bg-white/[0.04] group-hover:bg-[#5E9FE8]/20 rounded-2xl transition-all border border-white/5">
+                    <SendIcon className="text-zinc-300 group-hover:text-[#5E9FE8] transition-colors" size={24} />
                   </div>
                 </div>
                 <h3 className="font-bold text-white text-sm">Corporate Payout</h3>
@@ -246,10 +246,10 @@ export default function BusinessDashboard() {
             </Link>
 
             <Link href="/business/pos-terminal">
-              <div className="bg-white/[0.03] hover:bg-white/[0.06] rounded-2xl p-6 transition-all border border-white/10 hover:border-[#d4ff00]/50 text-center group cursor-pointer">
+              <div className="bg-white/[0.03] hover:bg-white/[0.06] rounded-2xl p-6 transition-all border border-white/10 hover:border-[#5E9FE8]/50 text-center group cursor-pointer">
                 <div className="flex justify-center mb-3">
-                  <div className="p-3.5 bg-white/[0.04] group-hover:bg-[#d4ff00]/20 rounded-2xl transition-all border border-white/5">
-                    <CardIcon className="text-zinc-300 group-hover:text-[#d4ff00] transition-colors" size={24} />
+                  <div className="p-3.5 bg-white/[0.04] group-hover:bg-[#5E9FE8]/20 rounded-2xl transition-all border border-white/5">
+                    <CardIcon className="text-zinc-300 group-hover:text-[#5E9FE8] transition-colors" size={24} />
                   </div>
                 </div>
                 <h3 className="font-bold text-white text-sm">POS Terminal</h3>
@@ -258,10 +258,10 @@ export default function BusinessDashboard() {
             </Link>
 
             <Link href="/business/cards">
-              <div className="bg-white/[0.03] hover:bg-white/[0.06] rounded-2xl p-6 transition-all border border-white/10 hover:border-[#d4ff00]/50 text-center group cursor-pointer">
+              <div className="bg-white/[0.03] hover:bg-white/[0.06] rounded-2xl p-6 transition-all border border-white/10 hover:border-[#5E9FE8]/50 text-center group cursor-pointer">
                 <div className="flex justify-center mb-3">
-                  <div className="p-3.5 bg-white/[0.04] group-hover:bg-[#d4ff00]/20 rounded-2xl transition-all border border-white/5">
-                    <CardIcon className="text-zinc-300 group-hover:text-[#d4ff00] transition-colors" size={24} />
+                  <div className="p-3.5 bg-white/[0.04] group-hover:bg-[#5E9FE8]/20 rounded-2xl transition-all border border-white/5">
+                    <CardIcon className="text-zinc-300 group-hover:text-[#5E9FE8] transition-colors" size={24} />
                   </div>
                 </div>
                 <h3 className="font-bold text-white text-sm">Corporate Cards</h3>

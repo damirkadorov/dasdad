@@ -17,19 +17,19 @@ export default function Button({
   disabled,
   ...props
 }: ButtonProps) {
-  const baseStyles = 'rounded-lg font-semibold transition-all duration-200 active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 cursor-pointer';
+  const baseStyles = 'min-h-11 rounded-xl border font-semibold transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#07090D]';
   
   const variants = {
-    primary: 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 shadow-lg hover:shadow-xl',
-    secondary: 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600',
-    danger: 'bg-gradient-to-r from-red-600 to-pink-600 text-white hover:from-red-700 hover:to-pink-700',
-    ghost: 'bg-transparent text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+    primary: 'border-blue-300/20 bg-[#5E9FE8] text-slate-950 hover:bg-[#7AB2EE] shadow-[0_10px_28px_rgba(39,131,222,.18)]',
+    secondary: 'border-white/10 bg-white/[0.06] text-white hover:bg-white/[0.1]',
+    danger: 'border-red-400/20 bg-red-500 text-white hover:bg-red-400',
+    ghost: 'border-transparent bg-transparent text-slate-300 hover:bg-white/[0.06] hover:text-white'
   };
 
   const sizes = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2.5 text-base',
-    lg: 'px-6 py-3 text-lg'
+    sm: 'px-3.5 py-2 text-xs',
+    md: 'px-4 py-2.5 text-sm',
+    lg: 'px-6 py-3 text-base'
   };
 
   return (

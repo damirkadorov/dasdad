@@ -112,7 +112,7 @@ export default function CardDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#ede9fe]/30 dark:bg-[#06090e]">
+      <div className="min-h-screen flex flex-col bg-[#ede9fe]/30 dark:bg-[#07090D]">
         <Navigation />
         <main className="flex-1 container mx-auto px-4 py-8 max-w-md space-y-6">
           <Skeleton variant="text" width={100} height={24} />
@@ -128,7 +128,7 @@ export default function CardDetailPage() {
 
   if (error && !card) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#ede9fe]/30 dark:bg-[#06090e]">
+      <div className="min-h-screen flex flex-col bg-[#ede9fe]/30 dark:bg-[#07090D]">
         <Navigation />
         <main className="flex-1 container mx-auto px-4 py-16 max-w-sm text-center">
           <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 border border-gray-200 dark:border-gray-800 shadow-xl">
@@ -137,7 +137,7 @@ export default function CardDetailPage() {
             <p className="text-xs text-gray-500 dark:text-gray-400 mb-6">The requested card could not be retrieved.</p>
             <Link
               href="/cards"
-              className="inline-block px-5 py-2.5 bg-purple-600 text-white font-semibold text-xs rounded-xl"
+              className="inline-block px-5 py-2.5 bg-blue-600 text-white font-semibold text-xs rounded-xl"
             >
               ← Back to Cards
             </Link>
@@ -151,7 +151,7 @@ export default function CardDetailPage() {
   if (!card) return null;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#EDE9FE]/40 dark:bg-[#06080E] text-gray-900 dark:text-white">
+    <div className="min-h-screen flex flex-col bg-[#EDE9FE]/40 dark:bg-[#07090D] text-gray-900 dark:text-white">
       <Navigation />
       
       <main className="flex-1 container mx-auto px-4 py-8 max-w-[440px] animate-fadeIn">
@@ -159,7 +159,7 @@ export default function CardDetailPage() {
         <div className="mb-4">
           <button 
             onClick={() => router.push('/cards')}
-            className="text-xs font-bold text-purple-700 dark:text-purple-400 hover:underline cursor-pointer"
+            className="text-xs font-bold text-blue-700 dark:text-blue-300 hover:underline cursor-pointer"
           >
             Close
           </button>
@@ -203,11 +203,11 @@ export default function CardDetailPage() {
             <div className="flex justify-between items-end">
               <div className="flex items-center gap-6">
                 <div>
-                  <p className="text-[9px] font-mono text-purple-200 uppercase tracking-widest">MM &nbsp; YY</p>
+                  <p className="text-[9px] font-mono text-blue-200 uppercase tracking-widest">MM &nbsp; YY</p>
                   <p className="font-mono text-sm font-bold text-white">{card.expiryDate}</p>
                 </div>
                 <div>
-                  <p className="text-[9px] font-mono text-purple-200 uppercase tracking-widest">CVC</p>
+                  <p className="text-[9px] font-mono text-blue-200 uppercase tracking-widest">CVC</p>
                   <p className="font-mono text-sm font-bold text-white">{showDetails ? card.cvv : '•••'}</p>
                 </div>
               </div>
@@ -267,7 +267,7 @@ export default function CardDetailPage() {
                 {copied ? '✓ Card number copied!' : 'Copy card number'}
               </span>
             </div>
-            <span className="text-xs text-purple-600 dark:text-purple-400 font-semibold">
+            <span className="text-xs text-blue-600 dark:text-blue-300 font-semibold">
               {copied ? 'Done' : 'Copy'}
             </span>
           </button>

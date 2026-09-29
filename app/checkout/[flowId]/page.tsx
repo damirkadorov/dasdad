@@ -80,7 +80,7 @@ export default function CheckoutPage() {
     // Validate card starts with 7
     const cleanCard = cardNumber.replace(/\s/g, '');
     if (!cleanCard.startsWith('7')) {
-      setError('Only NovaPay cards (starting with 7) are accepted');
+      setError('Only Lingoung cards (starting with 7) are accepted');
       setProcessing(false);
       return;
     }
@@ -137,9 +137,9 @@ export default function CheckoutPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#05070B] bg-cyber-grid flex items-center justify-center p-4 text-zinc-100">
+      <div className="min-h-screen bg-[#07090D] bg-cyber-grid flex items-center justify-center p-4 text-zinc-100">
         <div className="bg-white/[0.04] border border-white/10 backdrop-blur-xl rounded-3xl p-8 max-w-md w-full text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#d4ff00] mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#5E9FE8] mx-auto"></div>
           <p className="mt-4 text-xs font-mono text-zinc-400">Initializing checkout session...</p>
         </div>
       </div>
@@ -148,14 +148,14 @@ export default function CheckoutPage() {
 
   if (error && !flow) {
     return (
-      <div className="min-h-screen bg-[#05070B] bg-cyber-grid flex items-center justify-center p-4 text-zinc-100">
+      <div className="min-h-screen bg-[#07090D] bg-cyber-grid flex items-center justify-center p-4 text-zinc-100">
         <div className="bg-white/[0.04] border border-white/10 backdrop-blur-xl rounded-3xl p-8 max-w-md w-full text-center">
           <div className="w-16 h-16 bg-red-950/40 border border-red-500/30 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
             ❌
           </div>
           <h2 className="text-xl font-extrabold text-white mb-2">Checkout Error</h2>
           <p className="text-zinc-400 text-xs mb-6">{error}</p>
-          <Button onClick={() => router.push('/')} variant="primary" className="bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold">
+          <Button onClick={() => router.push('/')} variant="primary" className="bg-[#5E9FE8] hover:bg-[#7AB2EE] text-[#07090D] font-extrabold">
             Return to Home
           </Button>
         </div>
@@ -165,7 +165,7 @@ export default function CheckoutPage() {
 
   if (flow?.state !== 'CREATED') {
     return (
-      <div className="min-h-screen bg-[#05070B] bg-cyber-grid flex items-center justify-center p-4 text-zinc-100">
+      <div className="min-h-screen bg-[#07090D] bg-cyber-grid flex items-center justify-center p-4 text-zinc-100">
         <div className="bg-white/[0.04] border border-white/10 backdrop-blur-xl rounded-3xl p-8 max-w-md w-full text-center">
           <div className="w-16 h-16 bg-amber-950/40 border border-amber-500/30 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
             ⚠️
@@ -174,7 +174,7 @@ export default function CheckoutPage() {
           <p className="text-zinc-400 text-xs mb-6">
             This checkout session has already expired or been finalized. State: <span className="font-mono text-amber-400">{flow?.state}</span>
           </p>
-          <Button onClick={handleCancel} variant="primary" className="bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold">
+          <Button onClick={handleCancel} variant="primary" className="bg-[#5E9FE8] hover:bg-[#7AB2EE] text-[#07090D] font-extrabold">
             Return
           </Button>
         </div>
@@ -183,15 +183,15 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#05070B] bg-cyber-grid flex items-center justify-center p-4 text-zinc-100">
+    <div className="min-h-screen bg-[#07090D] bg-cyber-grid flex items-center justify-center p-4 text-zinc-100">
       <div className="bg-white/[0.04] rounded-3xl border border-white/10 backdrop-blur-2xl shadow-2xl p-6 sm:p-8 max-w-md w-full animate-scaleIn relative overflow-hidden">
         {/* Top Header - Reference 2 Affirm Style */}
         <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
           <div className="flex items-center space-x-2">
-            <div className="w-7 h-7 rounded-lg bg-[#d4ff00] flex items-center justify-center font-extrabold text-[#05070B] text-xs">
+            <div className="w-7 h-7 rounded-lg bg-[#5E9FE8] flex items-center justify-center font-extrabold text-[#07090D] text-xs">
               N
             </div>
-            <span className="font-extrabold text-sm text-white tracking-tight">NovaPay Checkout</span>
+            <span className="font-extrabold text-sm text-white tracking-tight">Lingoung Checkout</span>
           </div>
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[11px] font-mono font-bold text-emerald-400">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -211,7 +211,7 @@ export default function CheckoutPage() {
         {/* Card Mockup Wave Preview - Affirm Royal Cobalt Wave */}
         <div className="mb-6 card-affirm-wave rounded-2xl p-5 text-white shadow-xl relative overflow-hidden">
           <div className="relative z-10 flex justify-between items-start mb-6">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-200/90 font-mono">NovaPay Virtual</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-200/90 font-mono">Lingoung Virtual</span>
             <span className="px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-bold tracking-wider backdrop-blur-xs font-mono">ONE-TIME CARD</span>
           </div>
           <div className="relative z-10 font-mono text-sm tracking-widest font-bold text-white mb-3">
@@ -227,7 +227,7 @@ export default function CheckoutPage() {
         <form onSubmit={handlePayment} className="space-y-4">
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">
-              Card Number (NovaPay starts with 7)
+              Card Number (Lingoung starts with 7)
             </label>
             <div className="relative">
               <input
@@ -237,10 +237,10 @@ export default function CheckoutPage() {
                 placeholder="7003 2114 8051 1885"
                 required
                 maxLength={19}
-                className="w-full px-4 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:ring-2 focus:ring-[#d4ff00] focus:outline-none text-white text-base font-mono tracking-wider placeholder-zinc-700"
+                className="w-full px-4 py-3 bg-[#07090D] border border-white/10 rounded-xl focus:ring-2 focus:ring-[#5E9FE8] focus:outline-none text-white text-base font-mono tracking-wider placeholder-zinc-700"
               />
               <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                <span className="text-xs font-extrabold font-mono text-[#d4ff00]">NovaPay</span>
+                <span className="text-xs font-extrabold font-mono text-[#5E9FE8]">Lingoung</span>
               </div>
             </div>
           </div>
@@ -254,7 +254,7 @@ export default function CheckoutPage() {
                 value={expiryMonth}
                 onChange={(e) => setExpiryMonth(e.target.value)}
                 required
-                className="w-full px-3 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:ring-2 focus:ring-[#d4ff00] focus:outline-none text-white text-sm font-mono"
+                className="w-full px-3 py-3 bg-[#07090D] border border-white/10 rounded-xl focus:ring-2 focus:ring-[#5E9FE8] focus:outline-none text-white text-sm font-mono"
               >
                 <option value="">MM</option>
                 {Array.from({ length: 12 }, (_, i) => {
@@ -272,7 +272,7 @@ export default function CheckoutPage() {
                 value={expiryYear}
                 onChange={(e) => setExpiryYear(e.target.value)}
                 required
-                className="w-full px-3 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:ring-2 focus:ring-[#d4ff00] focus:outline-none text-white text-sm font-mono"
+                className="w-full px-3 py-3 bg-[#07090D] border border-white/10 rounded-xl focus:ring-2 focus:ring-[#5E9FE8] focus:outline-none text-white text-sm font-mono"
               >
                 <option value="">YY</option>
                 {Array.from({ length: 10 }, (_, i) => {
@@ -293,7 +293,7 @@ export default function CheckoutPage() {
                 placeholder="481"
                 required
                 maxLength={3}
-                className="w-full px-3 py-3 bg-[#05070B] border border-white/10 rounded-xl focus:ring-2 focus:ring-[#d4ff00] focus:outline-none text-white text-sm font-mono text-center placeholder-zinc-700"
+                className="w-full px-3 py-3 bg-[#07090D] border border-white/10 rounded-xl focus:ring-2 focus:ring-[#5E9FE8] focus:outline-none text-white text-sm font-mono text-center placeholder-zinc-700"
               />
             </div>
           </div>
@@ -317,7 +317,7 @@ export default function CheckoutPage() {
             type="submit"
             variant="primary"
             disabled={processing}
-            className="w-full py-4 bg-[#d4ff00] hover:bg-[#bce600] text-[#05070B] font-extrabold text-base rounded-2xl shadow-xl shadow-[#d4ff00]/20 active:scale-[0.98] transition-all cursor-pointer"
+            className="w-full py-4 bg-[#5E9FE8] hover:bg-[#7AB2EE] text-[#07090D] font-extrabold text-base rounded-2xl shadow-xl shadow-[#5E9FE8]/20 active:scale-[0.98] transition-all cursor-pointer"
           >
             {processing ? 'Authorizing Payment...' : `Complete Purchase (${flow?.currency} ${flow?.amount?.toFixed(2)})`}
           </Button>
@@ -332,7 +332,7 @@ export default function CheckoutPage() {
         </form>
 
         <div className="mt-4 pt-4 border-t border-white/10 text-center text-[11px] text-zinc-500">
-          <p>🔒 End-to-end encrypted clearance by NovaPay Gateway</p>
+          <p>🔒 End-to-end encrypted clearance by Lingoung Gateway</p>
         </div>
       </div>
     </div>
