@@ -8,7 +8,7 @@ import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
 import Skeleton, { DashboardSkeleton } from '@/components/ui/Skeleton';
 import TransactionItem from '@/components/transactions/TransactionItem';
-import { formatCurrencyAmount } from '@/lib/utils/currency';
+import { convertCurrency, formatCurrencyAmount } from '@/lib/utils/currency';
 import { Transaction, CurrencyBalance, Currency } from '@/lib/db/types';
 import { WalletIcon, TopUpIcon, SendIcon, CardIcon } from '@/components/icons/Icons';
 
@@ -88,7 +88,11 @@ export default function BusinessDashboard() {
     );
   }
 
-  const totalBalance = profile?.balances?.reduce((sum, b) => sum + b.amount, 0) || 0;
+  const displayCurrency = profile?.preferredCurrency || 'USD';
+  const totalBalance = profile?.balances?.reduce(
+    (sum, balance) => sum + convertCurrency(balance.amount, balance.currency, displayCurrency),
+    0
+  ) || 0;
 
   return (
     <div className="min-h-screen flex flex-col bg-[#07090D] text-zinc-100 bg-cyber-grid">

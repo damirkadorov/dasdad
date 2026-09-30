@@ -6,13 +6,14 @@ import BusinessNavigation from '@/components/business/BusinessNavigation';
 import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
-import { Currency } from '@/lib/db/types';
+import { Currency, CurrencyBalance } from '@/lib/db/types';
 import { getSupportedCurrencies, formatCurrencyAmount } from '@/lib/utils/currency';
 
 export default function BusinessPaymentsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<'send' | 'topup'>('send');
+  const [balances, setBalances] = useState<CurrencyBalance[]>([]);
   
   // Send Money State
   const [recipient, setRecipient] = useState('');
@@ -35,6 +36,17 @@ export default function BusinessPaymentsContent() {
       setActiveTab('topup');
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    void refreshBalances();
+  }, []);
+
+  const refreshBalances = async () => {
+    const response = await fetch('/api/user/profile', { cache: 'no-store' });
+    if (!response.ok) return;
+    const data = await response.json();
+    setBalances(data.user?.balances || []);
+  };
 
   const handleSendMoney = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,7 +75,8 @@ export default function BusinessPaymentsContent() {
       setSendSuccess(`Successfully sent ${formatCurrencyAmount(parseFloat(sendAmount), sendCurrency)} to ${recipient}`);
       setRecipient('');
       setSendAmount('');
-    } catch (error) {
+      await refreshBalances();
+    } catch {
       setSendError('An error occurred. Please try again.');
     } finally {
       setSendLoading(false);
@@ -95,11 +108,12 @@ export default function BusinessPaymentsContent() {
 
       setTopupSuccess(`Successfully added ${formatCurrencyAmount(parseFloat(topupAmount), topupCurrency)} to your balance`);
       setTopupAmount('');
+      await refreshBalances();
       
       setTimeout(() => {
         router.push('/business/dashboard');
       }, 2000);
-    } catch (error) {
+    } catch {
       setTopupError('An error occurred. Please try again.');
     } finally {
       setTopupLoading(false);
@@ -123,6 +137,17 @@ export default function BusinessPaymentsContent() {
           <p className="text-zinc-400 text-sm mt-1">
             Initiate counterparty wire transfers or credit corporate balance instantly
           </p>
+        </div>
+
+        <div className="mb-8 flex gap-2 overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+          {balances.length === 0 ? (
+            <span className="px-2 py-2 text-sm text-zinc-500">Loading treasury balances…</span>
+          ) : balances.map((balance) => (
+            <div key={balance.currency} className="min-w-[150px] rounded-xl border border-white/[0.08] bg-black/20 px-4 py-3">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">{balance.currency} available</p>
+              <p className="mt-1 font-mono text-base font-bold text-white">{formatCurrencyAmount(balance.amount, balance.currency)}</p>
+            </div>
+          ))}
         </div>
 
         {/* Tabs */}

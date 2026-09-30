@@ -252,8 +252,8 @@ export interface Payment {
   customerEmail?: string;
   customerName?: string;
   orderId?: string;
-  metadata?: Record<string, any>;
-  status: 'pending' | 'processing' | 'completed' | 'failed' | 'refunded';
+  metadata?: Record<string, unknown>;
+  status: 'pending' | 'processing' | 'completed' | 'failed' | 'refunded' | 'cancelled';
   paymentMethod?: 'card' | 'balance';
   cardId?: string;
   payerId?: string;
@@ -261,6 +261,7 @@ export interface Payment {
   cancelUrl?: string;
   webhookUrl?: string;
   createdAt: string;
+  expiresAt?: string;
   completedAt?: string;
   failedReason?: string;
 }

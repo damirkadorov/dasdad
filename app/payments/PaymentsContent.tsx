@@ -1,18 +1,19 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
-import { Currency } from '@/lib/db/types';
+import { Currency, CurrencyBalance } from '@/lib/db/types';
 import { getSupportedCurrencies, formatCurrencyAmount } from '@/lib/utils/currency';
 
 export default function PaymentsContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<'send' | 'nfc' | 'topup' | 'iban'>('send');
+  const [balances, setBalances] = useState<CurrencyBalance[]>([]);
+  const [balancesLoading, setBalancesLoading] = useState(true);
   
   // Send Money State
   const [recipient, setRecipient] = useState('');
@@ -24,6 +25,7 @@ export default function PaymentsContent() {
   
   // NFC Payment State
   const [nfcAmount, setNfcAmount] = useState('');
+  const [nfcCurrency, setNfcCurrency] = useState<Currency>('USD');
   const [nfcLoading, setNfcLoading] = useState(false);
   const [nfcSuccess, setNfcSuccess] = useState('');
   const [nfcError, setNfcError] = useState('');
@@ -56,6 +58,29 @@ export default function PaymentsContent() {
     }
   }, [searchParams]);
 
+  useEffect(() => {
+    void refreshBalances();
+  }, []);
+
+  const refreshBalances = async () => {
+    try {
+      const response = await fetch('/api/user/profile', { cache: 'no-store' });
+      if (!response.ok) return;
+      const data = await response.json();
+      const nextBalances = data.user?.balances || [];
+      setBalances(nextBalances);
+      if (nextBalances.length > 0) {
+        setSendCurrency((current) => nextBalances.some((balance: CurrencyBalance) => balance.currency === current) ? current : nextBalances[0].currency);
+        setNfcCurrency((current) => nextBalances.some((balance: CurrencyBalance) => balance.currency === current) ? current : nextBalances[0].currency);
+      }
+    } finally {
+      setBalancesLoading(false);
+    }
+  };
+
+  const getBalance = (currency: Currency) =>
+    balances.find((balance) => balance.currency === currency)?.amount ?? 0;
+
   const handleSendMoney = async (e: React.FormEvent) => {
     e.preventDefault();
     setSendLoading(true);
@@ -83,7 +108,8 @@ export default function PaymentsContent() {
       setSendSuccess(`Successfully sent ${formatCurrencyAmount(parseFloat(sendAmount), sendCurrency)} to ${recipient}`);
       setRecipient('');
       setSendAmount('');
-    } catch (error) {
+      await refreshBalances();
+    } catch {
       setSendError('An error occurred. Please try again.');
     } finally {
       setSendLoading(false);
@@ -106,6 +132,7 @@ export default function PaymentsContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           amount: parseFloat(nfcAmount),
+          currency: nfcCurrency,
           description: 'NFC Payment'
         })
       });
@@ -117,9 +144,10 @@ export default function PaymentsContent() {
         return;
       }
 
-      setNfcSuccess(`Payment of ${formatCurrencyAmount(parseFloat(nfcAmount), 'USD')} completed!`);
+      setNfcSuccess(`Payment of ${formatCurrencyAmount(parseFloat(nfcAmount), nfcCurrency)} completed!`);
       setNfcAmount('');
-    } catch (error) {
+      await refreshBalances();
+    } catch {
       setNfcError('An error occurred. Please try again.');
     } finally {
       setNfcLoading(false);
@@ -146,13 +174,14 @@ export default function PaymentsContent() {
       const data = await response.json();
 
       if (!response.ok) {
-        setTopupError(data.message || 'Failed to top up');
+        setTopupError(data.error || data.message || 'Failed to top up');
         return;
       }
 
       setTopupSuccess(`Successfully added ${formatCurrencyAmount(parseFloat(topupAmount), topupCurrency)} to your account!`);
       setTopupAmount('');
-    } catch (error) {
+      await refreshBalances();
+    } catch {
       setTopupError('An error occurred. Please try again.');
     } finally {
       setTopupLoading(false);
@@ -186,7 +215,8 @@ export default function PaymentsContent() {
       setIbanSuccess(`Successfully transferred ${formatCurrencyAmount(parseFloat(ibanAmount), ibanCurrency)} to ${ibanRecipient}`);
       setIbanRecipient('');
       setIbanAmount('');
-    } catch (error) {
+      await refreshBalances();
+    } catch {
       setIbanError('An error occurred. Please try again.');
     } finally {
       setIbanLoading(false);
@@ -213,6 +243,27 @@ export default function PaymentsContent() {
           </div>
           <h1 className="text-3xl font-extrabold text-white tracking-tight">Payments &amp; Transfers</h1>
           <p className="text-xs text-slate-400 mt-0.5">Instant zero-fee multi-currency transfers, top-ups, and NFC contactless checkout.</p>
+        </div>
+
+        <div className="mb-6 rounded-2xl border border-white/10 bg-white/[0.035] p-4">
+          <div className="mb-3 flex items-center justify-between">
+            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-400">Available balances</p>
+            <button type="button" onClick={() => void refreshBalances()} className="min-h-9 rounded-lg px-3 text-xs font-semibold text-blue-300 hover:bg-white/[0.06]">
+              Refresh
+            </button>
+          </div>
+          {balancesLoading ? (
+            <p className="text-sm text-slate-500">Loading balances…</p>
+          ) : (
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {balances.map((balance) => (
+                <div key={balance.currency} className="min-w-[132px] rounded-xl border border-white/[0.08] bg-black/20 px-3 py-2.5">
+                  <p className="text-[10px] font-semibold text-slate-500">{balance.currency}</p>
+                  <p className="mt-0.5 whitespace-nowrap font-mono text-sm font-semibold text-white">{formatCurrencyAmount(balance.amount, balance.currency)}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Tabs */}
@@ -316,7 +367,7 @@ export default function PaymentsContent() {
               />
 
               <Input
-                label="Amount ($)"
+                label={`Amount · Available ${formatCurrencyAmount(getBalance(sendCurrency), sendCurrency)}`}
                 type="number"
                 step="0.01"
                 min="0.01"
@@ -325,6 +376,13 @@ export default function PaymentsContent() {
                 placeholder="0.00"
                 required
               />
+
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.08em] text-slate-400">Send currency</label>
+                <select value={sendCurrency} onChange={(e) => setSendCurrency(e.target.value as Currency)} className="min-h-11 w-full rounded-xl border border-white/10 bg-white/[0.045] px-4 text-sm text-white focus:border-blue-300 focus:outline-none">
+                  {getSupportedCurrencies().map((currency) => <option key={currency} value={currency}>{currency}</option>)}
+                </select>
+              </div>
 
               {sendSuccess && (
                 <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
@@ -426,7 +484,7 @@ export default function PaymentsContent() {
             
             <form onSubmit={handleNfcPayment} className="space-y-4">
               <Input
-                label="Payment Amount ($)"
+                label={`Payment amount · Available ${formatCurrencyAmount(getBalance(nfcCurrency), nfcCurrency)}`}
                 type="number"
                 step="0.01"
                 min="0.01"
@@ -435,6 +493,13 @@ export default function PaymentsContent() {
                 placeholder="0.00"
                 required
               />
+
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.08em] text-slate-400">Payment currency</label>
+                <select value={nfcCurrency} onChange={(e) => setNfcCurrency(e.target.value as Currency)} className="min-h-11 w-full rounded-xl border border-white/10 bg-white/[0.045] px-4 text-sm text-white focus:border-blue-300 focus:outline-none">
+                  {getSupportedCurrencies().map((currency) => <option key={currency} value={currency}>{currency}</option>)}
+                </select>
+              </div>
 
               {nfcSuccess && (
                 <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">

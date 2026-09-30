@@ -82,22 +82,39 @@ export async function deleteCard(id: string): Promise<boolean> {
 // Transaction operations - now using MongoDB
 export async function getTransactionsByUserId(userId: string): Promise<Transaction[]> {
   const transactions = await getTransactionsCollection();
-  return await transactions
-    .find({
-      $or: [
-        { userId },
-        { recipientId: userId },
-        { senderId: userId }
-      ]
-    })
-    .sort({ createdAt: -1 })
+  const records = await transactions
+    .find({ userId })
     .toArray();
+
+  // Some legacy operations used `timestamp` instead of `createdAt`, and
+  // Normalize, de-duplicate, and sort in application code so every operation
+  // appears in Recent Activity in the correct order.
+  const unique = new Map<string, Transaction>();
+  for (const transaction of records) {
+    if (!unique.has(transaction.id)) {
+      unique.set(transaction.id, {
+        ...transaction,
+        createdAt: transaction.createdAt || transaction.timestamp || new Date(0).toISOString(),
+      });
+    }
+  }
+
+  return Array.from(unique.values()).sort((a, b) => {
+    const aTime = new Date(a.createdAt || a.timestamp || 0).getTime();
+    const bTime = new Date(b.createdAt || b.timestamp || 0).getTime();
+    return bTime - aTime;
+  });
 }
 
 export async function createTransaction(transaction: Transaction): Promise<Transaction> {
   const transactions = await getTransactionsCollection();
-  await transactions.insertOne(transaction);
-  return transaction;
+  const normalizedTransaction: Transaction = {
+    ...transaction,
+    status: transaction.status || 'completed',
+    createdAt: transaction.createdAt || transaction.timestamp || new Date().toISOString(),
+  };
+  await transactions.insertOne(normalizedTransaction);
+  return normalizedTransaction;
 }
 
 // Bank account operations
@@ -347,6 +364,16 @@ export async function updatePayment(id: string, updates: Partial<Payment>): Prom
   const result = await payments.findOneAndUpdate(
     { id },
     { $set: updates },
+    { returnDocument: 'after' }
+  );
+  return result ?? null;
+}
+
+export async function claimPendingPayment(id: string): Promise<Payment | null> {
+  const payments = await getPaymentsCollection();
+  const result = await payments.findOneAndUpdate(
+    { id, status: 'pending' },
+    { $set: { status: 'processing' } },
     { returnDocument: 'after' }
   );
   return result ?? null;

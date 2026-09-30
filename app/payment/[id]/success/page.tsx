@@ -1,82 +1,81 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import Button from '@/components/ui/Button';
+import { useParams } from 'next/navigation';
+import Logo from '@/components/layout/Logo';
+
+interface Receipt {
+  id: string;
+  amount: number;
+  currency: string;
+  description: string;
+  merchantName?: string;
+  orderId?: string;
+  successUrl?: string;
+}
 
 export default function PaymentSuccessPage() {
   const params = useParams();
-  const router = useRouter();
   const paymentId = params.id as string;
-
-  const [countdown, setCountdown] = useState(10);
+  const [receipt, setReceipt] = useState<Receipt | null>(null);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          router.push('/dashboard');
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    fetch(`/api/payment-gateway/process/${paymentId}`, { cache: 'no-store' })
+      .then((response) => response.json())
+      .then((data) => setReceipt(data.payment || null))
+      .catch(() => setReceipt(null));
+  }, [paymentId]);
 
-    return () => clearInterval(timer);
-  }, [router]);
+  const returnToMerchant = () => {
+    if (receipt?.successUrl) {
+      window.location.href = receipt.successUrl;
+      return;
+    }
+    if (window.opener) {
+      window.close();
+      return;
+    }
+    if (window.history.length > 1) window.history.back();
+    else window.close();
+  };
 
   return (
-    <div className="min-h-screen bg-[#07090D] bg-cyber-grid flex items-center justify-center p-4 text-zinc-100">
-      <div className="bg-white/[0.04] rounded-3xl border border-white/10 backdrop-blur-2xl shadow-2xl p-8 max-w-md w-full text-center animate-scaleIn">
-        <div className="text-center">
-          {/* Success Icon */}
-          <div className="w-20 h-20 bg-gradient-to-br from-[#5E9FE8] to-emerald-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-[#5E9FE8]/20 text-[#07090D]">
-            <span className="text-3xl font-extrabold">✓</span>
-          </div>
-
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#5E9FE8]/10 border border-[#5E9FE8]/30 text-xs font-bold text-[#5E9FE8] mb-3 font-mono">
-            <span>✓ TRANSACTION SETTLED</span>
-          </div>
-
-          {/* Success Message */}
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white mb-2">
-            Payment Completed!
-          </h1>
-          <p className="text-zinc-400 text-xs mb-6">
-            Your card transaction has been cleared and funds transferred securely.
-          </p>
-
-          {/* Payment ID */}
-          <div className="bg-[#07090D] border border-white/10 rounded-2xl p-4 mb-6 text-left font-mono">
-            <p className="text-[11px] text-zinc-500 uppercase tracking-wider mb-1">Receipt ID</p>
-            <p className="text-xs text-[#5E9FE8] break-all font-bold select-all">{paymentId}</p>
-          </div>
-
-          {/* Info */}
-          <p className="text-xs text-zinc-400 mb-6 flex items-center justify-center gap-1.5 font-mono">
-            <span>Redirecting to your dashboard in</span>
-            <span className="font-bold text-[#5E9FE8] px-2 py-0.5 rounded bg-white/[0.06] border border-white/10">{countdown}s</span>
-          </p>
-
-          {/* Buttons */}
-          <div className="space-y-3">
-            <Button
-              onClick={() => router.push('/dashboard')}
-              variant="primary"
-              className="w-full py-3.5 bg-[#5E9FE8] hover:bg-[#7AB2EE] text-[#07090D] font-extrabold text-sm shadow-xl shadow-[#5E9FE8]/20"
-            >
-              Go to Dashboard Now
-            </Button>
-            <Button
-              onClick={() => window.close()}
-              variant="secondary"
-              className="w-full border border-white/10 text-zinc-300 hover:text-white"
-            >
-              Close Receipt Window
-            </Button>
-          </div>
+    <div className="grid min-h-screen place-items-center bg-[#07090D] bg-cyber-grid p-4 text-white">
+      <div className="w-full max-w-md rounded-[24px] border border-white/10 bg-[#101318] p-7 shadow-[0_30px_90px_rgba(0,0,0,.45)] sm:p-8">
+        <div className="flex items-center justify-between">
+          <Logo size={32} showText textWhite />
+          <span className="rounded-lg border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-300">Paid</span>
         </div>
+
+        <div className="mt-9 text-center">
+          <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-emerald-400/10 text-2xl font-semibold text-emerald-300">✓</div>
+          <h1 className="mt-5 text-2xl font-semibold tracking-[-0.03em]">Payment complete</h1>
+          <p className="mt-2 text-sm text-slate-400">Your payment was authorized and the merchant has been notified.</p>
+        </div>
+
+        <div className="mt-7 rounded-2xl border border-white/[0.08] bg-black/20 p-4">
+          {receipt && (
+            <>
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold">{receipt.description}</p>
+                  <p className="mt-1 text-xs text-slate-500">{receipt.merchantName}</p>
+                </div>
+                <p className="whitespace-nowrap text-base font-semibold">{new Intl.NumberFormat('en-US', { style: 'currency', currency: receipt.currency }).format(receipt.amount)}</p>
+              </div>
+              <div className="my-4 border-t border-white/[0.08]" />
+            </>
+          )}
+          <dl className="space-y-2 text-xs">
+            {receipt?.orderId && <div className="flex justify-between gap-4"><dt className="text-slate-500">Order</dt><dd className="truncate text-slate-300">{receipt.orderId}</dd></div>}
+            <div className="flex justify-between gap-4"><dt className="text-slate-500">Receipt</dt><dd className="font-mono text-slate-300">{paymentId.slice(0, 8)}</dd></div>
+          </dl>
+        </div>
+
+        <button onClick={returnToMerchant} className="mt-6 min-h-12 w-full rounded-xl bg-[#5E9FE8] px-5 text-sm font-semibold text-slate-950 hover:bg-[#7AB2EE]">
+          {receipt?.successUrl ? 'Return to merchant' : 'Close receipt'}
+        </button>
+        <p className="mt-4 text-center text-[11px] text-slate-500">You will not be redirected to a Lingoung dashboard.</p>
       </div>
     </div>
   );
