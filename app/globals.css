@@ -2,8 +2,14 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #07090d;
-  --foreground: #f8fafc;
+  --background: #0b0d11;
+  --foreground: #f4f6f8;
+  --glass-surface: rgba(31, 34, 40, 0.62);
+  --glass-surface-strong: rgba(27, 30, 36, 0.82);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-highlight: rgba(255, 255, 255, 0.08);
+  --muted: #a5acb8;
+  --accent: #8ba8c7;
 }
 
 @theme inline {
@@ -14,11 +20,58 @@
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(circle at 12% 8%, rgba(139, 168, 199, 0.12), transparent 28rem),
+    radial-gradient(circle at 88% 34%, rgba(137, 155, 169, 0.09), transparent 30rem),
+    radial-gradient(circle at 48% 96%, rgba(120, 129, 143, 0.08), transparent 34rem),
+    var(--background);
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-sans);
   overflow-x: hidden;
   min-width: 320px;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.75), transparent 92%);
+}
+
+.glass-panel,
+.bezel-card-inner {
+  background: var(--glass-surface);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight),
+    0 18px 48px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(24px) saturate(125%);
+  -webkit-backdrop-filter: blur(24px) saturate(125%);
+}
+
+.glass-panel-strong {
+  background: var(--glass-surface-strong);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 var(--glass-highlight), 0 20px 56px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(28px) saturate(125%);
+  -webkit-backdrop-filter: blur(28px) saturate(125%);
+}
+
+.glass-option {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.glass-select {
+  color-scheme: dark;
 }
 
 html {
@@ -54,7 +107,7 @@ html {
 
 .bezel-card-inner {
   border-radius: calc(1.5rem - 4px);
-  background: #101318;
+  background: var(--glass-surface);
   border: 1px solid rgba(255, 255, 255, 0.06);
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.06), 0 8px 30px -4px rgba(0, 0, 0, 0.45);
   transition: all 0.35s cubic-bezier(0.32, 0.72, 0, 1);
@@ -62,7 +115,7 @@ html {
 
 @media (prefers-color-scheme: dark) {
   .bezel-card-inner {
-    background: #0f172a;
+    background: var(--glass-surface);
     border: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08), 0 8px 30px -4px rgba(0, 0, 0, 0.5);
   }
@@ -77,14 +130,16 @@ html {
 .glass-nav {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  background: rgba(255, 255, 255, 0.85);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(15, 17, 21, 0.68);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 12px 36px rgba(0, 0, 0, 0.22);
 }
 
 @media (prefers-color-scheme: dark) {
   .glass-nav {
-    background: rgba(6, 9, 14, 0.85);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(15, 17, 21, 0.68);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 12px 36px rgba(0, 0, 0, 0.22);
   }
 }
 
@@ -227,13 +282,13 @@ html {
 /* Frosted account summary surface */
 .card-sunset-glow {
   position: relative;
-  background: linear-gradient(135deg, rgba(39, 131, 222, 0.24) 0%, rgba(15, 39, 68, 0.92) 52%, rgba(12, 17, 24, 0.98) 100%);
+  background: linear-gradient(145deg, rgba(76, 87, 101, 0.74), rgba(24, 27, 33, 0.82));
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255, 255, 255, 0.14);
   box-shadow: 
     inset 0 1px 1px rgba(255, 255, 255, 0.2),
-    0 20px 50px -10px rgba(0, 0, 0, 0.6);
+    0 20px 50px -10px rgba(0, 0, 0, 0.42);
   border-radius: 1.5rem;
 }
 
@@ -241,10 +296,10 @@ html {
 .card-affirm-wave {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(145deg, #0d315a 0%, #174d91 55%, #286fbf 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(145deg, rgba(78, 91, 107, 0.9), rgba(31, 36, 44, 0.95));
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 1.5rem;
-  box-shadow: 0 20px 40px -12px rgba(15, 23, 42, 0.45);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 20px 40px -12px rgba(0, 0, 0, 0.38);
 }
 
 .card-affirm-wave::before {
@@ -254,9 +309,9 @@ html {
   bottom: -40%;
   width: 120%;
   height: 120%;
-  background: radial-gradient(circle at center, #7de2d1 0%, #5e9fe8 48%, transparent 75%);
+  background: radial-gradient(circle at center, rgba(168, 190, 211, 0.42), rgba(119, 138, 158, 0.18) 48%, transparent 74%);
   border-radius: 50%;
-  opacity: 0.85;
+  opacity: 0.65;
   pointer-events: none;
 }
 
@@ -264,10 +319,10 @@ html {
 .card-zip-split {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(110deg, #0b1724 0%, #10263b 48%, #286fbf 52%, #5e9fe8 100%);
+  background: linear-gradient(118deg, rgba(24, 27, 33, 0.96) 0%, rgba(48, 54, 63, 0.94) 52%, rgba(93, 105, 118, 0.86) 100%);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 1.5rem;
-  box-shadow: 0 20px 40px -12px rgba(39, 131, 222, 0.35);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 20px 40px -12px rgba(0, 0, 0, 0.38);
 }
 
 /* Featured blue surface */

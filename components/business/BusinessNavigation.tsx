@@ -20,7 +20,7 @@ export default function BusinessNavigation() {
 
   return (
     <>
-      <nav className="bg-[#07090D]/80 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50 transition-all duration-300">
+      <nav className="glass-nav sticky top-0 z-50 transition-all duration-300">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="flex items-center justify-between h-16">
             <Link href="/business/dashboard" className="transition-transform hover:scale-[1.02] active:scale-[0.98]">

@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Logo from '@/components/layout/Logo';
+import type { CardNetwork } from '@/lib/db/types';
+import { detectCardNetwork, formatNetworkCardNumber, getCardNetwork } from '@/lib/utils/cardNetworks';
 
 interface Payment {
   id: string;
@@ -27,6 +29,7 @@ interface SavedCard {
   cvv: string;
   currency: string;
   cardType: string;
+  network?: CardNetwork;
   status: string;
 }
 
@@ -36,10 +39,6 @@ const DEMO_CARD = {
   cvv: '481',
   cardholderName: 'Demo Customer',
 };
-
-function formatCardNumber(value: string) {
-  return value.replace(/\D/g, '').slice(0, 16).replace(/(\d{4})(?=\d)/g, '$1 ');
-}
 
 function formatExpiry(value: string) {
   const digits = value.replace(/\D/g, '').slice(0, 4);
@@ -100,10 +99,14 @@ export default function PaymentPage() {
     const minutes = Math.max(0, Math.ceil((new Date(payment.expiresAt).getTime() - Date.now()) / 60000));
     return `${minutes} min`;
   }, [payment?.expiresAt]);
+  const activeNetwork = useMemo(
+    () => getCardNetwork(detectCardNetwork(cardNumber) || savedCards.find((card) => card.id === selectedCardId)?.network),
+    [cardNumber, savedCards, selectedCardId]
+  );
 
   const selectSavedCard = (card: SavedCard) => {
     setSelectedCardId(card.id);
-    setCardNumber(formatCardNumber(card.cardNumber));
+    setCardNumber(formatNetworkCardNumber(card.cardNumber));
     setExpiryDate(formatExpiry(card.expiryDate));
     // CVC is never persisted in the checkout form, even for a saved card.
     setCvv('');
@@ -156,7 +159,10 @@ export default function PaymentPage() {
 
     const cleanCard = cardNumber.replace(/\D/g, '');
     const cleanExpiry = expiryDate.replace(/\D/g, '');
-    if (cleanCard.length !== 16) return setError('Enter a valid 16-digit card number');
+    const detectedNetwork = getCardNetwork(detectCardNetwork(cleanCard));
+    if (cleanCard.length !== detectedNetwork.digits) {
+      return setError(`Enter a valid ${detectedNetwork.digits}-digit ${detectedNetwork.label} card number`);
+    }
     if (cleanExpiry.length !== 4) return setError('Enter expiry date in MM/YY format');
     const expiryMonth = Number(cleanExpiry.slice(0, 2));
     const expiryYear = 2000 + Number(cleanExpiry.slice(2));
@@ -164,7 +170,9 @@ export default function PaymentPage() {
     if (expiryMonth < 1 || expiryMonth > 12 || expiryYear < now.getFullYear() || (expiryYear === now.getFullYear() && expiryMonth < now.getMonth() + 1)) {
       return setError('This card expiry date is invalid or has passed');
     }
-    if (cvv.length !== 3) return setError('Enter a valid 3-digit security code');
+    if (cvv.length !== detectedNetwork.cvcDigits) {
+      return setError(`Enter a valid ${detectedNetwork.cvcDigits}-digit security code`);
+    }
 
     setProcessing(true);
     try {
@@ -249,7 +257,7 @@ export default function PaymentPage() {
           </div>
         </header>
 
-        <div className="grid overflow-hidden rounded-[24px] border border-white/10 bg-[#101318] shadow-[0_32px_90px_rgba(0,0,0,.45)] lg:grid-cols-[1fr_360px]">
+        <div className="glass-panel-strong grid overflow-hidden rounded-[24px] lg:grid-cols-[1fr_360px]">
           <main className="p-5 sm:p-8">
             <div className="mb-7">
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-blue-300">Pay securely</p>
@@ -270,7 +278,7 @@ export default function PaymentPage() {
                         <span className="block text-sm font-semibold">•••• {card.cardNumber.replace(/\s/g, '').slice(-4)}</span>
                         <span className="mt-0.5 block text-xs text-slate-500">{card.currency} · {card.cardType === 'nova-plus' ? 'Lingoung+' : 'Lingoung'}</span>
                       </span>
-                      <span className="text-xs font-semibold italic text-slate-300">VISA</span>
+                      <span className="text-xs font-semibold italic text-slate-300">{getCardNetwork(card.network).shortLabel}</span>
                     </button>
                   ))}
                 </div>
@@ -285,8 +293,8 @@ export default function PaymentPage() {
               <div>
                 <label htmlFor="card-number" className="mb-2 block text-xs font-semibold text-slate-400">Card number</label>
                 <div className="relative">
-                  <input id="card-number" inputMode="numeric" autoComplete="cc-number" required value={cardNumber} onChange={(event) => { setSelectedCardId('new'); setCardNumber(formatCardNumber(event.target.value)); }} placeholder="1234 5678 9012 3456" className="min-h-12 w-full rounded-xl border border-white/10 bg-black/20 px-4 pr-16 font-mono text-sm text-white placeholder:text-slate-600 focus:border-blue-300 focus:outline-none" />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold italic text-slate-500">VISA</span>
+                  <input id="card-number" inputMode="numeric" autoComplete="cc-number" required value={cardNumber} onChange={(event) => { setSelectedCardId('new'); setCardNumber(formatNetworkCardNumber(event.target.value)); }} placeholder="1234 5678 9012 3456" className="min-h-12 w-full rounded-xl border border-white/10 bg-black/20 px-4 pr-24 font-mono text-sm text-white placeholder:text-slate-600 focus:border-blue-300 focus:outline-none" />
+                  <span className="absolute right-4 top-1/2 max-w-20 -translate-y-1/2 truncate text-xs font-semibold italic text-slate-500">{activeNetwork.shortLabel}</span>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -296,7 +304,7 @@ export default function PaymentPage() {
                 </div>
                 <div>
                   <label htmlFor="cvv" className="mb-2 block text-xs font-semibold text-slate-400">Security code</label>
-                  <input id="cvv" type="password" inputMode="numeric" autoComplete="cc-csc" required value={cvv} onChange={(event) => setCvv(event.target.value.replace(/\D/g, '').slice(0, 3))} placeholder="CVC" className="min-h-12 w-full rounded-xl border border-white/10 bg-black/20 px-4 font-mono text-sm text-white placeholder:text-slate-600 focus:border-blue-300 focus:outline-none" />
+                  <input id="cvv" type="password" inputMode="numeric" autoComplete="cc-csc" required value={cvv} onChange={(event) => setCvv(event.target.value.replace(/\D/g, '').slice(0, activeNetwork.cvcDigits))} placeholder={activeNetwork.cvcDigits === 4 ? '4 digits' : 'CVC'} className="min-h-12 w-full rounded-xl border border-white/10 bg-black/20 px-4 font-mono text-sm text-white placeholder:text-slate-600 focus:border-blue-300 focus:outline-none" />
                 </div>
               </div>
               <div>
@@ -305,7 +313,7 @@ export default function PaymentPage() {
               </div>
 
               {savedCards.length === 0 && (
-                <button type="button" onClick={() => { setCardholderName(DEMO_CARD.cardholderName); setCardNumber(formatCardNumber(DEMO_CARD.cardNumber)); setExpiryDate(DEMO_CARD.expiryDate); setCvv(DEMO_CARD.cvv); }} className="text-left text-xs text-blue-300 hover:text-blue-200">
+                <button type="button" onClick={() => { setCardholderName(DEMO_CARD.cardholderName); setCardNumber(formatNetworkCardNumber(DEMO_CARD.cardNumber)); setExpiryDate(DEMO_CARD.expiryDate); setCvv(DEMO_CARD.cvv); }} className="text-left text-xs text-blue-300 hover:text-blue-200">
                   Sandbox only: fill the demo card
                 </button>
               )}

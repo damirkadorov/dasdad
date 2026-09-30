@@ -22,7 +22,7 @@ export default function Navigation() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 backdrop-blur-xl bg-[#07090D]/85 border-b border-white/[0.08] transition-all">
+      <nav className="glass-nav sticky top-0 z-50 transition-all">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="flex items-center justify-between h-16">
             <Link href="/dashboard" className="transition-transform hover:scale-[1.02] active:scale-[0.98]">

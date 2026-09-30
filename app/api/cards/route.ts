@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { requireAuth } from '@/lib/auth/middleware';
 import { getCardsByUserId, createCard, getUserById } from '@/lib/db/database';
 import { generateCardNumber, generateCVV, generateExpiryDate } from '@/lib/utils/helpers';
-import { Currency, NovapayCardType } from '@/lib/db/types';
+import { CardNetwork, Currency, NovapayCardType } from '@/lib/db/types';
 
 export async function GET() {
   try {
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { cardType, cardFormat = 'virtual', currency = 'USD', accountType = 'personal' } = body;
+    const { cardType, network = 'visa', cardFormat = 'virtual', currency = 'USD', accountType = 'personal' } = body;
 
     // Validate card type - NovaPay network cards only
     if (!cardType || !['nova', 'nova-plus'].includes(cardType)) {
@@ -62,6 +62,11 @@ export async function POST(request: NextRequest) {
         { error: 'Invalid card type. Must be "nova" or "nova-plus"' },
         { status: 400 }
       );
+    }
+
+    const validNetworks: CardNetwork[] = ['visa', 'mastercard', 'amex', 'discover', 'unionpay'];
+    if (!validNetworks.includes(network as CardNetwork)) {
+      return NextResponse.json({ error: 'Unsupported card network' }, { status: 400 });
     }
 
     // Validate card format
@@ -90,8 +95,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate NovaPay card details (all cards start with "7")
-    const cardNumber = generateCardNumber(cardType as NovapayCardType);
-    const cvv = generateCVV();
+    const cardNumber = generateCardNumber(cardType as NovapayCardType, network as CardNetwork);
+    const cvv = network === 'amex'
+      ? Math.floor(1000 + Math.random() * 9000).toString()
+      : generateCVV();
     const expiryDate = generateExpiryDate();
 
     // Create card in MongoDB with multi-currency support
@@ -102,6 +109,7 @@ export async function POST(request: NextRequest) {
       expiryDate,
       cvv,
       cardType: cardType as NovapayCardType,
+      network: network as CardNetwork,
       cardFormat: cardFormat as 'virtual' | 'physical',
       currency: currency as Currency,
       accountType: accountType as 'personal' | 'business',
