@@ -30,6 +30,30 @@ npm run android:sync
 npm run android:open
 ```
 
+`npm install` now restores the Gradle wrapper automatically. If Android Studio
+was opened before running it, close the project, run the commands above, and
+open `mobile/android` again.
+
+## Fixing Gradle sync
+
+In Android Studio open **Settings → Build, Execution, Deployment → Build Tools
+→ Gradle** and set **Gradle JDK** to **Embedded JDK 21**. Do not use JDK 25:
+Gradle 8.14 currently fails with `Unsupported class file major version 69`.
+
+If a build runs for more than a few minutes without new output:
+
+```bash
+cd mobile/android
+./gradlew --stop
+cd ../..
+npm run android:prepare
+npm run android:sync
+```
+
+Then use **File → Sync Project with Gradle Files**. The first successful sync
+downloads the Android Gradle Plugin and can take several minutes, but it should
+continue printing download or task progress.
+
 Build a debug APK in Android Studio, or with a compatible JDK:
 
 ```bash
