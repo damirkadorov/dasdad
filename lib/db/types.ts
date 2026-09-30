@@ -44,8 +44,9 @@ export interface User {
   createdAt: string;
 }
 
-// NovaPay card types - proprietary closed-loop payment network
+// Lingoung card visual/product tiers
 export type NovapayCardType = 'nova' | 'nova-plus';
+export type CardNetwork = 'visa' | 'mastercard' | 'amex' | 'discover' | 'unionpay';
 
 export interface Card {
   id: string;
@@ -53,7 +54,8 @@ export interface Card {
   cardNumber: string;
   expiryDate: string;
   cvv: string;
-  cardType: NovapayCardType; // NovaPay network card type (all cards start with "7")
+  cardType: NovapayCardType; // Lingoung product tier
+  network?: CardNetwork; // External card scheme; legacy cards default to Visa
   cardFormat: 'virtual' | 'physical'; // Virtual or physical card
   currency: Currency; // Card currency
   accountType?: 'personal' | 'business'; // Account type the card belongs to (default: personal)

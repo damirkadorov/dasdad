@@ -8,6 +8,7 @@ import Footer from '@/components/layout/Footer';
 import Skeleton from '@/components/ui/Skeleton';
 import { Card } from '@/lib/db/types';
 import { formatCardNumber } from '@/lib/utils/helpers';
+import { getCardNetwork } from '@/lib/utils/cardNetworks';
 
 export default function CardDetailPage() {
   const router = useRouter();
@@ -212,8 +213,8 @@ export default function CardDetailPage() {
                 </div>
               </div>
 
-              <div className="font-bold italic text-2xl tracking-tighter font-sans text-white/95">
-                VISA
+              <div className="font-bold italic text-xl tracking-tight font-sans text-white/95">
+                {getCardNetwork(card.network).shortLabel}
               </div>
             </div>
           </div>

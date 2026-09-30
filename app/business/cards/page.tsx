@@ -7,8 +7,9 @@ import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
 import CardItem from '@/components/cards/CardItem';
 import { CardsSkeleton } from '@/components/ui/Skeleton';
-import { Card, Currency, NovapayCardType } from '@/lib/db/types';
+import { Card, CardNetwork, Currency, NovapayCardType } from '@/lib/db/types';
 import { getSupportedCurrencies } from '@/lib/utils/currency';
+import { CARD_NETWORKS } from '@/lib/utils/cardNetworks';
 
 export default function BusinessCardsPage() {
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function BusinessCardsPage() {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [creating, setCreating] = useState(false);
   const [cardType, setCardType] = useState<NovapayCardType>('nova');
+  const [network, setNetwork] = useState<CardNetwork>('visa');
   const [cardFormat, setCardFormat] = useState<'virtual' | 'physical'>('virtual');
   const [cardCurrency, setCardCurrency] = useState<Currency>('USD');
 
@@ -61,6 +63,7 @@ export default function BusinessCardsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           cardType, 
+          network,
           cardFormat,
           currency: cardCurrency,
           accountType: 'business'
@@ -75,6 +78,7 @@ export default function BusinessCardsPage() {
       await fetchCards();
       setShowCreateForm(false);
       setCardType('nova');
+      setNetwork('visa');
       setCardFormat('virtual');
       setCardCurrency('USD');
     } catch (err) {
@@ -103,10 +107,11 @@ export default function BusinessCardsPage() {
   const previewCard: Card = {
     id: 'preview',
     userId: 'user',
-    cardNumber: cardType === 'nova' ? '7099887766554433' : '7199887766554433',
+    cardNumber: network === 'amex' ? '371449635398431' : network === 'mastercard' ? '5399211480511885' : network === 'discover' ? '6011211480511885' : network === 'unionpay' ? '6214211480511885' : '4539211480511885',
     expiryDate: '12/29',
     cvv: '999',
     cardType,
+    network,
     cardFormat,
     currency: cardCurrency,
     accountType: 'business',
@@ -201,6 +206,21 @@ export default function BusinessCardsPage() {
                       <div className="text-xs text-zinc-400">Engraved contactless chip</div>
                     </button>
                   </div>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-zinc-400">
+                    Payment network
+                  </label>
+                  <select
+                    value={network}
+                    onChange={(event) => setNetwork(event.target.value as CardNetwork)}
+                    className="glass-select min-h-12 w-full rounded-xl border border-white/10 bg-white/[0.045] px-4 text-sm text-white focus:border-blue-300 focus:outline-none"
+                  >
+                    {CARD_NETWORKS.map((item) => (
+                      <option key={item.id} value={item.id}>{item.label}</option>
+                    ))}
+                  </select>
                 </div>
 
                 <div>

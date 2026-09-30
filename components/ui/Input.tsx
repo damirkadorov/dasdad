@@ -22,7 +22,7 @@ export default function Input({
       )}
       <div className="relative">
         <input
-          className={`min-h-11 w-full rounded-xl border bg-white/[0.045] px-4 py-2.5 text-sm text-white placeholder:text-slate-500 transition-all duration-200 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400/20 ${error ? 'border-red-500 ring-1 ring-red-500/20' : 'border-white/10 hover:border-white/20'} ${className}`}
+          className={`min-h-11 w-full rounded-xl border bg-white/[0.055] px-4 py-2.5 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,.04)] backdrop-blur-xl placeholder:text-slate-500 transition-all duration-200 focus:border-[#9CB4CB] focus:outline-none focus:ring-2 focus:ring-[#9CB4CB]/20 ${error ? 'border-red-500 ring-1 ring-red-500/20' : 'border-white/10 hover:border-white/20'} ${className}`}
           {...props}
         />
         {error && (

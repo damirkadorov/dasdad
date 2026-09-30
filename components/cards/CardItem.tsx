@@ -2,6 +2,7 @@
 
 import { Card as CardType } from '@/lib/db/types';
 import { maskCardNumber } from '@/lib/utils/helpers';
+import { getCardNetwork } from '@/lib/utils/cardNetworks';
 
 interface CardProps {
   card: CardType;
@@ -12,6 +13,7 @@ export default function Card({ card, onClick }: CardProps) {
   // Reference-Inspired styles: Zip Plum Split (Image 1) or Affirm Cobalt Wave (Image 2)
   const isNovaPlus = card.cardType === 'nova-plus';
   const cardStyleClass = isNovaPlus ? 'card-zip-split' : 'card-affirm-wave';
+  const network = getCardNetwork(card.network);
 
   return (
     <div
@@ -65,7 +67,7 @@ export default function Card({ card, onClick }: CardProps) {
           </div>
           <div>
             <span className="text-[9px] opacity-70 block uppercase tracking-wider">CVC</span>
-            <span className="font-bold">•••</span>
+            <span className="font-bold">{'•'.repeat(network.cvcDigits)}</span>
           </div>
           {card.cardFormat && (
             <span className="text-[10px] px-2 py-0.5 rounded bg-white/10 text-white/80">
@@ -74,8 +76,8 @@ export default function Card({ card, onClick }: CardProps) {
           )}
         </div>
 
-        <div className="font-bold italic text-xl tracking-tighter font-sans text-white/95">
-          VISA
+        <div className="max-w-[104px] text-right font-sans text-base font-bold italic tracking-tight text-white/95">
+          {network.shortLabel}
         </div>
       </div>
     </div>

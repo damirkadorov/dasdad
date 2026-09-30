@@ -38,7 +38,7 @@ export default function Home() {
     <div className="hero-mesh min-h-screen overflow-x-hidden text-slate-100 selection:bg-blue-400 selection:text-slate-950">
       <div className="surface-grid pointer-events-none fixed inset-0 z-0" />
 
-      <header className="sticky top-0 z-50 border-b border-white/[0.08] bg-[#07090d]/80 backdrop-blur-xl">
+      <header className="glass-nav sticky top-0 z-50">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
           <Link href="/" aria-label="Lingoung home" className="rounded-xl">
             <Logo size={34} showText textWhite />
@@ -71,7 +71,7 @@ export default function Home() {
 
             <h1 className="max-w-2xl text-5xl font-semibold leading-[1.02] tracking-[-0.055em] text-white sm:text-6xl lg:text-[4.7rem]">
               Money moves.
-              <span className="block bg-gradient-to-r from-[#8EC5FF] via-[#5E9FE8] to-[#7DE2D1] bg-clip-text text-transparent">You stay in control.</span>
+              <span className="block text-[#B6C7D8]">You stay in control.</span>
             </h1>
 
             <p className="mt-7 max-w-xl text-base leading-7 text-slate-400 sm:text-lg">
@@ -79,7 +79,7 @@ export default function Home() {
             </p>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Link href="/register" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#5E9FE8] px-5 text-sm font-semibold text-slate-950 transition-all hover:-translate-y-0.5 hover:bg-[#7AB2EE]">Get started free <Arrow /></Link>
+              <Link href="/register" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/20 bg-[#9CB4CB] px-5 text-sm font-semibold text-slate-950 shadow-[inset_0_1px_0_rgba(255,255,255,.35),0_14px_32px_rgba(0,0,0,.22)] transition-all hover:-translate-y-0.5 hover:bg-[#B3C5D5]">Get started free <Arrow /></Link>
               <Link href="/developer/tester" className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/12 bg-white/[0.045] px-5 text-sm font-semibold text-white transition-colors hover:bg-white/[0.09]">Try API sandbox</Link>
             </div>
 
@@ -91,8 +91,8 @@ export default function Home() {
           </div>
 
           <div className="relative mx-auto w-full max-w-[560px] lg:col-span-6">
-            <div className="absolute -inset-10 rounded-full bg-blue-500/10 blur-3xl" />
-            <div className="relative overflow-hidden rounded-[28px] border border-white/12 bg-[#101318]/90 p-4 shadow-[0_32px_90px_rgba(0,0,0,.5)] backdrop-blur-xl sm:p-5">
+            <div className="absolute -inset-10 rounded-full bg-slate-300/[0.07] blur-3xl" />
+            <div className="glass-panel-strong relative overflow-hidden rounded-[28px] p-4 sm:p-5">
               <div className="mb-4 flex items-center justify-between px-1">
                 <div>
                   <p className="text-xs text-slate-500">Total balance</p>
@@ -101,7 +101,7 @@ export default function Home() {
                 <button aria-label="More account options" className="grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/[0.04] text-slate-400 transition-colors hover:bg-white/[0.08] hover:text-white">•••</button>
               </div>
 
-              <div className="relative mb-4 min-h-[210px] overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br from-[#286FBF] via-[#174D91] to-[#0B2446] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,.18)]">
+              <div className="relative mb-4 min-h-[210px] overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br from-[#626D7A] via-[#3C444F] to-[#20242B] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,.18),0_18px_38px_rgba(0,0,0,.24)]">
                 <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full border-[38px] border-white/[0.08]" />
                 <div className="absolute -bottom-24 right-14 h-48 w-48 rounded-full border-[30px] border-cyan-200/[0.08]" />
                 <div className="relative flex h-full flex-col justify-between">
@@ -165,7 +165,7 @@ export default function Home() {
 
           <div className="grid gap-4 md:grid-cols-3">
             {features.map((feature, index) => (
-              <article key={feature.number} className={`group flex min-h-[300px] flex-col justify-between rounded-2xl border p-6 transition-all hover:-translate-y-1 ${index === 1 ? 'border-blue-300/30 bg-[#5E9FE8] text-slate-950 shadow-[0_20px_60px_rgba(39,131,222,.18)]' : 'border-white/[0.09] bg-white/[0.035] text-white hover:border-white/20 hover:bg-white/[0.055]'}`}>
+              <article key={feature.number} className={`group flex min-h-[300px] flex-col justify-between rounded-2xl border p-6 backdrop-blur-xl transition-all hover:-translate-y-1 ${index === 1 ? 'border-white/18 bg-[#9AA7B5]/80 text-slate-950 shadow-[inset_0_1px_0_rgba(255,255,255,.3),0_20px_50px_rgba(0,0,0,.2)]' : 'border-white/[0.09] bg-white/[0.045] text-white shadow-[inset_0_1px_0_rgba(255,255,255,.05)] hover:border-white/20 hover:bg-white/[0.065]'}`}>
                 <div>
                   <span className={`font-mono text-xs ${index === 1 ? 'text-slate-950/60' : 'text-slate-500'}`}>{feature.number}</span>
                   <h3 className="mt-14 text-2xl font-semibold tracking-[-0.035em]">{feature.title}</h3>

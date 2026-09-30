@@ -20,8 +20,8 @@ export default function Button({
   const baseStyles = 'min-h-11 rounded-xl border font-semibold transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#07090D]';
   
   const variants = {
-    primary: 'border-blue-300/20 bg-[#5E9FE8] text-slate-950 hover:bg-[#7AB2EE] shadow-[0_10px_28px_rgba(39,131,222,.18)]',
-    secondary: 'border-white/10 bg-white/[0.06] text-white hover:bg-white/[0.1]',
+    primary: 'border-white/20 bg-[#9CB4CB] text-slate-950 hover:bg-[#B2C5D6] shadow-[inset_0_1px_0_rgba(255,255,255,.32),0_12px_30px_rgba(0,0,0,.2)]',
+    secondary: 'border-white/12 bg-white/[0.07] text-white backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,.07)] hover:bg-white/[0.11]',
     danger: 'border-red-400/20 bg-red-500 text-white hover:bg-red-400',
     ghost: 'border-transparent bg-transparent text-slate-300 hover:bg-white/[0.06] hover:text-white'
   };

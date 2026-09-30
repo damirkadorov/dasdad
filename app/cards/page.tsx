@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
-import Button from '@/components/ui/Button';
 import CardItem from '@/components/cards/CardItem';
 import { CardsSkeleton } from '@/components/ui/Skeleton';
-import { Card, Currency, NovapayCardType } from '@/lib/db/types';
+import { Card, CardNetwork, Currency, NovapayCardType } from '@/lib/db/types';
 import { getSupportedCurrencies } from '@/lib/utils/currency';
+import { CARD_NETWORKS, getCardNetwork } from '@/lib/utils/cardNetworks';
 
 export default function CardsPage() {
   const router = useRouter();
@@ -18,6 +18,7 @@ export default function CardsPage() {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [creating, setCreating] = useState(false);
   const [cardType, setCardType] = useState<NovapayCardType>('nova');
+  const [network, setNetwork] = useState<CardNetwork>('visa');
   const [cardFormat, setCardFormat] = useState<'virtual' | 'physical'>('virtual');
   const [cardCurrency, setCardCurrency] = useState<Currency>('USD');
 
@@ -61,6 +62,7 @@ export default function CardsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           cardType, 
+          network,
           cardFormat,
           currency: cardCurrency 
         })
@@ -74,6 +76,7 @@ export default function CardsPage() {
       await fetchCards();
       setShowCreateForm(false);
       setCardType('nova');
+      setNetwork('visa');
       setCardFormat('virtual');
       setCardCurrency('USD');
     } catch (err) {
@@ -91,10 +94,11 @@ export default function CardsPage() {
   const previewCard: Card = {
     id: 'preview-card',
     userId: 'current-user',
-    cardNumber: '7003 2114 8051 1885',
+    cardNumber: network === 'amex' ? '3714 496353 98431' : network === 'mastercard' ? '5399 2114 8051 1885' : network === 'discover' ? '6011 2114 8051 1885' : network === 'unionpay' ? '6214 2114 8051 1885' : '4539 2114 8051 1885',
     expiryDate: '07/31',
     cvv: '481',
     cardType,
+    network,
     cardFormat,
     currency: cardCurrency,
     accountType: 'personal',
@@ -167,7 +171,7 @@ export default function CardsPage() {
         {/* Create Card Form with Live Interactive Preview (References: Images 1, 2 & 3) */}
         {showCreateForm && (
           <div className="bezel-card mb-10 animate-slideDown">
-            <div className="bezel-card-inner p-6 sm:p-8 bg-[#101318]/95 border border-white/10">
+            <div className="bezel-card-inner p-6 sm:p-8">
               <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/[0.08]">
                 <div>
                   <h2 className="text-lg font-bold text-white">
@@ -257,6 +261,31 @@ export default function CardsPage() {
                     </div>
                   </div>
 
+                  <div>
+                    <label className="mb-2.5 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+                      Payment network
+                    </label>
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+                      {CARD_NETWORKS.map((item) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => setNetwork(item.id)}
+                          className={`glass-option min-h-12 rounded-xl border px-3 text-xs font-semibold transition-all ${
+                            network === item.id
+                              ? 'border-blue-300/50 bg-blue-300/15 text-white'
+                              : 'border-white/10 bg-white/[0.035] text-slate-300 hover:bg-white/[0.07]'
+                          }`}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="mt-2 text-[11px] text-slate-500">
+                      Checkout automatically adapts number length and security code rules.
+                    </p>
+                  </div>
+
                   {/* Currency Selector */}
                   <div>
                     <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2.5">
@@ -280,7 +309,7 @@ export default function CardsPage() {
                     disabled={creating}
                     className="w-full py-3 px-6 rounded-full bg-white hover:bg-slate-200 text-black font-extrabold text-xs transition-all active:scale-98 cursor-pointer shadow-lg disabled:opacity-50"
                   >
-                    {creating ? 'Issuing card...' : `Confirm & Issue ${cardFormat === 'physical' ? 'Physical' : 'Virtual'} ${cardType === 'nova' ? 'Affirm Wave' : 'Zip Split'}`}
+                    {creating ? 'Issuing card...' : `Issue ${getCardNetwork(network).label} ${cardFormat === 'physical' ? 'Physical' : 'Virtual'} Card`}
                   </button>
                 </div>
 
