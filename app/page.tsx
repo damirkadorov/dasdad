@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Logo from '@/components/layout/Logo';
+import CardChip from '@/components/cards/CardChip';
 import Footer from '@/components/layout/Footer';
 
 const activity = [
@@ -109,7 +110,8 @@ export default function Home() {
                     <Logo size={30} showText={false} />
                     <span className="text-lg font-semibold italic tracking-tight">VISA</span>
                   </div>
-                  <div className="mt-14">
+                  <CardChip size="md" className="mt-5" />
+                  <div className="mt-6">
                     <p className="font-mono text-lg tracking-[0.16em] text-white sm:text-xl">4804 •••• •••• 8300</p>
                     <div className="mt-5 flex items-end justify-between">
                       <div>

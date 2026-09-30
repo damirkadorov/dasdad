@@ -3,6 +3,7 @@
 import { Card as CardType } from '@/lib/db/types';
 import { maskCardNumber } from '@/lib/utils/helpers';
 import { getCardNetwork } from '@/lib/utils/cardNetworks';
+import CardChip from '@/components/cards/CardChip';
 
 interface CardProps {
   card: CardType;
@@ -40,18 +41,7 @@ export default function Card({ card, onClick }: CardProps) {
         </div>
       </div>
 
-      {/* Chip SVG Icon */}
-      <div className="mb-4 relative z-10">
-        <svg width="36" height="28" viewBox="0 0 36 28" fill="none" className="opacity-90">
-          <rect x="0.5" y="0.5" width="35" height="27" rx="3.5" stroke="rgba(255,255,255,0.6)" />
-          <rect x="4" y="4" width="12" height="8" rx="1" fill="rgba(255,255,255,0.4)" />
-          <rect x="4" y="16" width="12" height="8" rx="1" fill="rgba(255,255,255,0.4)" />
-          <rect x="20" y="4" width="12" height="8" rx="1" fill="rgba(255,255,255,0.4)" />
-          <rect x="20" y="16" width="12" height="8" rx="1" fill="rgba(255,255,255,0.4)" />
-          <line x1="18" y1="4" x2="18" y2="24" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" />
-          <line x1="4" y1="14" x2="32" y2="14" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" />
-        </svg>
-      </div>
+      <CardChip size="sm" className="relative z-10 mb-4" />
 
       {/* Masked Card Number */}
       <div className="mb-6 text-lg sm:text-xl font-mono tracking-widest text-white font-semibold relative z-10">

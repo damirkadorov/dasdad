@@ -9,6 +9,7 @@ import Skeleton from '@/components/ui/Skeleton';
 import { Card } from '@/lib/db/types';
 import { formatCardNumber } from '@/lib/utils/helpers';
 import { getCardNetwork } from '@/lib/utils/cardNetworks';
+import CardChip from '@/components/cards/CardChip';
 
 export default function CardDetailPage() {
   const router = useRouter();
@@ -192,6 +193,8 @@ export default function CardDetailPage() {
                 {card.balance !== undefined ? card.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}
               </div>
             </div>
+
+            <CardChip size="lg" className="mb-7" />
 
             {/* Card Number */}
             <div className="mb-8">
