@@ -56,6 +56,13 @@ export default function Home() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <Link
+              href="/business"
+              aria-label="Open Business Banking"
+              className="grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/[0.06] text-base text-white md:hidden"
+            >
+              <span aria-hidden="true">💼</span>
+            </Link>
             <Link href="/login" className="hidden min-h-11 items-center px-3 text-sm font-medium text-slate-300 transition-colors hover:text-white sm:flex">Log in</Link>
             <Link href="/register" className="inline-flex min-h-11 items-center rounded-xl bg-white px-4 text-sm font-semibold text-slate-950 transition-transform hover:-translate-y-0.5 hover:bg-blue-50">Open account</Link>
           </div>

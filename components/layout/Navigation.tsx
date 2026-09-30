@@ -87,7 +87,7 @@ export default function Navigation() {
           {/* Mobile navigation panel */}
           <div
             className={`lg:hidden overflow-hidden transition-all duration-300 ease-spring ${
-              mobileOpen ? 'max-h-96 pb-4 opacity-100' : 'max-h-0 pb-0 opacity-0'
+              mobileOpen ? 'max-h-[34rem] pb-4 opacity-100' : 'max-h-0 pb-0 opacity-0'
             }`}
           >
             <div className="pt-2 grid grid-cols-2 gap-2 animate-slideDown">
@@ -109,6 +109,22 @@ export default function Navigation() {
                   </Link>
                 );
               })}
+              <Link
+                href="/business"
+                onClick={() => setMobileOpen(false)}
+                className="col-span-2 flex min-h-12 items-center justify-between rounded-xl border border-white/12 bg-white/[0.07] px-4 text-sm font-semibold text-white"
+              >
+                <span className="flex items-center gap-2.5"><span aria-hidden="true">💼</span> Business Banking</span>
+                <span className="text-slate-400">→</span>
+              </Link>
+              <Link
+                href="/business/pos-terminal"
+                onClick={() => setMobileOpen(false)}
+                className="col-span-2 flex min-h-12 items-center justify-between rounded-xl border border-emerald-300/20 bg-emerald-300/[0.08] px-4 text-sm font-semibold text-emerald-100"
+              >
+                <span className="flex items-center gap-2.5"><span aria-hidden="true">◉</span> NFC POS Terminal</span>
+                <span className="text-emerald-200/60">→</span>
+              </Link>
               <Link
                 href="/developer/tester"
                 onClick={() => setMobileOpen(false)}

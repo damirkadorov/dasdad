@@ -6,6 +6,16 @@ interface LingoungNfcPlugin {
   stopCardEmulation(): Promise<void>;
   readPaymentToken(): Promise<{ token: string }>;
   cancelRead(): Promise<void>;
+  runDiagnostics(): Promise<NfcDiagnostics>;
+}
+
+export interface NfcDiagnostics {
+  nativeBridge: boolean;
+  nfcSupported: boolean;
+  nfcEnabled: boolean;
+  hceSupported: boolean;
+  hceServiceDeclared: boolean;
+  paymentTokenLoaded: boolean;
 }
 
 const LingoungNfc = registerPlugin<LingoungNfcPlugin>('LingoungNfc');
@@ -33,4 +43,18 @@ export async function readLingoungPaymentToken() {
 
 export async function cancelLingoungNfcRead() {
   return await LingoungNfc.cancelRead();
+}
+
+export async function runLingoungNfcDiagnostics() {
+  if (!isLingoungAndroidApp()) {
+    return {
+      nativeBridge: false,
+      nfcSupported: false,
+      nfcEnabled: false,
+      hceSupported: false,
+      hceServiceDeclared: false,
+      paymentTokenLoaded: false,
+    } satisfies NfcDiagnostics;
+  }
+  return await LingoungNfc.runDiagnostics();
 }

@@ -11,6 +11,8 @@ import {
   getLingoungNfcStatus,
   isLingoungAndroidApp,
   readLingoungPaymentToken,
+  runLingoungNfcDiagnostics,
+  type NfcDiagnostics,
 } from '@/lib/mobile/lingoungNfc';
 
 interface PosTransactionDetails {
@@ -41,6 +43,7 @@ export default function POSTerminal() {
   const [transactionDetails, setTransactionDetails] = useState<PosTransactionDetails | null>(null);
   const [nativeNfc, setNativeNfc] = useState(false);
   const [nfcStatus, setNfcStatus] = useState('');
+  const [nfcDiagnostics, setNfcDiagnostics] = useState<NfcDiagnostics | null>(null);
 
   useEffect(() => {
     if (!isLingoungAndroidApp()) return;
@@ -184,6 +187,22 @@ export default function POSTerminal() {
       setNfcStatus('NFC terminal ready');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleNfcDiagnostics = async () => {
+    setNfcStatus('Running NFC hardware diagnostics…');
+    try {
+      const diagnostics = await runLingoungNfcDiagnostics();
+      setNfcDiagnostics(diagnostics);
+      const ready = diagnostics.nativeBridge
+        && diagnostics.nfcSupported
+        && diagnostics.nfcEnabled
+        && diagnostics.hceSupported
+        && diagnostics.hceServiceDeclared;
+      setNfcStatus(ready ? 'NFC hardware and Lingoung HCE service are ready' : 'NFC diagnostics found a configuration problem');
+    } catch (diagnosticError) {
+      setNfcStatus(diagnosticError instanceof Error ? diagnosticError.message : 'NFC diagnostics failed');
     }
   };
 
@@ -337,6 +356,30 @@ export default function POSTerminal() {
                 >
                   {loading ? 'Waiting for tap…' : 'Start NFC payment'}
                 </button>
+                <button
+                  type="button"
+                  onClick={handleNfcDiagnostics}
+                  className="mt-2 min-h-11 w-full rounded-xl border border-white/12 bg-white/[0.06] px-4 text-xs font-semibold text-white"
+                >
+                  Run NFC diagnostics
+                </button>
+                {nfcDiagnostics && (
+                  <div className="mt-3 grid grid-cols-2 gap-2 text-[11px]">
+                    {[
+                      ['Native bridge', nfcDiagnostics.nativeBridge],
+                      ['NFC hardware', nfcDiagnostics.nfcSupported],
+                      ['NFC enabled', nfcDiagnostics.nfcEnabled],
+                      ['Card emulation', nfcDiagnostics.hceSupported],
+                      ['HCE service', nfcDiagnostics.hceServiceDeclared],
+                      ['Customer token', nfcDiagnostics.paymentTokenLoaded],
+                    ].map(([label, passed]) => (
+                      <div key={String(label)} className="flex items-center justify-between rounded-lg border border-white/8 bg-black/15 px-3 py-2">
+                        <span className="text-slate-400">{label}</span>
+                        <span className={passed ? 'text-emerald-300' : 'text-slate-500'}>{passed ? 'PASS' : '—'}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
                 <p className="mt-3 text-center text-[11px] leading-5 text-slate-500">Accepts a 90-second authorization generated in the customer Lingoung Android app.</p>
               </div>
             )}

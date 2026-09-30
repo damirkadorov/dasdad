@@ -1,6 +1,8 @@
 package com.lingoung.bank;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.pm.PackageManager;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
@@ -24,6 +26,39 @@ public class LingoungNfcPlugin extends Plugin {
         JSObject result = new JSObject();
         result.put("supported", adapter != null);
         result.put("enabled", adapter != null && adapter.isEnabled());
+        call.resolve(result);
+    }
+
+    @PluginMethod
+    public void runDiagnostics(PluginCall call) {
+        NfcAdapter adapter = NfcAdapter.getDefaultAdapter(getContext());
+        PackageManager packageManager = getContext().getPackageManager();
+        boolean serviceDeclared;
+        try {
+            packageManager.getServiceInfo(
+                new ComponentName(getContext(), LingoungHostApduService.class),
+                PackageManager.GET_META_DATA
+            );
+            serviceDeclared = true;
+        } catch (PackageManager.NameNotFoundException error) {
+            serviceDeclared = false;
+        }
+
+        JSObject result = new JSObject();
+        result.put("nativeBridge", true);
+        result.put("nfcSupported", adapter != null);
+        result.put("nfcEnabled", adapter != null && adapter.isEnabled());
+        result.put(
+            "hceSupported",
+            packageManager.hasSystemFeature(PackageManager.FEATURE_NFC_HOST_CARD_EMULATION)
+        );
+        result.put("hceServiceDeclared", serviceDeclared);
+        result.put(
+            "paymentTokenLoaded",
+            !getContext().getSharedPreferences("lingoung_nfc", Activity.MODE_PRIVATE)
+                .getString("payment_token", "")
+                .isEmpty()
+        );
         call.resolve(result);
     }
 
