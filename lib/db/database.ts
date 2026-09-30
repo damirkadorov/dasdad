@@ -368,3 +368,13 @@ export async function updatePayment(id: string, updates: Partial<Payment>): Prom
   );
   return result ?? null;
 }
+
+export async function claimPendingPayment(id: string): Promise<Payment | null> {
+  const payments = await getPaymentsCollection();
+  const result = await payments.findOneAndUpdate(
+    { id, status: 'pending' },
+    { $set: { status: 'processing' } },
+    { returnDocument: 'after' }
+  );
+  return result ?? null;
+}

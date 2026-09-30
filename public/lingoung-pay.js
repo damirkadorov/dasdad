@@ -3,12 +3,28 @@
  * Lightweight, zero-dependency embedded checkout widget & modal
  * https://lingoung-bank.vercel.app
  */
+/* eslint-disable @typescript-eslint/no-this-alias */
 (function(window, document) {
   'use strict';
 
-  var DEFAULT_HOST = (typeof window !== 'undefined' && window.location && window.location.origin) 
-    ? window.location.origin 
-    : 'https://lingoung-bank.vercel.app';
+  function resolveGatewayHost() {
+    var current = document.currentScript;
+    if (!current) {
+      var scripts = document.getElementsByTagName('script');
+      for (var i = scripts.length - 1; i >= 0; i--) {
+        if ((scripts[i].src || '').indexOf('lingoung-pay.js') !== -1) {
+          current = scripts[i];
+          break;
+        }
+      }
+    }
+    if (current && current.src) {
+      try { return new URL(current.src).origin; } catch {}
+    }
+    return 'https://dasdad-alpha.vercel.app';
+  }
+
+  var DEFAULT_HOST = resolveGatewayHost();
 
   var LingoungPay = {
     version: '2.0.0',
@@ -41,8 +57,10 @@
         customerName: options.customerName || undefined,
         customerEmail: options.customerEmail || undefined,
         orderId: options.orderId || ('ORD-' + Date.now()),
+        metadata: options.metadata || undefined,
         successUrl: options.successUrl || undefined,
         cancelUrl: options.cancelUrl || undefined,
+        webhookUrl: options.webhookUrl || undefined,
       };
 
       fetch(endpoint, {
@@ -108,7 +126,7 @@
         'position: relative',
         'width: 100%',
         'max-width: 490px',
-        'height: 650px',
+        'height: 760px',
         'max-height: 94vh',
         'background: #090d16',
         'border: 1px solid rgba(255, 255, 255, 0.15)',
@@ -168,6 +186,11 @@
       };
 
       var messageHandler = function(event) {
+        try {
+          if (event.origin !== new URL(selfRef.host).origin) return;
+        } catch {
+          return;
+        }
         if (!event.data) return;
         if (event.data.type === 'lingoung.payment.success' || event.data.event === 'payment.completed') {
           window.removeEventListener('message', messageHandler);
@@ -209,6 +232,11 @@
 
       var selfRef = this;
       var messageHandler = function(event) {
+        try {
+          if (event.origin !== new URL(selfRef.host).origin) return;
+        } catch {
+          return;
+        }
         if (!event.data) return;
         if (event.data.type === 'lingoung.payment.success') {
           clearInterval(timer);
@@ -236,6 +264,9 @@
           var customerName = btn.getAttribute('data-customer-name') || undefined;
           var customerEmail = btn.getAttribute('data-customer-email') || undefined;
           var mode = btn.getAttribute('data-mode') || 'modal';
+          var successUrl = btn.getAttribute('data-success-url') || btn.getAttribute('data-success-redirect') || undefined;
+          var cancelUrl = btn.getAttribute('data-cancel-url') || undefined;
+          var webhookUrl = btn.getAttribute('data-webhook-url') || undefined;
 
           self.checkout({
             apiKey: apiKey,
@@ -245,11 +276,14 @@
             customerName: customerName,
             customerEmail: customerEmail,
             mode: mode,
+            successUrl: successUrl,
+            cancelUrl: cancelUrl,
+            webhookUrl: webhookUrl,
             onSuccess: function(data) {
               var customEvt = new CustomEvent('lingoung:success', { detail: data });
               btn.dispatchEvent(customEvt);
-              if (btn.hasAttribute('data-success-redirect')) {
-                window.location.href = btn.getAttribute('data-success-redirect');
+              if (successUrl) {
+                window.location.href = successUrl;
               }
             },
             onCancel: function() {

@@ -10,6 +10,16 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-API-Key',
 };
 
+function isValidReturnUrl(value?: string): boolean {
+  if (!value) return true;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' || (url.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(url.hostname));
+  } catch {
+    return false;
+  }
+}
+
 // Handle OPTIONS request for CORS preflight
 export async function OPTIONS() {
   return NextResponse.json({}, { headers: corsHeaders });
@@ -67,6 +77,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (![successUrl, cancelUrl, webhookUrl].every(isValidReturnUrl)) {
+      return NextResponse.json(
+        { error: 'Return and webhook URLs must use HTTPS (HTTP is allowed only for localhost)' },
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
     // Create payment
     const payment: Payment = {
       id: uuidv4(),
@@ -83,7 +100,8 @@ export async function POST(request: NextRequest) {
       successUrl,
       cancelUrl,
       webhookUrl,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 30 * 60 * 1000).toISOString()
     };
 
     await createPayment(payment);

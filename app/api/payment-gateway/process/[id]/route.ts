@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
-import { getPaymentById, updatePayment, getAllCards, getUserById, updateUser, createTransaction } from '@/lib/db/database';
+import { claimPendingPayment, getPaymentById, updatePayment, getAllCards, getUserById, updateUser, createTransaction } from '@/lib/db/database';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 // Payment gateway fee percentage
 const PAYMENT_GATEWAY_FEE_PERCENTAGE = 0.025; // 2.5%
@@ -22,6 +25,8 @@ export async function GET(
       );
     }
 
+    const merchant = await getUserById(payment.merchantId);
+
     return NextResponse.json({
       payment: {
         id: payment.id,
@@ -32,6 +37,12 @@ export async function GET(
         status: payment.status,
         customerEmail: payment.customerEmail,
         customerName: payment.customerName,
+        merchantName: merchant?.username || 'Lingoung merchant',
+        orderId: payment.orderId,
+        successUrl: payment.successUrl,
+        cancelUrl: payment.cancelUrl,
+        createdAt: payment.createdAt,
+        expiresAt: payment.expiresAt,
       }
     });
   } catch (error) {
@@ -40,6 +51,25 @@ export async function GET(
       { error: 'Failed to fetch payment' },
       { status: 500 }
     );
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id: paymentId } = await params;
+    const payment = await getPaymentById(paymentId);
+    if (!payment) return NextResponse.json({ error: 'Payment not found' }, { status: 404 });
+    if (payment.status !== 'pending') {
+      return NextResponse.json({ error: 'Only pending payments can be cancelled' }, { status: 409 });
+    }
+    await updatePayment(paymentId, { status: 'cancelled', failedReason: 'Cancelled by customer' });
+    return NextResponse.json({ success: true, cancelUrl: payment.cancelUrl });
+  } catch (error) {
+    console.error('Cancel payment error:', error);
+    return NextResponse.json({ error: 'Failed to cancel payment' }, { status: 500 });
   }
 }
 
@@ -75,6 +105,11 @@ export async function POST(
         { error: 'Payment is not in pending status' },
         { status: 400 }
       );
+    }
+
+    if (payment.expiresAt && new Date(payment.expiresAt).getTime() < Date.now()) {
+      await updatePayment(paymentId, { status: 'failed', failedReason: 'Payment session expired' });
+      return NextResponse.json({ error: 'Payment session expired' }, { status: 410 });
     }
 
     // Find the card in the database
@@ -130,6 +165,13 @@ export async function POST(
       );
     }
 
+    if (payer.id === merchant.id) {
+      return NextResponse.json(
+        { error: 'A merchant cannot pay their own checkout. Use a card from a separate customer account.' },
+        { status: 400 }
+      );
+    }
+
     // Calculate fee (2.5%)
     const fee = payment.amount * PAYMENT_GATEWAY_FEE_PERCENTAGE;
     const merchantAmount = payment.amount - fee;
@@ -160,7 +202,13 @@ export async function POST(
 
     // Only lock the session after all user-correctable validations pass.
     // Invalid card details or a low balance can therefore be fixed and retried.
-    await updatePayment(paymentId, { status: 'processing' });
+    const claimedPayment = await claimPendingPayment(paymentId);
+    if (!claimedPayment) {
+      return NextResponse.json(
+        { error: 'This payment is already being processed or has been completed' },
+        { status: 409 }
+      );
+    }
 
     await updateUser(payer.id, { 
       balances: updatedPayerBalances,
