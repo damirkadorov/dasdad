@@ -1,6 +1,6 @@
 // MongoDB database operations (replacing JSON file storage)
-import { User, Card, Transaction, BankAccount, Trade, Loan, SavingsAccount, CreditCard, Bill, Investment, Product, Order, ApiKey, Payment } from './types';
-import { getUsersCollection, getCardsCollection, getTransactionsCollection, getBankAccountsCollection, getTradesCollection, getLoansCollection, getSavingsAccountsCollection, getCreditCardsCollection, getBillsCollection, getInvestmentsCollection, getProductsCollection, getOrdersCollection, getApiKeysCollection, getPaymentsCollection } from './mongodb';
+import { User, Card, Transaction, BankAccount, Trade, Loan, SavingsAccount, CreditCard, Bill, Investment, Product, Order, ApiKey, Payment, NfcPaymentToken } from './types';
+import { getUsersCollection, getCardsCollection, getTransactionsCollection, getBankAccountsCollection, getTradesCollection, getLoansCollection, getSavingsAccountsCollection, getCreditCardsCollection, getBillsCollection, getInvestmentsCollection, getProductsCollection, getOrdersCollection, getApiKeysCollection, getPaymentsCollection, getNfcPaymentTokensCollection } from './mongodb';
 
 // User operations - now using MongoDB
 export async function getAllUsers(): Promise<User[]> {
@@ -115,6 +115,39 @@ export async function createTransaction(transaction: Transaction): Promise<Trans
   };
   await transactions.insertOne(normalizedTransaction);
   return normalizedTransaction;
+}
+
+export async function createNfcPaymentToken(token: NfcPaymentToken): Promise<NfcPaymentToken> {
+  const tokens = await getNfcPaymentTokensCollection();
+  await tokens.insertOne(token);
+  return token;
+}
+
+export async function getActiveNfcPaymentToken(tokenHash: string): Promise<NfcPaymentToken | null> {
+  const tokens = await getNfcPaymentTokensCollection();
+  return await tokens.findOne({
+    tokenHash,
+    status: 'active',
+    expiresAt: { $gt: new Date().toISOString() },
+  });
+}
+
+export async function claimNfcPaymentToken(tokenHash: string): Promise<NfcPaymentToken | null> {
+  const tokens = await getNfcPaymentTokensCollection();
+  return await tokens.findOneAndUpdate(
+    {
+      tokenHash,
+      status: 'active',
+      expiresAt: { $gt: new Date().toISOString() },
+    },
+    {
+      $set: {
+        status: 'redeemed',
+        redeemedAt: new Date().toISOString(),
+      },
+    },
+    { returnDocument: 'after' }
+  );
 }
 
 // Bank account operations

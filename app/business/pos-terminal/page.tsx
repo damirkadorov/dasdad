@@ -1,13 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import BusinessNavigation from '@/components/business/BusinessNavigation';
 import Footer from '@/components/layout/Footer';
 import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
 import { formatCurrencyAmount } from '@/lib/utils/currency';
 import { Currency } from '@/lib/db/types';
+import {
+  getLingoungNfcStatus,
+  isLingoungAndroidApp,
+  readLingoungPaymentToken,
+} from '@/lib/mobile/lingoungNfc';
+
+interface PosTransactionDetails {
+  amount: number;
+  currency: Currency;
+  cardLast4?: string;
+  transactionId?: string;
+  paymentId?: string;
+  description?: string;
+  customer?: string;
+}
 
 export default function POSTerminal() {
   const router = useRouter();
@@ -22,10 +36,19 @@ export default function POSTerminal() {
   
   // UI state
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
-  const [transactionDetails, setTransactionDetails] = useState<any>(null);
+  const [transactionDetails, setTransactionDetails] = useState<PosTransactionDetails | null>(null);
+  const [nativeNfc, setNativeNfc] = useState(false);
+  const [nfcStatus, setNfcStatus] = useState('');
+
+  useEffect(() => {
+    if (!isLingoungAndroidApp()) return;
+    setNativeNfc(true);
+    void getLingoungNfcStatus().then((status) => {
+      setNfcStatus(status.enabled ? 'NFC terminal ready' : 'Enable NFC in Android settings');
+    });
+  }, []);
 
   const formatCardNumber = (value: string) => {
     const cleaned = value.replace(/\s/g, '');
@@ -66,7 +89,6 @@ export default function POSTerminal() {
     e.preventDefault();
     setLoading(true);
     setError('');
-    setSuccess('');
 
     // Validate inputs
     if (!cardNumber || cardNumber.length !== 16) {
@@ -113,7 +135,6 @@ export default function POSTerminal() {
         throw new Error(data.error || 'Payment failed');
       }
 
-      setSuccess(`Successfully charged ${formatCurrencyAmount(parseFloat(amount), currency)}`);
       setTransactionDetails(data);
       setShowSuccess(true);
       
@@ -130,10 +151,45 @@ export default function POSTerminal() {
     }
   };
 
+  const handleNativeNfcCharge = async () => {
+    const paymentAmount = Number(amount);
+    if (!Number.isFinite(paymentAmount) || paymentAmount <= 0) {
+      setError('Enter a valid amount before starting the NFC terminal');
+      return;
+    }
+    setLoading(true);
+    setError('');
+    setNfcStatus('Hold the customer Lingoung phone near this device…');
+    try {
+      const { token } = await readLingoungPaymentToken();
+      setNfcStatus('Authorizing payment…');
+      const response = await fetch('/api/business/nfc-charge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, amount: paymentAmount, currency, description }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'NFC payment failed');
+      setTransactionDetails({
+        ...data,
+        transactionId: data.paymentId,
+        cardLast4: 'NFC',
+        description,
+      });
+      setShowSuccess(true);
+      setAmount('');
+      setDescription('');
+    } catch (nfcError) {
+      setError(nfcError instanceof Error ? nfcError.message : 'NFC payment failed');
+      setNfcStatus('NFC terminal ready');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleNewTransaction = () => {
     setShowSuccess(false);
     setTransactionDetails(null);
-    setSuccess('');
     setError('');
   };
 
@@ -263,6 +319,27 @@ export default function POSTerminal() {
                 </select>
               </div>
             </div>
+
+            {nativeNfc && (
+              <div className="glass-panel mb-6 rounded-2xl p-4">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.12em] text-blue-200">Native Android NFC</p>
+                    <p className="mt-1 text-sm text-slate-300">{nfcStatus || 'NFC terminal ready'}</p>
+                  </div>
+                  <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-emerald-300 shadow-[0_0_14px_rgba(110,231,183,.7)]" />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleNativeNfcCharge}
+                  disabled={loading}
+                  className="mt-4 min-h-14 w-full rounded-xl bg-[#9CB4CB] px-5 text-sm font-extrabold text-slate-950 disabled:opacity-50"
+                >
+                  {loading ? 'Waiting for tap…' : 'Start NFC payment'}
+                </button>
+                <p className="mt-3 text-center text-[11px] leading-5 text-slate-500">Accepts a 90-second authorization generated in the customer Lingoung Android app.</p>
+              </div>
+            )}
 
             {/* Card Number */}
             <div className="mb-4">

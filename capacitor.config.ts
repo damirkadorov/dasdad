@@ -1,0 +1,27 @@
+import type { CapacitorConfig } from '@capacitor/cli';
+
+const config: CapacitorConfig = {
+  appId: 'com.lingoung.bank',
+  appName: 'Lingoung',
+  webDir: 'mobile-shell',
+  server: {
+    url: 'https://dasdad-alpha.vercel.app',
+    cleartext: false,
+    androidScheme: 'https',
+  },
+  android: {
+    path: 'mobile/android',
+    allowMixedContent: false,
+    backgroundColor: '#0B0D11',
+  },
+  plugins: {
+    SplashScreen: {
+      launchAutoHide: true,
+      launchShowDuration: 1200,
+      backgroundColor: '#0B0D11',
+      showSpinner: false,
+    },
+  },
+};
+
+export default config;

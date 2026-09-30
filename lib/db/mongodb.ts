@@ -1,5 +1,5 @@
 import { MongoClient, Db, Collection } from 'mongodb';
-import { User, Card, Transaction, BankAccount, Trade, Loan, SavingsAccount, CreditCard, Bill, Investment, Product, Order, ApiKey, Payment } from './types';
+import { User, Card, Transaction, BankAccount, Trade, Loan, SavingsAccount, CreditCard, Bill, Investment, Product, Order, ApiKey, Payment, NfcPaymentToken } from './types';
 
 // MongoDB connection URI from environment variable
 // Will be validated when connecting, not at module load time (for build compatibility)
@@ -155,4 +155,9 @@ export async function getApiKeysCollection(): Promise<Collection<ApiKey>> {
 export async function getPaymentsCollection(): Promise<Collection<Payment>> {
   const db = await connectToDatabase();
   return db.collection<Payment>('payments');
+}
+
+export async function getNfcPaymentTokensCollection(): Promise<Collection<NfcPaymentToken>> {
+  const db = await connectToDatabase();
+  return db.collection<NfcPaymentToken>('nfcPaymentTokens');
 }
