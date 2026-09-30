@@ -10,6 +10,12 @@ import { Card } from '@/lib/db/types';
 import { formatCardNumber } from '@/lib/utils/helpers';
 import { getCardNetwork } from '@/lib/utils/cardNetworks';
 import CardChip from '@/components/cards/CardChip';
+import {
+  disableNfcPaymentCard,
+  enableNfcPaymentCard,
+  getLingoungNfcStatus,
+  isLingoungAndroidApp,
+} from '@/lib/mobile/lingoungNfc';
 
 export default function CardDetailPage() {
   const router = useRouter();
@@ -22,12 +28,28 @@ export default function CardDetailPage() {
   const [actionLoading, setActionLoading] = useState<'freeze' | 'delete' | null>(null);
   const [showDetails, setShowDetails] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [nativeNfc, setNativeNfc] = useState(false);
+  const [nfcAmount, setNfcAmount] = useState('');
+  const [nfcReady, setNfcReady] = useState(false);
+  const [nfcMessage, setNfcMessage] = useState('');
 
   useEffect(() => {
     if (cardId) {
       fetchCard();
     }
   }, [cardId]);
+
+  useEffect(() => {
+    if (!isLingoungAndroidApp()) return;
+    setNativeNfc(true);
+    void getLingoungNfcStatus().then((status) => {
+      if (!status.supported) setNfcMessage('This device does not support NFC.');
+      else if (!status.enabled) setNfcMessage('Enable NFC in Android settings to use Tap to Pay.');
+    });
+    return () => {
+      void disableNfcPaymentCard().catch(() => undefined);
+    };
+  }, []);
 
   const fetchCard = async () => {
     try {
@@ -50,6 +72,39 @@ export default function CardDetailPage() {
       setError(err instanceof Error ? err.message : 'Failed to load card');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const enableTapToPay = async () => {
+    if (!card) return;
+    const maxAmount = Number(nfcAmount);
+    if (!Number.isFinite(maxAmount) || maxAmount <= 0) {
+      setNfcMessage('Enter the maximum amount you approve.');
+      return;
+    }
+    setActionLoading('freeze');
+    setNfcMessage('');
+    try {
+      const response = await fetch('/api/mobile/nfc/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cardId: card.id, currency: card.currency, maxAmount }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Could not authorize NFC payment');
+      await enableNfcPaymentCard(data.token);
+      setNfcReady(true);
+      setNfcMessage(`Ready to tap for up to ${maxAmount.toFixed(2)} ${card.currency}. Authorization expires in 90 seconds.`);
+      window.setTimeout(() => {
+        void disableNfcPaymentCard();
+        setNfcReady(false);
+        setNfcMessage('Authorization expired. Create a new one to pay again.');
+      }, 90_000);
+    } catch (nfcError) {
+      setNfcReady(false);
+      setNfcMessage(nfcError instanceof Error ? nfcError.message : 'NFC authorization failed');
+    } finally {
+      setActionLoading(null);
     }
   };
 
@@ -222,6 +277,37 @@ export default function CardDetailPage() {
             </div>
           </div>
         </div>
+
+        {nativeNfc && (
+          <section className="glass-panel mb-6 rounded-2xl p-5">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-blue-200">Lingoung Tap to Pay</p>
+                <h2 className="mt-1 text-lg font-semibold text-white">Use this phone as your card</h2>
+                <p className="mt-1 text-xs leading-5 text-slate-400">Approve a maximum amount, then hold this phone near a Lingoung Business POS device.</p>
+              </div>
+              <span className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${nfcReady ? 'bg-emerald-300 shadow-[0_0_14px_rgba(110,231,183,.75)]' : 'bg-slate-600'}`} />
+            </div>
+            <div className="mt-4 flex gap-3">
+              <input
+                inputMode="decimal"
+                value={nfcAmount}
+                onChange={(event) => setNfcAmount(event.target.value.replace(/[^\d.]/g, ''))}
+                placeholder={`Maximum amount (${card.currency})`}
+                className="min-h-12 min-w-0 flex-1 rounded-xl border border-white/10 bg-black/20 px-4 text-sm text-white placeholder:text-slate-500 focus:border-blue-300 focus:outline-none"
+              />
+              <button
+                type="button"
+                onClick={enableTapToPay}
+                disabled={actionLoading !== null || nfcReady}
+                className="min-h-12 rounded-xl bg-[#9CB4CB] px-4 text-sm font-semibold text-slate-950 disabled:opacity-50"
+              >
+                {nfcReady ? 'Ready to tap' : 'Enable NFC'}
+              </button>
+            </div>
+            {nfcMessage && <p className={`mt-3 text-xs ${nfcReady ? 'text-emerald-200' : 'text-amber-200'}`}>{nfcMessage}</p>}
+          </section>
+        )}
 
         {/* Date & Balance Card (Reference: Image 1) */}
         <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 border border-gray-200/80 dark:border-gray-800 shadow-sm flex items-center justify-between mb-4">

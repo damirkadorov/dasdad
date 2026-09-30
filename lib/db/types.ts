@@ -268,6 +268,19 @@ export interface Payment {
   failedReason?: string;
 }
 
+export interface NfcPaymentToken {
+  id: string;
+  tokenHash: string;
+  userId: string;
+  cardId?: string;
+  currency: Currency;
+  maxAmount: number;
+  status: 'active' | 'redeemed' | 'expired';
+  expiresAt: string;
+  createdAt: string;
+  redeemedAt?: string;
+}
+
 export interface Database {
   users: User[];
   cards: Card[];

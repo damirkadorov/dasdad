@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Lingoung</string>
+    <string name="title_activity_main">Lingoung</string>
+    <string name="package_name">com.lingoung.bank</string>
+    <string name="custom_url_scheme">com.lingoung.bank</string>
+    <string name="nfc_service_description">Lingoung secure payment authorization</string>
+</resources>
