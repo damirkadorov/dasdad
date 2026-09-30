@@ -88,6 +88,18 @@ APP_BASE_NAME=${0##*/}
 # Discard cd standard output in case $CDPATH is set (https://github.com/gradle/gradle/issues/25036)
 APP_HOME=$( cd -P "${APP_HOME:-./}" > /dev/null && printf '%s\n' "$PWD" ) || exit
 
+# Restore the wrapper binary from its checked-in text copy when necessary.
+WRAPPER_JAR="$APP_HOME/gradle/wrapper/gradle-wrapper.jar"
+WRAPPER_B64="$WRAPPER_JAR.b64"
+if [ ! -f "$WRAPPER_JAR" ] && [ -f "$WRAPPER_B64" ]; then
+    if command -v base64 >/dev/null 2>&1; then
+        tr -d '\r\n\t ' < "$WRAPPER_B64" | base64 -d > "$WRAPPER_JAR"
+    else
+        echo "Gradle wrapper is missing. Run 'npm run android:prepare' first." >&2
+        exit 1
+    fi
+fi
+
 # Use the maximum available, or set MAX_FD != -1 to use that value.
 MAX_FD=maximum
 
